@@ -1,0 +1,12 @@
+class: HouseholdMember
+table: household_members
+fields:
+  householdId: String
+  name: String
+  email: String
+  role: String
+  joinedAt: DateTime
+indexes:
+  householdMembersHouseholdIndex:
+    fields: householdId
+    unique: false

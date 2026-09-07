@@ -1,0 +1,6 @@
+class: Household
+table: households
+fields:
+  name: String
+  ownerId: String
+  createdAt: DateTime

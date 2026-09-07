@@ -1,0 +1,111 @@
+name: shipit_golden_app_workspace
+description: ShipIt Golden App monorepo workspace
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.12.2
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  melos: ^8.6.0
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+workspace:
+  - apps/app
+  - apps/server
+  - packages/app_client
+
+melos:
+  scripts:
+    format:
+      description: Format all Dart code.
+      exec: fvm dart format .
+
+    analyze:
+      description: Analyze all code.
+      exec: fvm dart analyze .
+
+    generate:
+      description: Run all code generation (Serverpod, Freezed, JSON serialization).
+      steps:
+        - generate:server
+        - generate:freezed
+
+    generate:check:
+      description: Verify generated code is up to date with committed baselines.
+      run: melos run generate && git diff --exit-code
+
+    generate:server:
+      description: Serverpod generate only (server code + regenerated client package).
+      run: cd apps/server && serverpod generate
+
+    generate:client:
+      description: Regenerate the Serverpod client package only.
+      run: serverpod generate --directory apps/server
+
+    generate:freezed:
+      description: Freezed/JSON generation only.
+      run: melos exec --scope="shipit_golden_app" -- fvm dart run build_runner build --delete-conflicting-outputs
+
+    test:
+      description: Run all tests.
+      steps:
+        - test:unit
+        - test:server
+        - test:flutter
+
+    test:unit:
+      description: Dart unit tests (app_client package).
+      run: melos exec --scope="app_client" -- fvm dart test
+
+    test:server:
+      description: Serverpod server tests.
+      run: melos exec --scope="shipit_golden_server" -- fvm dart test
+
+    test:flutter:
+      description: Flutter app tests.
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter test
+
+    test:integration:
+      description: Flutter integration tests.
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter test integration_test/
+
+    qa:
+      description: >-
+        Run default QA pipeline (analyze + tests). Device/server-gated suites
+        (integration, Patrol) are opt-in; see docs/qa/strategy.md.
+      steps:
+        - analyze
+        - test
+
+    dev:
+      description: Start server + Flutter web.
+      run: melos run dev:server & melos run dev:app
+
+    dev:server:
+      description: Start Serverpod only (http://localhost:8080).
+      run: cd apps/server && fvm dart run bin/main.dart
+
+    dev:app:
+      description: Start Flutter web only (http://localhost:8081, API on 8080).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run -d web-server --web-port=8081 --dart-define=API_BASE_URL=http://localhost:8080 --target=lib/app/bootstrap/app_bootstrap.dart
+
+    build:web:
+      description: Flutter web release build.
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build web --release --target=lib/app/bootstrap/app_bootstrap.dart
+
+    build:android:
+      description: Android app bundle.
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build appbundle --release --target=lib/app/bootstrap/app_bootstrap.dart
+
+    build:ios:
+      description: iOS release build (macOS only).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build ios --release --no-codesign --target=lib/app/bootstrap/app_bootstrap.dart

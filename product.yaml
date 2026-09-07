@@ -1,0 +1,41 @@
+product:
+  id: shipit-golden-app
+  name: ShipIt Golden App
+
+frontend:
+  framework: flutter
+  targets:
+    - web
+    - android
+    - ios
+
+  toolchain:
+    flutter_version_manager: fvm
+
+  state_management:
+    framework: bloc
+    immutability: freezed
+
+backend:
+  framework: serverpod
+
+database:
+  postgres: true
+
+design:
+  system: shipit_ui
+  source: penpot
+
+  qa:
+    unit: true
+    widget: true
+    golden: true
+    accessibility: true
+    integration: true
+    patrol: false  # skeleton exists integration_test_patrol/; pending device/CI setup
+    web: true
+    android: true
+    ios: true
+
+deployment:
+  profile: standard

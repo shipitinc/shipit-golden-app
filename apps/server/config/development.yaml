@@ -1,0 +1,19 @@
+server:
+  port: 8080
+  host: localhost
+
+# Apply pending database migrations automatically on boot so a fresh checkout
+# only needs `docker compose up` + `melos run dev:server`.
+applyMigrations: true
+
+database:
+  host: localhost
+  port: 5432
+  name: shipit_golden
+  user: shipit
+  # password is in passwords.yaml
+  maxConnectionCount: 10
+
+# Email verification codes are simulated by logging them to the server console.
+# See apps/server/bin/main.dart (EmailIdpConfigFromPasswords callbacks). This is
+# a development-only convenience; no SMTP/fake email service is used.

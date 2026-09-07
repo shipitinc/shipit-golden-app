@@ -1,0 +1,55 @@
+name: shipit_golden_app
+description: ShipIt Golden App - End-user Flutter application
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.12.2
+  flutter: ">=3.19.0"
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State management
+  flutter_bloc: ^9.0.0
+  freezed_annotation: ^3.0.0
+
+  # Design system (pinned to approved revision)
+  shipit_ui:
+    git:
+      url: https://github.com/shipitinc/shipit-ui.git
+      ref: 2a916a551ed4d7bcf72c9159466db00e6bb199ce
+
+  # Generated client
+  app_client:
+    path: ../../packages/app_client
+
+  # Serverpod client + auth
+  serverpod_client: 3.4.13
+  serverpod_auth_core_client: 3.4.13
+  serverpod_auth_core_flutter: 3.4.13
+  serverpod_auth_idp_client: 3.4.13
+
+  # Navigation
+  go_router: ^14.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.0
+  freezed: ^3.0.0
+  bloc_test: ^10.0.0
+  mocktail: ^1.0.0
+  golden_toolkit: ^0.15.0
+  integration_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  generate: true

@@ -1,0 +1,11 @@
+server:
+  port: 8081
+  host: localhost
+
+database:
+  host: localhost
+  port: 5432
+  name: shipit_golden_test
+  user: shipit
+  # password is in passwords.yaml (test section)
+  maxConnectionCount: 4

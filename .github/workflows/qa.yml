@@ -1,0 +1,83 @@
+name: qa
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.7
+          channel: stable
+          cache: true
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.12.2
+      - name: Bootstrap
+        run: |
+          dart pub global activate melos
+          melos bootstrap
+      - name: Analyze
+        run: melos run analyze
+
+  generate-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.7
+          channel: stable
+          cache: true
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.12.2
+      - name: Bootstrap
+        run: |
+          dart pub global activate melos
+          melos bootstrap
+      - name: Code generation is up to date
+        run: melos run generate:check
+
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: shipit
+          POSTGRES_PASSWORD: shipit
+          POSTGRES_DB: shipit_golden_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U shipit"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.7
+          channel: stable
+          cache: true
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.12.2
+      - name: Bootstrap
+        run: |
+          dart pub global activate melos
+          melos bootstrap
+      - name: Generate
+        run: melos run generate
+      - name: Test
+        run: melos run test
+
+  # Device/server-gated suites (integration_test/, Patrol) are NOT part of the
+  # default pipeline; see product.yaml and docs/qa/strategy.md.

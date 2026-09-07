@@ -1,0 +1,8 @@
+class: Program
+table: programs
+fields:
+  name: String
+  description: String
+  startDate: DateTime
+  endDate: DateTime
+  status: String
