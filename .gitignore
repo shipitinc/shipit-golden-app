@@ -12,6 +12,7 @@ build/
 .idea/
 .vscode/
 *.iml
+*.iml~
 
 # OS
 .DS_Store
