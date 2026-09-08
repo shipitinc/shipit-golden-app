@@ -2,6 +2,29 @@ import 'package:serverpod/serverpod.dart';
 import 'package:shipit_golden_server/src/generated/protocol.dart';
 
 class HouseholdEndpoint extends Endpoint {
+  static int _nextId = 3;
+
+  /// In-memory member store for the dev stub so that id-based add/remove
+  /// operations are stable within a server process lifetime.
+  static final List<HouseholdMember> _members = [
+    HouseholdMember(
+      id: 1,
+      householdId: 'household_1',
+      name: 'John Doe',
+      email: 'john@example.com',
+      role: 'owner',
+      joinedAt: DateTime.now().subtract(const Duration(days: 30)),
+    ),
+    HouseholdMember(
+      id: 2,
+      householdId: 'household_1',
+      name: 'Jane Smith',
+      email: 'jane@example.com',
+      role: 'member',
+      joinedAt: DateTime.now().subtract(const Duration(days: 15)),
+    ),
+  ];
+
   @override
   bool get requireLogin => true;
 
@@ -14,22 +37,7 @@ class HouseholdEndpoint extends Endpoint {
   }
 
   Future<List<HouseholdMember>> getMembers(Session session) async {
-    return [
-      HouseholdMember(
-        householdId: 'household_1',
-        name: 'John Doe',
-        email: 'john@example.com',
-        role: 'owner',
-        joinedAt: DateTime.now().subtract(const Duration(days: 30)),
-      ),
-      HouseholdMember(
-        householdId: 'household_1',
-        name: 'Jane Smith',
-        email: 'jane@example.com',
-        role: 'member',
-        joinedAt: DateTime.now().subtract(const Duration(days: 15)),
-      ),
-    ];
+    return List.unmodifiable(_members);
   }
 
   Future<HouseholdMember> addMember(
@@ -37,14 +45,19 @@ class HouseholdEndpoint extends Endpoint {
     String name,
     String email,
   ) async {
-    return HouseholdMember(
+    final member = HouseholdMember(
+      id: _nextId++,
       householdId: 'household_1',
       name: name,
       email: email,
       role: 'member',
       joinedAt: DateTime.now(),
     );
+    _members.add(member);
+    return member;
   }
 
-  Future<void> removeMember(Session session, String memberId) async {}
+  Future<void> removeMember(Session session, String memberId) async {
+    _members.removeWhere((m) => m.id.toString() == memberId);
+  }
 }

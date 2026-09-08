@@ -11,10 +11,12 @@ class AddMemberDialog {
     final emailController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
+    final bloc = context.read<HouseholdBloc>();
+
     return showDialog<void>(
       context: context,
       builder: (context) => BlocProvider.value(
-        value: context.read<HouseholdBloc>(),
+        value: bloc,
         child: AppDialog(
           title: 'Add Member',
           content: Form(
