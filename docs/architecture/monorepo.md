@@ -96,23 +96,25 @@ dev_dependencies:
 ## Code Generation Flow
 
 ```
-1. Serverpod YAML (apps/server/lib/src/)
+1. Serverpod YAML + endpoint annotations (apps/server/lib/)
          │
          ▼
-2. melos run generate:server
+2. melos run generate:server     (cd apps/server && serverpod generate)
          │
-         ├── Generates Dart models/endpoints in apps/server/generated/
-         └── Generates client in packages/app_client/
+         ├── Generates Dart models/endpoints in apps/server/lib/src/generated/  (committed)
+         └── Regenerates the client in packages/app_client/lib/src/protocol/    (committed)
                     │
                     ▼
-3. melos run generate:client
+3. melos run generate:freezed    (Freezed/JSON build_runner in apps/app)
          │
          ▼
-4. melos run generate:freezed
-         │
-         ▼
-5. All generated code ready for use
+4. All generated code ready for use
 ```
+
+Generated output is **committed by design** so `analyze`, `test`, and fresh
+checkouts work without a prior generate step; see root `.gitignore` and
+`apps/server/.gitignore`. `melos run generate:check` regenerates and fails if
+committed baseline drift is detected (`generate && git diff --exit-code`).
 
 ## FVM Integration
 

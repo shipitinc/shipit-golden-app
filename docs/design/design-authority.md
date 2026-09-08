@@ -93,18 +93,38 @@ Text('DESIGN_PENDING: Program detail screen')
 
 ### Breakpoints (from shipit_ui)
 ```dart
-AppBreakpoints.mobile   // < 600px
-AppBreakpoints.tablet   // 600px - 1200px
-AppBreakpoints.desktop  // > 1200px
+AppBreakpoints.mobile   // 360px
+AppBreakpoints.tablet   // 600px
+AppBreakpoints.desktop  // 1024px
+AppBreakpoints.wide     // 1440px
+AppBreakpoints.pageWidth // max content width (1200px)
 ```
+
+Detection helpers (`AppBreakpoints.isMobile(context)`, `isTablet`, `isDesktop`,
+`isWide`, `getLayoutType`) and the `AppLayoutType` enum handle comparison. The
+`AppLayout` class is a **static utility** (not a widget) with `pageConstraints`,
+`centeredPage`, `responsivePageWidth`, `responsivePadding`, `hStack`, `vStack`,
+`divider`, and fixed spacing helpers (`width2/4/6`, `height2/4/6`).
 
 ### AppLayout Usage
 ```dart
-AppLayout(
-  mobile: MobileLayout(),
-  tablet: TabletLayout(),
-  desktop: DesktopLayout(),
-)
+// AppLayout is a static helper, not a widget:
+child: AppLayout.centeredPage(child: content, width: AppBreakpoints.pageWidth)
+
+AppLayout.hStack(spacing: AppSpacing.space4, children: [AppButton.primary(...), ...])
+AppLayout.vStack(...)
+
+// Layout-type branching (640px viewport = tablet):
+switch (AppBreakpoints.getLayoutType(context)) {
+  case AppLayoutType.compact:
+  case AppLayoutType.mobile:
+    return _MobileLayout();
+  case AppLayoutType.tablet:
+    return _TabletLayout();
+  case AppLayoutType.desktop:
+  case AppLayoutType.wide:
+    return _DesktopLayout();
+}
 ```
 
 ## Accessibility

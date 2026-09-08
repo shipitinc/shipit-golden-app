@@ -12,11 +12,12 @@ apps/app/lib/
 │       └── app_router.dart   # GoRouter configuration
 ├── core/
 │   ├── errors/
-│   │   └── app_failure.dart  # Standardized failure types
+│   │   ├── app_failure.dart          # Standardized failure types
+│   │   └── error_translator.dart     # Maps exceptions to user-safe failures
 │   ├── networking/
-│   │   └── api_client.dart   # HTTP client with error handling
+│   │   └── serverpod_client_provider.dart  # Shared Serverpod client/session
 │   └── shared/
-│       └── extensions.dart   # BuildContext extensions
+│       └── extensions.dart   # Immutability helpers
 └── features/
     ├── authentication/
     │   ├── bloc/
@@ -52,9 +53,9 @@ Widget dispatches Event
         ↓
     BLoC calls Repository
         ↓
-    Repository calls ApiClient
+    Repository calls Serverpod generated client (via ServerpodClientProvider)
         ↓
-    ApiClient calls Serverpod
+    Serverpod client calls Serverpod
         ↓
     Response → Repository → Result
         ↓
@@ -89,7 +90,7 @@ sealed class HouseholdState with _$HouseholdState {
 @freezed
 sealed class AppFailure with _$AppFailure {
   const factory AppFailure.network({required String message, String? code}) = NetworkFailure;
-  const factory AppFailure.authentication({required String message, String? code}) = AuthenticationFailure;
+  const factory AppFailure.auth({required String message, String? code}) = AuthFailure;
   const factory AppFailure.authorization({required String message, String? code}) = AuthorizationFailure;
   const factory AppFailure.validation({required String message, Map<String, String>? fields}) = ValidationFailure;
   const factory AppFailure.server({required String message, int? statusCode}) = ServerFailure;
@@ -98,20 +99,32 @@ sealed class AppFailure with _$AppFailure {
 }
 ```
 
+Repositories catch exceptions and route them through `mapAppFailure` (in
+`core/errors/error_translator.dart`) so users only ever see safe, human-readable
+messages — never `Exception.toString()` or stack traces. `userMessage` on
+`AppFailure` adds a stable prefix per failure type for dialogs/state views.
+
 ## UI Layer
 
 ### shipit_ui Integration
 - All components from `package:shipit_ui/shipit_ui.dart`
-- Theme via `AppTheme` wrapper
-- Responsive via `AppLayout` and breakpoints
+- Theme via `shipitLightTheme()` / `shipitDarkTheme()` from shipit_ui
+- Responsive via `AppBreakpoints` and `AppLayout` helpers (static utility class:
+  `pageConstraints`, `centeredPage`, `responsivePageWidth`, `hStack`, `vStack`)
 - No custom Material widgets for common controls
 
 ### Responsive Design
 ```dart
-// BuildContext extensions
-context.isMobile    // < 600px
-context.isTablet    // 600px - 1200px
-context.isDesktop   // > 1200px
+// shipit_ui tokens: mobile 360 / tablet 600 / desktop 1024 / wide 1440
+final type = AppLayoutType? ...;  // see AppBreakpoints.getLayoutType / AppLayoutType
+
+AppBreakpoints.isMobile(context)   // width >= 360
+AppBreakpoints.isTablet(context)   // width >= 600
+AppBreakpoints.isDesktop(context)  // width >= 1024
+AppBreakpoints.isWide(context)     // width >= 1440
+
+// Or the BuildContext extension:
+context.isMobileLayout / context.isTabletLayout / context.isDesktopLayout
 ```
 
 ### Navigation
@@ -128,7 +141,7 @@ context.isDesktop   // > 1200px
 
 ### Unit Tests
 - BLoC tests with `bloc_test`
-- Repository tests with mocked ApiClient
+- Repository tests with mocked `ServerpodClientProvider`
 - Pure domain logic tests
 
 ### Widget Tests

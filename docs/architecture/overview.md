@@ -4,7 +4,7 @@
 
 The ShipIt Golden App is a reference implementation demonstrating the standard ShipIt product architecture. It consists of:
 
-- **Frontend**: Flutter application (web, Android, iOS)
+- **Frontend**: Flutter application (web — the only scaffolded target)
 - **Backend**: Serverpod (Dart) with PostgreSQL
 - **Design System**: shipit_ui components
 - **State Management**: BLoC + Freezed
@@ -92,11 +92,11 @@ packages/app_client → serverpod_client, NO apps/*
 
 ### Authentication Flow
 ```
-User Input → LoginScreen → AuthenticationBloc → AuthRepository → ApiClient
+User Input → LoginScreen → AuthenticationBloc → AuthRepository → Serverpod generated client (auth + jwtTokens)
                                                               ↓
                                                     Serverpod AuthEndpoint
                                                               ↓
-                                                    PostgreSQL (User table)
+                                                    PostgreSQL (serverpod_auth user tables)
                                                               ↓
                                                     AuthResult ← Token
                                                               ↓
@@ -105,7 +105,7 @@ User Input → LoginScreen → AuthenticationBloc → AuthRepository → ApiClie
 
 ### Household Flow
 ```
-HouseholdScreen → HouseholdBloc → HouseholdRepository → ApiClient
+HouseholdScreen → HouseholdBloc → HouseholdRepository → Serverpod generated client (household)
                                                                   ↓
                                                         Serverpod HouseholdEndpoint
                                                                   ↓

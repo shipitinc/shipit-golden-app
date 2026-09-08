@@ -53,8 +53,11 @@ Melos runs commands in package directories. FVM Flutter is available because:
 scripts:
   analyze: melos exec -- dart analyze
   test: melos exec -- flutter test
-  build:web: melos exec --scope=app -- flutter build web --release
-  generate:freezed: melos exec --scope=app -- dart run build_runner build --delete-conflicting-outputs
+  build:web: melos exec --scope=shipit_golden_app -- flutter build web --release
+  generate:freezed: melos exec --scope=shipit_golden_app -- fvm dart run build_runner build --delete-conflicting-outputs
+  test:unit: melos exec --scope=app_client -- fvm dart test
+  test:server: melos exec --scope=shipit_golden_server -- fvm dart test
+  test:flutter: melos exec --scope=shipit_golden_app -- fvm flutter test
 ```
 
 ## Flutter Upgrade Workflow
@@ -94,7 +97,7 @@ melos run build:web
 git diff
 
 # 10. Commit
-git add .fvmrc pubspec.lock apps/app/pubspec.lock apps/server/pubspec.lock packages/app_client/pubspec.lock
+git add .fvmrc pubspec.lock  # package-level locks are gitignored (melos/bootstrap-managed)
 git commit -m "chore: upgrade Flutter to 3.XX.X"
 ```
 
@@ -145,9 +148,15 @@ fvm dart run build_runner build --delete-conflicting-outputs
 ```
 
 ### Generated Files
-- `*.freezed.dart` — Freezed unions
-- `*.g.dart` — JSON serialization
-- `*.grpc.dart` — Serverpod client (in app_client)
+- `*.freezed.dart` — Freezed unions (committed)
+- `apps/server/lib/src/generated/` — Serverpod server protocol/endpoints (committed)
+- `packages/app_client/lib/src/protocol/` — Serverpod client protocol/endpoints (committed)
+
+> Serverpod generates plain Dart serialization (HTTP/JSON) — NOT gRPC. The
+> `*.grpc.dart` ignore pattern in `apps/app/.gitignore` / `packages/app_client/.gitignore`
+> is defensive only; no gRPC artifacts exist in this repo. Generated code is
+> committed by design (see root `.gitignore`); never delete it for CI.
+> Run `melos run generate:check` to verify committed baselines match a fresh generate.
 
 ## IDE Configuration
 

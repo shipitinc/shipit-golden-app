@@ -69,13 +69,21 @@ abstract class FeatureRepository {
 
 // Implementation
 class FeatureRepositoryImpl implements FeatureRepository {
-  final ApiClient _apiClient;
-  
+  final ServerpodClientProvider _clientProvider;
+
   Future<Result<Data>> getData() async {
-    return _apiClient.get<Data>(...);
+    return _runCatching(() async {
+      // Call the Serverpod generated client endpoint, then map protocol → domain.
+      ...
+    });
   }
 }
 ```
+
+Repositories never expose raw exceptions to the UI: fetch/call errors are routed
+through `mapAppFailure` (`core/errors/error_translator.dart`) into a typed
+`AppFailure`, and widgets render `failure.userMessage`. Exception `toString()`
+and stack traces are never shown to users.
 
 ## BLoC Testing
 

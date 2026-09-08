@@ -29,7 +29,8 @@ apps/server/
 │   │   ├── household.yaml
 │   │   ├── household_member.yaml
 │   │   └── program.yaml
-│   └── generated/              # Serverpod generated code (gitignored)
+│   └── generated/              # Serverpod generated code (committed by design:
+│                               # required for analyze/tests without a generate step)
 ├── migrations/                 # Generated migration baseline (applied on boot)
 └── test/
     ├── dart_test.yaml          # integration tag
@@ -59,7 +60,9 @@ fields:
 
 ### 2. Endpoints (Dart)
 
-Endpoints are Dart classes registered in `endpoints.yaml`. `EmailIdp` and
+Endpoints are Dart classes under `lib/src/endpoints/`, registered via the
+annotations (`@serverpod.Route` / `@serverpod.Serializer`) that the `serverpod
+generate` step reads; there is no `endpoints.yaml` manifest. `EmailIdp` and
 `JwtTokens` endpoints are the live auth surface:
 
 ```dart
