@@ -31,17 +31,16 @@ This repository demonstrates:
 
 ```
 /
+├── .github/                 # CI workflows (qa.yml)
 ├── apps/
 │   ├── app/                 # End-user Flutter application
 │   └── server/              # Serverpod backend
 ├── packages/
 │   └── app_client/          # Serverpod generated client
-├── infrastructure/          # Local infrastructure configs
 ├── docs/
 │   ├── architecture/
 │   ├── design/
 │   └── qa/
-├── scripts/
 ├── pubspec.yaml          # Workspace + melos: scripts (Melos 8)
 ├── product.yaml
 ├── .fvmrc
@@ -104,8 +103,10 @@ All commands run from repository root via Melos:
 | `melos run dev:server` | Start Serverpod only |
 | `melos run dev:app` | Start Flutter web only |
 | `melos run build:web` | Build Flutter web release |
-| `melos run build:android` | Build Android app bundle |
-| `melos run build:ios` | Build iOS release (macOS only) |
+
+> Only the **web** target is scaffolded in this baseline — there is no real
+> Android/iOS project (no build `build:android` / `build:ios` command exists).
+> Add platforms deliberately in a later Phase; see `product.yaml`.
 
 ## Flutter Version Management
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shipit_ui/shipit_ui.dart';
 import 'package:shipit_golden_app/core/core.dart';
+import 'package:shipit_golden_app/features/authentication/bloc/authentication_bloc.dart';
+import 'package:shipit_golden_app/features/authentication/bloc/authentication_event.dart';
 import 'package:shipit_golden_app/features/household/bloc/household_bloc.dart';
 import 'package:shipit_golden_app/features/household/bloc/household_event.dart';
 import 'package:shipit_golden_app/features/household/bloc/household_state.dart';
@@ -35,6 +37,15 @@ class HouseholdView extends StatelessWidget {
             onPressed: () {
               context.read<HouseholdBloc>().add(
                 const HouseholdRefreshRequested(),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Sign out',
+            onPressed: () {
+              context.read<AuthenticationBloc>().add(
+                const AuthenticationEvent.logoutRequested(),
               );
             },
           ),

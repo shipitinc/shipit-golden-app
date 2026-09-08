@@ -5,22 +5,31 @@ on:
     branches: [main]
   pull_request:
 
+# The toolchain is pinned by FVM (.fvmrc -> 3.44.7 / Dart 3.12.2). Every
+# package command runs through `melos`, which invokes `fvm flutter/dart`, so
+# each job provisions FVM and the Serverpod CLI exactly as documented in
+# AGENTS.md and docs/architecture/flutter-toolchain.md.
 jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: 3.44.7
-          channel: stable
-          cache: true
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: 3.12.2
+      - name: Activate FVM (pinned) and add to PATH
+        run: |
+          dart pub global activate fvm 4.1.2
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+      - name: Install pinned Flutter SDK via FVM (.fvmrc)
+        run: fvm install
+      - name: Add FVM Flutter SDK to PATH
+        run: echo "$HOME/fvm/versions/3.44.7/bin" >> "$GITHUB_PATH"
+      - name: Activate Serverpod CLI (pinned)
+        run: dart pub global activate serverpod_cli 3.4.13
       - name: Bootstrap
         run: |
-          dart pub global activate melos
+          dart pub global activate melos 8.6.0
           melos bootstrap
       - name: Analyze
         run: melos run analyze
@@ -29,17 +38,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: 3.44.7
-          channel: stable
-          cache: true
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: 3.12.2
+      - name: Activate FVM (pinned) and add to PATH
+        run: |
+          dart pub global activate fvm 4.1.2
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+      - name: Install pinned Flutter SDK via FVM (.fvmrc)
+        run: fvm install
+      - name: Add FVM Flutter SDK to PATH
+        run: echo "$HOME/fvm/versions/3.44.7/bin" >> "$GITHUB_PATH"
+      - name: Activate Serverpod CLI (pinned)
+        run: dart pub global activate serverpod_cli 3.4.13
       - name: Bootstrap
         run: |
-          dart pub global activate melos
+          dart pub global activate melos 8.6.0
           melos bootstrap
       - name: Code generation is up to date
         run: melos run generate:check
@@ -62,17 +76,22 @@ jobs:
           --health-retries 5
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: 3.44.7
-          channel: stable
-          cache: true
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: 3.12.2
+      - name: Activate FVM (pinned) and add to PATH
+        run: |
+          dart pub global activate fvm 4.1.2
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+      - name: Install pinned Flutter SDK via FVM (.fvmrc)
+        run: fvm install
+      - name: Add FVM Flutter SDK to PATH
+        run: echo "$HOME/fvm/versions/3.44.7/bin" >> "$GITHUB_PATH"
+      - name: Activate Serverpod CLI (pinned)
+        run: dart pub global activate serverpod_cli 3.4.13
       - name: Bootstrap
         run: |
-          dart pub global activate melos
+          dart pub global activate melos 8.6.0
           melos bootstrap
       - name: Generate
         run: melos run generate

@@ -1,7 +1,8 @@
 # QA Strategy
 
 This document reflects the ACTUAL test surface of the ShipIt Golden App. It is
-kept in sync with `product.yaml` (the QA manifest) and `melos.yaml` scripts.
+kept in sync with `product.yaml` (the QA manifest) and the `melos:` scripts in
+the workspace `pubspec.yaml` (Melos 8).
 Status fields in `product.yaml` are the source of truth; some suites (Patrol)
 are declared but not yet in the standard pipeline.
 
@@ -82,10 +83,9 @@ test/
 | `melos run qa` | analyze + test | integration/Patrol are opt-in |
 
 `generate:check` (= `melos run generate && git diff --exit-code`) guards against
-silent regeneration of committed generated/migration baselines. NOTE: with a
-repo that has zero commits (all files untracked), `git diff` cannot detect
-drift until a baseline exists in a commit — the guard becomes effective once
-the initial baseline is committed.
+silent regeneration of committed generated/migration baselines by failing the
+pipeline when generated output drifts from the committed baseline (the initial
+`chore: establish canonical Golden App baseline` commit).
 
 ## Unit Tests
 
@@ -175,10 +175,22 @@ structure. It is disabled in the standard pipeline (`product.yaml`
 
 ## CI Pipeline
 
-No CI workflow is committed yet. The recommended first minimal workflow runs
-`melos run analyze`, `melos run test`, and `melos run generate:check` on a
-Ubuntu runner with a PostgreSQL service for `test:server`. Integration and
-Patrol suites are opt-in and device-gated.
+`.github/workflows/qa.yml` is committed and runs on push to `main` and on pull
+requests. Three jobs share one toolchain bootstrap (documented in
+`docs/architecture/flutter-toolchain.md`):
+
+- **analyze** — `melos run analyze` (`fvm dart analyze .`)
+- **generate-check** — `melos run generate:check` (regeneration must produce no
+  diff against the committed baseline)
+- **test** — `melos run generate` then `melos run test`
+  (unit + server + Flutter), with a PostgreSQL 16 service for the DB-backed
+  `test:server` suite
+
+Because every Melos script invokes `fvm flutter`/`fvm dart` and `generate:server`
+invokes the Serverpod CLI, each job provisions FVM (`dart pub global activate
+fvm` + `fvm install` from `.fvmrc`) and the pinned Serverpod CLI
+(`dart pub global activate serverpod_cli`), and puts both on `PATH`. Integration
+and Patrol suites remain opt-in and device-gated (see `product.yaml`).
 
 ## Failure Classification
 

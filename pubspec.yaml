@@ -101,11 +101,3 @@ melos:
     build:web:
       description: Flutter web release build.
       run: melos exec --scope="shipit_golden_app" -- fvm flutter build web --release --target=lib/app/bootstrap/app_bootstrap.dart
-
-    build:android:
-      description: Android app bundle.
-      run: melos exec --scope="shipit_golden_app" -- fvm flutter build appbundle --release --target=lib/app/bootstrap/app_bootstrap.dart
-
-    build:ios:
-      description: iOS release build (macOS only).
-      run: melos exec --scope="shipit_golden_app" -- fvm flutter build ios --release --no-codesign --target=lib/app/bootstrap/app_bootstrap.dart

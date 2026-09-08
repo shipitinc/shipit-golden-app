@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shipit_ui/shipit_ui.dart';
 import 'package:shipit_golden_app/app/routing/app_router.dart';
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_bloc.dart';
+import 'package:shipit_golden_app/features/authentication/bloc/authentication_state.dart';
 
 class ShipItGoldenApp extends StatelessWidget {
   /// Provides the root [AuthenticationBloc] instance.
@@ -49,13 +50,17 @@ class _AppViewState extends State<_AppView> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'ShipIt Golden App',
-      debugShowCheckedModeBanner: false,
-      routerConfig: _router,
-      theme: shipitLightTheme(),
-      darkTheme: shipitDarkTheme(),
-      themeMode: ThemeMode.system,
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
+      bloc: widget.authBloc,
+      listener: (context, state) => _router.refresh(),
+      child: MaterialApp.router(
+        title: 'ShipIt Golden App',
+        debugShowCheckedModeBanner: false,
+        routerConfig: _router,
+        theme: shipitLightTheme(),
+        darkTheme: shipitDarkTheme(),
+        themeMode: ThemeMode.system,
+      ),
     );
   }
 }

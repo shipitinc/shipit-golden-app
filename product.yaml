@@ -4,10 +4,11 @@ product:
 
 frontend:
   framework: flutter
+  # Only `web` is scaffolded in this baseline. There are no real Android/iOS
+  # projects (no Gradle build, no Xcode project); claiming them here would be
+  # false. Add platforms deliberately in a later Phase.
   targets:
     - web
-    - android
-    - ios
 
   toolchain:
     flutter_version_manager: fvm
@@ -34,8 +35,8 @@ design:
     integration: true
     patrol: false  # skeleton exists integration_test_patrol/; pending device/CI setup
     web: true
-    android: true
-    ios: true
+    android: false  # no Android project scaffolded; platform not buildable
+    ios: false  # no iOS project scaffolded; platform not buildable
 
 deployment:
   profile: standard

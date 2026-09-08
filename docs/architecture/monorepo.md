@@ -13,14 +13,13 @@ The repository uses **Melos** for monorepo management.
 │   └── server/              # Serverpod backend (runnable)
 ├── packages/
 │   └── app_client/          # Serverpod generated client (library)
-├── melos.yaml               # Workspace configuration
-└── pubspec.yaml             # Workspace root pubspec
+└── pubspec.yaml             # Workspace root pubspec + melos: scripts (Melos 8)
 ```
 
 ## Package Types
 
 ### Runnable Applications (`apps/`)
-- `apps/app` — Flutter app for web, Android, iOS
+- `apps/app` — Flutter app (web target scaffolded; Android/iOS added in a later Phase)
 - `apps/server` — Serverpod server executable
 
 ### Libraries (`packages/`)
@@ -73,8 +72,6 @@ melos run qa             # Full pipeline
 
 # Build
 melos run build:web
-melos run build:android
-melos run build:ios
 ```
 
 ## Version Management
@@ -86,7 +83,7 @@ melos run build:ios
 
 ### Dependency Overrides
 ```yaml
-# melos.yaml
+# Workspace package globs (root pubspec.yaml `workspace:` section)
 packages:
   - apps/*
   - packages/*
@@ -124,7 +121,7 @@ dev_dependencies:
 - All Flutter commands via `fvm flutter` or `fvm dart`
 - Melos scripts use FVM-managed SDK
 
-### melos.yaml Script Integration
+### Melos Script Integration (`pubspec.yaml` `melos:` section)
 ```yaml
 scripts:
   analyze: melos exec -- dart analyze
@@ -159,7 +156,7 @@ The `melos exec` command runs in each package directory with the FVM Flutter SDK
 1. Create under `packages/` or `apps/`
 2. Add `pubspec.yaml`
 3. Run `melos bootstrap`
-4. Update `melos.yaml` if new command scope needed
+4. Update the `workspace:` globs or `melos:` scripts in the root `pubspec.yaml` if new command scope needed
 
 ## Path Ownership
 

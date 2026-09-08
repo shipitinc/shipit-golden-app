@@ -23,5 +23,16 @@ coverage/
 # Logs
 *.log
 
+# Flutter tool-generated per-machine/platform files
+# The baseline is web-only (product.yaml): no real Android/iOS project exists,
+# so the machine-local platform scaffolding Flutter writes on `pub get`/build
+# is NOT part of the baseline and must not be committed.
+.flutter-plugins-dependencies
+android/
+ios/Flutter/
+ios/Runner/GeneratedPluginRegistrant.h
+ios/Runner/GeneratedPluginRegistrant.m
+ios/Info.plist
+
 # NOTE: *.freezed.dart and *.g.dart freezed/serialization outputs are COMMITTED
 # by design (they form the immutable state contract). Do not ignore them.

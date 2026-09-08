@@ -107,4 +107,32 @@ void main() {
 
     expect(find.byType(AppDialog), findsNothing);
   });
+
+  testWidgets('authenticated user can sign out and returns to /login', (
+    tester,
+  ) async {
+    final repository = _MockAuthRepository();
+    when(() => repository.restoreSession()).thenAnswer((_) async {});
+    when(() => repository.isAuthenticated).thenReturn(true);
+    when(() => repository.authInfo).thenReturn(_fakeAuth);
+    when(() => repository.logout()).thenAnswer((_) async {});
+
+    final bloc = AuthenticationBloc(authRepository: repository);
+    addTearDown(bloc.close);
+
+    await tester.pumpWidget(ShipItGoldenApp(authBloc: bloc));
+    await tester.pumpAndSettle();
+    bloc.add(const AuthenticationEvent.started());
+    await tester.pumpAndSettle();
+
+    // An authenticated session lands on the household screen with a sign-out.
+    expect(find.text('Household'), findsOneWidget);
+    expect(find.byTooltip('Sign out'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Sign out'));
+    await tester.pumpAndSettle();
+
+    verify(() => repository.logout()).called(1);
+    expect(find.text('Sign In'), findsOneWidget);
+  });
 }

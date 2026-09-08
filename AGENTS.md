@@ -26,26 +26,27 @@ Lower-authority artifacts must not silently contradict higher-authority sources.
 
 ```
 / (repository root)
-├── .fvm/                    # FVM configuration (not committed)
+├── .github/                 # CI workflows (qa.yml)
 ├── apps/
 │   ├── app/                 # End-user Flutter application
 │   └── server/              # Serverpod backend
 ├── packages/
 │   └── app_client/          # Serverpod generated client package
-├── infrastructure/          # Docker Compose, local infrastructure
 ├── docs/
 │   ├── architecture/
 │   ├── design/
 │   └── qa/
-├── scripts/
-├── melos.yaml               # Melos workspace configuration
-├── pubspec.yaml             # Workspace pubspec
+├── pubspec.yaml             # Workspace pubspec + melos: scripts (Melos 8)
 ├── product.yaml             # Product manifest
 ├── .fvmrc                   # Pinned Flutter version
 ├── AGENTS.md                # This file
 ├── README.md
-└── compose.yaml             # Docker Compose for local infrastructure
+└── compose.yaml             # Docker Compose for local PostgreSQL
 ```
+
+> The Melos workspace has no `melos.yaml` — Melos 8 reads its config from the
+> `melos:` section of the root `pubspec.yaml`. There are no `infrastructure/` or
+> `scripts/` directories; local infrastructure is `compose.yaml` at the root.
 
 ## Invariants
 
@@ -97,8 +98,6 @@ melos run test:integration           # Flutter integration tests
 
 # Build
 melos run build:web                  # Flutter web release build
-melos run build:android              # Android app bundle
-melos run build:ios                  # iOS release build (macOS only)
 ```
 
 ## Feature Organization (apps/app/lib)

@@ -48,7 +48,7 @@ Melos runs commands in package directories. FVM Flutter is available because:
 2. PATH includes FVM shims when `fvm` is in PATH
 3. Melos inherits shell environment
 
-### melos.yaml Scripts
+### Melos Scripts (`pubspec.yaml` `melos:` section)
 ```yaml
 scripts:
   analyze: melos exec -- dart analyze
@@ -87,16 +87,14 @@ melos run analyze
 melos run test
 melos run qa
 
-# 8. Build all targets
+# 8. Build the web target
 melos run build:web
-melos run build:android
-melos run build:ios
 
 # 9. Review changes
 git diff
 
 # 10. Commit
-git add .fvmrc melos.yaml pubspec.lock apps/app/pubspec.lock apps/server/pubspec.lock packages/app_client/pubspec.lock
+git add .fvmrc pubspec.lock apps/app/pubspec.lock apps/server/pubspec.lock packages/app_client/pubspec.lock
 git commit -m "chore: upgrade Flutter to 3.XX.X"
 ```
 
@@ -105,29 +103,20 @@ git commit -m "chore: upgrade Flutter to 3.XX.X"
 - [ ] `melos run analyze` passes (0 issues)
 - [ ] `melos run test` passes (all green)
 - [ ] `melos run build:web` succeeds
-- [ ] `melos run build:android` succeeds
-- [ ] `melos run build:ios` succeeds (on macOS)
 - [ ] No deprecated API usage warnings
 - [ ] Dependencies compatible (check `flutter pub outdated`)
 
 ## Build Targets
 
+> Only the **web** target is scaffolded in this baseline (`product.yaml`). There
+> is no Android project (no Gradle build) and no iOS project (no `Runner.xcodeproj`),
+> so `build:android` / `build:ios` do not exist. Add platforms deliberately in a
+> later Phase.
+
 ### Web
 ```bash
 fvm flutter build web --release
 # Output: build/web/
-```
-
-### Android
-```bash
-fvm flutter build appbundle --release
-# Output: build/app/outputs/bundle/release/app-release.aab
-```
-
-### iOS (macOS only)
-```bash
-fvm flutter build ios --release --no-codesign
-# Output: build/ios/iphoneos/Runner.app
 ```
 
 ## Development Workflow
@@ -136,12 +125,6 @@ fvm flutter build ios --release --no-codesign
 ```bash
 # Web
 fvm flutter run -d web-server --web-port=8080
-
-# Android (device/emulator)
-fvm flutter run -d android
-
-# iOS (simulator/device)
-fvm flutter run -d ios
 ```
 
 ### Device Selection

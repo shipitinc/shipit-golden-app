@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shipit_ui/shipit_ui.dart';
 import 'package:shipit_golden_app/core/core.dart';
+import 'package:shipit_golden_app/features/authentication/bloc/authentication_bloc.dart';
+import 'package:shipit_golden_app/features/authentication/bloc/authentication_event.dart';
 import 'package:shipit_golden_app/features/programs/bloc/programs_bloc.dart';
 import 'package:shipit_golden_app/features/programs/bloc/programs_event.dart';
 import 'package:shipit_golden_app/features/programs/bloc/programs_state.dart';
@@ -33,6 +35,15 @@ class ProgramsView extends StatelessWidget {
             onPressed: () {
               context.read<ProgramsBloc>().add(
                 const ProgramsRefreshRequested(),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Sign out',
+            onPressed: () {
+              context.read<AuthenticationBloc>().add(
+                const AuthenticationEvent.logoutRequested(),
               );
             },
           ),
