@@ -28,7 +28,7 @@ void main() {
     await authBloc.close();
   });
 
-  testWidgets('wrong password shows a safe failure dialog (server-backed)', (
+  testWidgets('wrong password shows a safe failure alert (server-backed)', (
     tester,
   ) async {
     final authBloc = AuthenticationBloc();
@@ -51,8 +51,8 @@ void main() {
     );
 
     // The server rejects the bad credentials and the app surfaces a safe,
-    // human-readable message via AppDialog (never raw exception text).
-    expect(find.byType(AppDialog), findsOneWidget);
+    // human-readable message via AppInlineAlert (never raw exception text).
+    expect(find.byType(AppInlineAlert), findsOneWidget);
     await authBloc.close();
   });
 }

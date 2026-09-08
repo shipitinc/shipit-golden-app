@@ -3,58 +3,66 @@
 Tracking components needed by Golden App that don't exist in shipit_ui.
 
 > **Status of this document:** reviewed against shipit_ui revision
-> `2a916a551ed4d7bcf72c9159466db00e6bb199ce` (2026-09-06, the revision pinned in
-> `apps/app/pubspec.yaml`). Gaps are reported as GitHub issues in the
-> [shipitinc/shipit-ui](https://github.com/shipitinc/shipit-ui) repository so the
-> design system can process them; the `issue` column links each report.
+> `01f0720` (2026-09-08, the revision pinned in `apps/app/pubspec.yaml`).
+> GAP-001 through GAP-008 shipped upstream and the Golden App now consumes the
+> components (see **Resolved Gaps** below). GAP-009 (Inter font bundling) remains
+> open and is tracked as
+> [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8).
 
-## Superseded Gaps
+## Resolved Gaps
 
-These gaps were resolved by components that now exist in shipit_ui. Keep the
-entries so the history is legible, but do not file new issues for them.
-
-- **UPSTREAM_UI_GAP-005 (AppEmptyState)** — superseded by `AppStateView.empty`
-  (`AppEmptyState` and loading/error variants are all covered by
-  `AppStateView.loading` / `.empty` / `.error`).
-- **UPSTREAM_UI_GAP-007 (AppConfirmDialog)** — partially superseded by
-  `AppDialog.error` (destructive Cancel/Delete confirm). The remaining gap is a
-  **generic (non-destructive)** confirm variant; see issue #6 below.
-
-## Reported Gaps
+These gaps shipped in shipit_ui and the Golden App migrated to the upstream
+components. The `shipit_ui` column records the commit that closed the gap
+within the revision range `2a916a5..01f0720`.
 
 ### UPSTREAM_UI_GAP-001: AppNavigationRail
 - **Desired Component**: Navigation rail for desktop/tablet layouts
 - **Reason**: Reusable cross-product navigation primitive for responsive layouts
 - **Recommended Owner**: shipit-ui
-- **Status**: reported — [shipitinc/shipit-ui#1](https://github.com/shipitinc/shipit-ui/issues/1)
+- **shipit_ui**: shipped in `7ca6189` (`AppNavigationRail`)
+- **Issue**: [shipitinc/shipit-ui#1](https://github.com/shipitinc/shipit-ui/issues/1) — closed
 - **Workaround**: Using `NavigationRail` from Material with shipit_ui styling
 
 ### UPSTREAM_UI_GAP-002: AppDataTable
 - **Desired Component**: Sortable, filterable data table with pagination
 - **Reason**: Program listing, member management tables
 - **Recommended Owner**: shipit-ui
-- **Status**: reported — [shipitinc/shipit-ui#2](https://github.com/shipitinc/shipit-ui/issues/2)
+- **shipit_ui**: shipped in `7bf293b` (`AppDataTable`)
+- **Issue**: [shipitinc/shipit-ui#2](https://github.com/shipitinc/shipit-ui/issues/2) — closed
 - **Workaround**: `ListView` with `AppCard` items
 
 ### UPSTREAM_UI_GAP-003: AppDatePicker
 - **Desired Component**: Date range picker with presets
 - **Reason**: Program date selection, filtering
 - **Recommended Owner**: shipit-ui
-- **Status**: reported — [shipitinc/shipit-ui#3](https://github.com/shipitinc/shipit-ui/issues/3)
+- **shipit_ui**: shipped in `7bf293b` (`AppDatePicker`)
+- **Issue**: [shipitinc/shipit-ui#3](https://github.com/shipitinc/shipit-ui/issues/3) — closed
 - **Workaround**: `showDatePicker` with custom styling
 
 ### UPSTREAM_UI_GAP-004: AppAvatar
 - **Desired Component**: User avatar with fallback initials, badges
 - **Reason**: Household member display, user profile
 - **Recommended Owner**: shipit-ui
-- **Status**: reported — [shipitinc/shipit-ui#4](https://github.com/shipitinc/shipit-ui/issues/4)
+- **shipit_ui**: shipped in `7bf293b` (`AppAvatar`)
+- **Issue**: [shipitinc/shipit-ui#4](https://github.com/shipitinc/shipit-ui/issues/4) — closed
 - **Workaround**: Custom `CircleAvatar` with initials
+
+### UPSTREAM_UI_GAP-005: AppEmptyState
+- **Desired Component**: Empty-state view that *replaces* a content area
+- **Reason**: `AppStateView.empty` used to be the only empty state; the
+  loading/error variants were removed from `AppStateView`
+- **Recommended Owner**: shipit-ui
+- **shipit_ui**: superseded by the `AppStateView` split in `e5648e0`
+  (`AppEmptyState`, `AppSkeleton`, `AppInlineAlert`)
+- **Issue**: — closed via the `AppStateView` split
+- **Workaround**: `AppStateView.empty` / `.loading` / `.error`
 
 ### UPSTREAM_UI_GAP-006: AppSearchField
 - **Desired Component**: Search input with clear, filter chips, recent searches
 - **Reason**: Program search, member search
 - **Recommended Owner**: shipit-ui
-- **Status**: reported — [shipitinc/shipit-ui#5](https://github.com/shipitinc/shipit-ui/issues/5)
+- **shipit_ui**: shipped in `7bf293b` (`AppSearchField`, `AppFilterChip`)
+- **Issue**: [shipitinc/shipit-ui#5](https://github.com/shipitinc/shipit-ui/issues/5) — closed
 - **Workaround**: `AppTextField` with search icon
 
 ### UPSTREAM_UI_GAP-007: AppConfirmDialog (generic confirm variant)
@@ -62,14 +70,16 @@ entries so the history is legible, but do not file new issues for them.
   (the destructive variant exists as `AppDialog.error`)
 - **Reason**: Logout/changes confirmation without error styling
 - **Recommended Owner**: shipit-ui
-- **Status**: reported — [shipitinc/shipit-ui#6](https://github.com/shipitinc/shipit-ui/issues/6)
+- **shipit_ui**: shipped in `7bf293b` (`AppConfirmDialog` — generic + destructive)
+- **Issue**: [shipitinc/shipit-ui#6](https://github.com/shipitinc/shipit-ui/issues/6) — closed
 - **Workaround**: `AppDialog.error` with a neutral confirm label
 
 ### UPSTREAM_UI_GAP-008: AppTooltip
 - **Desired Component**: Accessible tooltip with rich content support
 - **Reason**: Icon-only buttons, truncated text (sign-out button)
 - **Recommended Owner**: shipit-ui
-- **Status**: reported — [shipitinc/shipit-ui#7](https://github.com/shipitinc/shipit-ui/issues/7)
+- **shipit_ui**: shipped in `7ca6189` (`AppTooltip`, `AppTooltip.rich`)
+- **Issue**: [shipitinc/shipit-ui#7](https://github.com/shipitinc/shipit-ui/issues/7) — closed
 - **Workaround**: `Tooltip` widget from Material (token styling lost)
 
 ### UPSTREAM_UI_GAP-009: Inter font not bundled by shipit_ui
@@ -80,7 +90,7 @@ entries so the history is legible, but do not file new issues for them.
   web falls back to the platform default because neither shipit_ui nor the app
   ships the font asset
 - **Recommended Owner**: shipit-ui
-- **Status**: not yet reported
+- **Status**: reported — [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8)
 - **Workaround**: `flutter_test_config.dart` `FontLoader('Inter')` → Roboto TTF
   in golden tests; production web renders with a default fallback
 

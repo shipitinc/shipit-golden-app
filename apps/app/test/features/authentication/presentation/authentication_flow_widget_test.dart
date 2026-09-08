@@ -40,7 +40,7 @@ void main() {
     },
   );
 
-  testWidgets('failed login surfaces a safe, human-readable AppDialog', (
+  testWidgets('failed login surfaces a safe, human-readable AppInlineAlert', (
     tester,
   ) async {
     final repository = _MockAuthRepository();
@@ -71,7 +71,7 @@ void main() {
     await tester.tap(find.text('Sign In'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(AppDialog), findsOneWidget);
+    expect(find.byType(AppInlineAlert), findsOneWidget);
     expect(
       find.text('Authentication required: Invalid credentials'),
       findsOneWidget,
@@ -105,7 +105,9 @@ void main() {
     await tester.tap(find.text('Sign In'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(AppDialog), findsNothing);
+    // Navigated away from /login; no login-level failure alert is shown.
+    expect(find.text('Household'), findsOneWidget);
+    expect(find.text('Sign In Failed'), findsNothing);
   });
 
   testWidgets('authenticated user can sign out and returns to /login', (

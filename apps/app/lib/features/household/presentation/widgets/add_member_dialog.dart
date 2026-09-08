@@ -15,8 +15,8 @@ class AddMemberDialog {
       context: context,
       builder: (context) => BlocProvider.value(
         value: context.read<HouseholdBloc>(),
-        child: AlertDialog(
-          title: const Text('Add Member'),
+        child: AppDialog(
+          title: 'Add Member',
           content: Form(
             key: formKey,
             child: Column(
@@ -51,9 +51,9 @@ class AddMemberDialog {
             ),
           ),
           actions: [
-            TextButton(
+            AppButton.secondary(
+              label: 'Cancel',
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
             ),
             BlocBuilder<HouseholdBloc, dynamic>(
               builder: (context, state) {

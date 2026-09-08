@@ -23,7 +23,7 @@ dependencies:
   shipit_ui:
     git:
       url: https://github.com/shipitinc/shipit-ui.git
-      ref: 2a916a551ed4d7bcf72c9159466db00e6bb199ce
+      ref: 01f0720
 
   # Generated client
   app_client:

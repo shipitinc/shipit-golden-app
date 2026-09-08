@@ -38,29 +38,46 @@ class ProgramsView extends StatelessWidget {
               );
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Sign out',
-            onPressed: () {
-              context.read<AuthenticationBloc>().add(
-                const AuthenticationEvent.logoutRequested(),
-              );
-            },
+          AppTooltip(
+            message: 'Sign out',
+            child: IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: () {
+                context.read<AuthenticationBloc>().add(
+                  const AuthenticationEvent.logoutRequested(),
+                );
+              },
+            ),
           ),
         ],
       ),
       body: BlocBuilder<ProgramsBloc, ProgramsState>(
         builder: (context, state) {
           return switch (state) {
-            ProgramsLoading() => const Center(
-              child: CircularProgressIndicator(),
+            ProgramsLoading() => ListView(
+              padding: EdgeInsets.all(AppSpacing.space4),
+              children: [
+                AppSkeleton.card(),
+                const SizedBox(height: AppSpacing.space4),
+                AppSkeleton.card(),
+                const SizedBox(height: AppSpacing.space4),
+                AppSkeleton.card(),
+              ],
             ),
-            ProgramsFailure(:final failure) => AppStateView.error(
-              title: 'Error',
-              message: failure.userMessage,
-              onRetry: () => context.read<ProgramsBloc>().add(
-                const ProgramsRefreshRequested(),
-              ),
+            ProgramsFailure(:final failure) => ListView(
+              padding: EdgeInsets.all(AppSpacing.space4),
+              children: [
+                AppInlineAlert.error(
+                  title: 'Error',
+                  message: failure.userMessage,
+                  actionLabel: 'Retry',
+                  onAction: () => context.read<ProgramsBloc>().add(
+                    const ProgramsRefreshRequested(),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.space4),
+                AppSkeleton.card(autoplay: false),
+              ],
             ),
             ProgramsLoaded(:final programs) => RefreshIndicator(
               onRefresh: () async {
@@ -69,7 +86,16 @@ class ProgramsView extends StatelessWidget {
                 );
               },
               child: programs.isEmpty
-                  ? _EmptyProgramsView()
+                  ? ListView(
+                      padding: EdgeInsets.all(AppSpacing.space4),
+                      children: const [
+                        AppEmptyState(
+                          title: 'No programs available',
+                          message: 'DESIGN_PENDING: Program creation flow',
+                          icon: Icons.event_outlined,
+                        ),
+                      ],
+                    )
                   : ListView.builder(
                       padding: EdgeInsets.all(AppSpacing.space4),
                       itemCount: programs.length,
@@ -81,37 +107,6 @@ class ProgramsView extends StatelessWidget {
             _ => const SizedBox.shrink(),
           };
         },
-      ),
-    );
-  }
-}
-
-class _EmptyProgramsView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(AppSpacing.space5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.event_outlined,
-              size: 64,
-              color: AppColors.fgSecondaryColor,
-            ),
-            SizedBox(height: AppSpacing.space5),
-            Text('No programs available', style: AppTypography.headlineSmall),
-            SizedBox(height: AppSpacing.space3),
-            Text(
-              'DESIGN_PENDING: Program creation flow',
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.fgSecondaryColor,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
       ),
     );
   }

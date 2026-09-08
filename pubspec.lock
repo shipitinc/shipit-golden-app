@@ -1080,8 +1080,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: "2a916a551ed4d7bcf72c9159466db00e6bb199ce"
-      resolved-ref: "2a916a551ed4d7bcf72c9159466db00e6bb199ce"
+      ref: "01f0720"
+      resolved-ref: "01f0720f6a5c92384186c08bff6646813fbecdc3"
       url: "https://github.com/shipitinc/shipit-ui.git"
     source: git
     version: "0.1.0"

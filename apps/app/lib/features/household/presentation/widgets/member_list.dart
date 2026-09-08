@@ -12,121 +12,66 @@ class MemberList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (members.isEmpty) {
-      return AppCard(
-        padding: EdgeInsets.all(AppSpacing.space5),
-        child: Column(
-          children: [
-            Icon(
-              Icons.people_outline,
-              size: 48,
-              color: AppColors.fgSecondaryColor,
-            ),
-            SizedBox(height: AppSpacing.space3),
-            Text('No members yet', style: AppTypography.titleMedium),
-            SizedBox(height: AppSpacing.space2),
-            Text(
-              'Tap the + button to add a member',
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.fgSecondaryColor,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      );
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Members (${members.length})', style: AppTypography.titleMedium),
         SizedBox(height: AppSpacing.space3),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: members.length,
-          separatorBuilder: (_, _) => SizedBox(height: AppSpacing.space2),
-          itemBuilder: (context, index) {
-            final member = members[index];
-            return _MemberTile(member: member);
-          },
+        AppDataTable<HouseholdMember>(
+          columns: [
+            AppDataColumn.text(
+              label: 'Name',
+              value: (member) => member.name,
+              comparator: (a, b) => a.name.compareTo(b.name),
+            ),
+            AppDataColumn.text(
+              label: 'Email',
+              value: (member) => member.email,
+              comparator: (a, b) => a.email.compareTo(b.email),
+            ),
+            AppDataColumn(
+              label: '',
+              cellBuilder: (context, member) => _MemberRowMenu(member: member),
+            ),
+          ],
+          rows: members,
+          emptyTitle: 'No members yet',
+          emptyDescription: 'Tap the + button to add a member',
         ),
       ],
     );
   }
 }
 
-class _MemberTile extends StatelessWidget {
+class _MemberRowMenu extends StatelessWidget {
   final HouseholdMember member;
 
-  const _MemberTile({required this.member});
+  const _MemberRowMenu({required this.member});
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
-      padding: EdgeInsets.all(AppSpacing.space3),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: AppColors.actionSecondaryBgColor,
-            child: Text(
-              member.name.isNotEmpty ? member.name[0].toUpperCase() : '?',
-              style: AppTypography.titleMedium.copyWith(
-                color: AppColors.actionSecondaryFgColor,
-              ),
-            ),
-          ),
-          SizedBox(width: AppSpacing.space3),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(member.name, style: AppTypography.titleMedium),
-                Text(
-                  member.email,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.fgSecondaryColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'remove') {
-                _confirmRemove(context, context.read<HouseholdBloc>());
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(value: 'remove', child: Text('Remove')),
-            ],
-          ),
-        ],
-      ),
+    return PopupMenuButton<String>(
+      onSelected: (value) {
+        if (value == 'remove') {
+          _confirmRemove(context, context.read<HouseholdBloc>());
+        }
+      },
+      itemBuilder: (context) => [
+        const PopupMenuItem(value: 'remove', child: Text('Remove')),
+      ],
     );
   }
 
-  void _confirmRemove(BuildContext context, HouseholdBloc bloc) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Remove Member'),
-        content: Text('Are you sure you want to remove ${member.name}?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              bloc.add(HouseholdMemberRemoved(memberId: member.id));
-            },
-            child: const Text('Remove'),
-          ),
-        ],
-      ),
+  Future<void> _confirmRemove(BuildContext context, HouseholdBloc bloc) async {
+    final confirmed = await AppConfirmDialog.show(
+      context,
+      title: 'Remove Member',
+      message: 'Are you sure you want to remove ${member.name}?',
+      confirmLabel: 'Remove',
+      isDestructive: true,
     );
+    if (confirmed) {
+      bloc.add(HouseholdMemberRemoved(memberId: member.id));
+    }
   }
 }

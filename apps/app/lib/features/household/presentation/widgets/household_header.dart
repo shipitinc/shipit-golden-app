@@ -16,18 +16,7 @@ class HouseholdHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: AppColors.actionPrimaryBgColor,
-                child: Text(
-                  household.name.isNotEmpty
-                      ? household.name[0].toUpperCase()
-                      : 'H',
-                  style: AppTypography.headlineMedium.copyWith(
-                    color: AppColors.actionPrimaryFgColor,
-                  ),
-                ),
-              ),
+              AppAvatar(name: household.name, size: AppAvatarSize.xl),
               SizedBox(width: AppSpacing.space3),
               Expanded(
                 child: Column(

@@ -44,6 +44,7 @@ class _AuthScreenState extends State<_AuthScreen> {
   final _codeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _accountRequestId;
+  String? _failureMessage;
 
   @override
   void initState() {
@@ -65,19 +66,12 @@ class _AuthScreenState extends State<_AuthScreen> {
     setState(() {
       _mode = _isRegister ? AuthScreenMode.login : AuthScreenMode.register;
       _accountRequestId = null;
+      _failureMessage = null;
     });
   }
 
-  void _showFailure(AppFailure failure) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => AppDialog.error(
-        title: _isRegister ? 'Registration Failed' : 'Sign In Failed',
-        subtitle: failure.userMessage,
-        onConfirm: () => Navigator.of(context).pop(),
-        confirmLabel: 'OK',
-      ),
-    );
+  void _dismissFailure() {
+    setState(() => _failureMessage = null);
   }
 
   void _submit(AuthenticationBloc bloc) {
@@ -118,10 +112,10 @@ class _AuthScreenState extends State<_AuthScreen> {
         if (state is AuthenticationAuthenticated) {
           context.go('/household');
         } else if (state is AuthenticationFailure) {
-          _showFailure(state.failure);
+          setState(() => _failureMessage = state.failure.userMessage);
         } else if (state is AuthenticationRegistrationCodeSent) {
           _accountRequestId = state.accountRequestId;
-          setState(() {});
+          setState(() => _failureMessage = null);
         }
       },
       child: Scaffold(
@@ -143,6 +137,18 @@ class _AuthScreenState extends State<_AuthScreen> {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: AppSpacing.space5),
+                      if (_failureMessage != null) ...[
+                        AppInlineAlert.error(
+                          title: _isRegister
+                              ? 'Registration Failed'
+                              : 'Sign In Failed',
+                          message: _failureMessage,
+                          actionLabel: 'Retry',
+                          onAction: () => _submit(context.read()),
+                          onDismiss: _dismissFailure,
+                        ),
+                        const SizedBox(height: AppSpacing.space5),
+                      ],
                       if (register && _accountRequestId == null)
                         Text(
                           'Enter your email to receive a verification code',

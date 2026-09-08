@@ -40,29 +40,44 @@ class HouseholdView extends StatelessWidget {
               );
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Sign out',
-            onPressed: () {
-              context.read<AuthenticationBloc>().add(
-                const AuthenticationEvent.logoutRequested(),
-              );
-            },
+          AppTooltip(
+            message: 'Sign out',
+            child: IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: () {
+                context.read<AuthenticationBloc>().add(
+                  const AuthenticationEvent.logoutRequested(),
+                );
+              },
+            ),
           ),
         ],
       ),
       body: BlocBuilder<HouseholdBloc, HouseholdState>(
         builder: (context, state) {
           return switch (state) {
-            HouseholdLoading() => const Center(
-              child: CircularProgressIndicator(),
+            HouseholdLoading() => ListView(
+              padding: EdgeInsets.all(AppSpacing.space4),
+              children: [
+                AppSkeleton.card(),
+                const SizedBox(height: AppSpacing.space4),
+                AppSkeleton.card(),
+              ],
             ),
-            HouseholdFailure(:final failure) => AppStateView.error(
-              title: 'Error',
-              message: failure.userMessage,
-              onRetry: () => context.read<HouseholdBloc>().add(
-                const HouseholdRefreshRequested(),
-              ),
+            HouseholdFailure(:final failure) => ListView(
+              padding: EdgeInsets.all(AppSpacing.space4),
+              children: [
+                AppInlineAlert.error(
+                  title: 'Error',
+                  message: failure.userMessage,
+                  actionLabel: 'Retry',
+                  onAction: () => context.read<HouseholdBloc>().add(
+                    const HouseholdRefreshRequested(),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.space4),
+                AppSkeleton.card(autoplay: false),
+              ],
             ),
             HouseholdLoaded(:final household, :final members) =>
               RefreshIndicator(
