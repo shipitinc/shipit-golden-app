@@ -105,5 +105,76 @@ jobs:
           path: apps/app/test/goldens/failures
           if-no-files-found: ignore
 
+  # Build jobs prove the release artifacts compile for every defined flavor
+  # (development/qa/production) with the pinned toolchain, in addition to the
+  # analysis/generation/test gates above. Android uses JDK 17 + Android SDK
+  # (platform 36, build-tools 36, pinned NDK); iOS builds without code signing
+  # on macOS. Both run through the same Melos build:scripts in the workspace.
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.12.2
+      - name: Activate FVM (pinned) and add to PATH
+        run: |
+          dart pub global activate fvm 4.1.2
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+      - name: Install pinned Flutter SDK via FVM (.fvmrc)
+        run: fvm install
+      - name: Add FVM Flutter SDK to PATH
+        run: echo "$HOME/fvm/versions/3.44.7/bin" >> "$GITHUB_PATH"
+      - name: Activate Serverpod CLI (pinned)
+        run: dart pub global activate serverpod_cli 3.4.13
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+      - name: Install pinned Android SDK components (platform 36, build-tools 36, NDK)
+        run: |
+          sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358"
+      - name: Bootstrap
+        run: |
+          dart pub global activate melos 8.6.0
+          melos bootstrap
+      - name: Build release APK (development)
+        run: melos run build:android:development
+      - name: Build release APK (qa)
+        run: melos run build:android:qa
+      - name: Build release APK (production)
+        run: melos run build:android:production
+
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.12.2
+      - name: Activate FVM (pinned) and add to PATH
+        run: |
+          dart pub global activate fvm 4.1.2
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+      - name: Install pinned Flutter SDK via FVM (.fvmrc)
+        run: fvm install
+      - name: Add FVM Flutter SDK to PATH
+        run: echo "$HOME/fvm/versions/3.44.7/bin" >> "$GITHUB_PATH"
+      - name: Activate Serverpod CLI (pinned)
+        run: dart pub global activate serverpod_cli 3.4.13
+      - name: Bootstrap
+        run: |
+          dart pub global activate melos 8.6.0
+          melos bootstrap
+      - name: Build iOS without codesigning (development)
+        run: melos run build:ios:development
+      - name: Build iOS without codesigning (qa)
+        run: melos run build:ios:qa
+      - name: Build iOS without codesigning (production)
+        run: melos run build:ios:production
+
   # Device/server-gated suites (integration_test/, Patrol) are NOT part of the
   # default pipeline; see product.yaml and docs/qa/strategy.md.

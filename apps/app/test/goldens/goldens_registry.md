@@ -9,8 +9,8 @@ Status values:
 
 | File | Screen | Status | Design revision | Notes |
 |------|--------|--------|-----------------|-------|
-| `goldens/login_sign_in.png` | LoginScreen (sign in) | DESIGN_PENDING | (none) | Auth screen, shipit_ui components. Baseline generated on Linux (CI host) with `Inter` pinned to golden_toolkit Roboto (`flutter_test_config.dart`); font rasterization is platform-dependent so regenerate on Linux. |
-| `goldens/login_register.png` | LoginScreen (register) | DESIGN_PENDING | (none) | Register/request-code mode. Baseline generated on Linux (CI host) with `Inter` pinned to golden_toolkit Roboto (`flutter_test_config.dart`); font rasterization is platform-dependent so regenerate on Linux. |
+| `goldens/login_sign_in.png` | LoginScreen (sign in) | DESIGN_PENDING | (none) | Auth screen, shipit_ui components. Baseline generated on Linux (CI host, ubuntu:24.04 amd64) with `Inter` pinned to golden_toolkit Roboto (`flutter_test_config.dart`); font rasterization is platform-dependent so regenerate on Linux. Regenerated to capture the flavor-tagged app name (`FlavorConfig.appName` → `[Dev] ShipIt Golden App` by default) introduced by the multi-environment flavor work. |
+| `goldens/login_register.png` | LoginScreen (register) | DESIGN_PENDING | (none) | Register/request-code mode. Baseline generated on Linux (CI host, ubuntu:24.04 amd64) with `Inter` pinned to golden_toolkit Roboto (`flutter_test_config.dart`); font rasterization is platform-dependent so regenerate on Linux. Regenerated to capture the flavor-tagged app name (`FlavorConfig.appName` → `[Dev] ShipIt Golden App` by default) introduced by the multi-environment flavor work. |
 
 ## Policy (enforced by `test/goldens/golden_policy_test.dart`)
 

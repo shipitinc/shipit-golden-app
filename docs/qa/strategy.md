@@ -176,7 +176,7 @@ structure. It is disabled in the standard pipeline (`product.yaml`
 ## CI Pipeline
 
 `.github/workflows/qa.yml` is committed and runs on push to `main` and on pull
-requests. Three jobs share one toolchain bootstrap (documented in
+requests. Five jobs share one toolchain bootstrap (documented in
 `docs/architecture/flutter-toolchain.md`):
 
 - **analyze** — `melos run analyze` (`fvm dart analyze .`)
@@ -185,6 +185,11 @@ requests. Three jobs share one toolchain bootstrap (documented in
 - **test** — `melos run generate` then `melos run test`
   (unit + server + Flutter), with a PostgreSQL 16 service for the DB-backed
   `test:server` suite
+- **build-android** — release APKs for `development`/`qa`/`production` flavors
+  (`melos run build:android:*`) on ubuntu with JDK 17 + Android SDK (platform
+  36, build-tools 36, pinned NDK)
+- **build-ios** — iOS builds without code signing for all three flavors
+  (`melos run build:ios:*`) on macOS
 
 Because every Melos script invokes `fvm flutter`/`fvm dart` and `generate:server`
 invokes the Serverpod CLI, each job provisions FVM (`dart pub global activate

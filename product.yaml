@@ -4,7 +4,8 @@ product:
 
 frontend:
   framework: flutter
-  # Real minima are scaffolded for each target and buildable in CI.
+  # Real minima are scaffolded for each target and buildable in CI
+  # (analyze/generate-check/test/build jobs; see .github/workflows/qa.yml).
   targets:
     - web
     - android
@@ -52,8 +53,8 @@ design:
     integration: true
     patrol: false  # skeleton exists integration_test_patrol/; pending device/CI setup
     web: true
-    android: true  # real Gradle project scaffolded; per-flavor APKs build in CI
-    ios: true  # real Xcode project + schemes scaffolded; per-flavor builds in CI
+    android: true  # real Gradle project scaffolded with buildable per-flavor APKs
+    ios: true  # real Xcode project + schemes scaffolded with buildable per-flavor builds
 
 deployment:
   profile: standard
