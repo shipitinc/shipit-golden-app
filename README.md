@@ -101,12 +101,34 @@ All commands run from repository root via Melos:
 | `melos run qa` | Full QA pipeline (analyze + test; integration is opt-in) |
 | `melos run dev` | Start dev servers (server + app) |
 | `melos run dev:server` | Start Serverpod only |
-| `melos run dev:app` | Start Flutter web only |
-| `melos run build:web` | Build Flutter web release |
+| `melos run dev:app` | Start Flutter web only (development flavor) |
+| `melos run dev:app:qa` | Start Flutter web only (qa flavor) |
+| `melos run dev:app:production` | Start Flutter web only (production flavor) |
+| `melos run run:android` | Run app on Android (development flavor) |
+| `melos run run:ios` | Run app on iOS simulator (development flavor) |
+| `melos run build:web` | Build Flutter web release (development flavor) |
+| `melos run build:android:development` | Build Android release APK (development) |
+| `melos run build:android:qa` | Build Android release APK (qa) |
+| `melos run build:android:production` | Build Android release APK (production) |
+| `melos run build:ios:development` | Build iOS (no codesign) (development) |
+| `melos run build:ios:qa` | Build iOS (no codesign) (qa) |
+| `melos run build:ios:production` | Build iOS (no codesign) (production) |
 
-> Only the **web** target is scaffolded in this baseline — there is no real
-> Android/iOS project (no build `build:android` / `build:ios` command exists).
-> Add platforms deliberately in a later Phase; see `product.yaml`.
+## Environments (Flavors)
+
+The app targets the three standard environments, resolved from the `FLAVOR`
+dart-define (defaults to `development`):
+
+| Flavor       | Android appId                    | iOS bundleId                       | App name                 |
+|--------------|----------------------------------|------------------------------------|--------------------------|
+| `development`| `io.letsshipit.golden`           | `io.letsshipit.golden`             | `[Dev] ShipIt Golden App`|
+| `qa`         | `io.letsshipit.golden.qa`        | `io.letsshipit.golden.qa`          | `[QA] ShipIt Golden App` |
+| `production` | `io.letsshipit.golden.production`| `io.letsshipit.golden.production`  | `ShipIt Golden App`      |
+
+The active flavor is compiled in via `--dart-define=FLAVOR=<flavor>` and drives
+`FlavorConfig` (app name shown in the browser tab / login screen and per-flavor
+API URL). Native app IDs and display names come from the Android product flavors
+and iOS schemes/build configs. See `docs/architecture/flutter-toolchain.md`.
 
 ## Flutter Version Management
 

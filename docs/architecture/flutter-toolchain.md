@@ -53,12 +53,20 @@ Melos runs commands in package directories. FVM Flutter is available because:
 scripts:
   analyze: melos exec -- dart analyze
   test: melos exec -- flutter test
-  build:web: melos exec --scope=shipit_golden_app -- flutter build web --release
+  build:web:development: melos exec --scope=shipit_golden_app -- flutter build web --release --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+  build:web:qa: melos exec --scope=shipit_golden_app -- flutter build web --release --dart-define=FLAVOR=qa --target=lib/app/bootstrap/app_bootstrap.dart
+  build:web:production: melos exec --scope=shipit_golden_app -- flutter build web --release --dart-define=FLAVOR=production --target=lib/app/bootstrap/app_bootstrap.dart
+  build:android:development: melos exec --scope=shipit_golden_app -- flutter build apk --flavor development --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+  dev:app:qa: melos exec --scope=shipit_golden_app -- flutter run -d web-server --web-port=8081 --dart-define=FLAVOR=qa --target=lib/app/bootstrap/app_bootstrap.dart
+  run:ios:production: melos exec --scope=shipit_golden_app -- flutter run --flavor production --dart-define=FLAVOR=production --target=lib/app/bootstrap/app_bootstrap.dart
   generate:freezed: melos exec --scope=shipit_golden_app -- fvm dart run build_runner build --delete-conflicting-outputs
   test:unit: melos exec --scope=app_client -- fvm dart test
   test:server: melos exec --scope=shipit_golden_server -- fvm dart test
   test:flutter: melos exec --scope=shipit_golden_app -- fvm flutter test
 ```
+
+The full matrix of `dev:app:*`, `run:android:*`, `run:ios:*`, `build:web:*`,
+`build:android:*` and `build:ios:*` scripts lives in the root `pubspec.yaml`.
 
 ## Flutter Upgrade Workflow
 
@@ -111,16 +119,49 @@ git commit -m "chore: upgrade Flutter to 3.XX.X"
 
 ## Build Targets
 
-> Only the **web** target is scaffolded in this baseline (`product.yaml`). There
-> is no Android project (no Gradle build) and no iOS project (no `Runner.xcodeproj`),
-> so `build:android` / `build:ios` do not exist. Add platforms deliberately in a
-> later Phase.
+> Web, Android, and iOS are all scaffolded (`product.yaml`). Each runs under the
+> three standard flavors (`development` / `qa` / `production`), resolved from the
+> `FLAVOR` dart-define. Entry point is `lib/app/bootstrap/app_bootstrap.dart`.
 
 ### Web
 ```bash
-fvm flutter build web --release
+fvm flutter build web --release --dart-define=FLAVOR=development
 # Output: build/web/
 ```
+
+### Android (per flavor)
+```bash
+fvm flutter build apk --flavor development --dart-define=FLAVOR=development \
+  --target=lib/app/bootstrap/app_bootstrap.dart
+# Output: build/app/outputs/flutter-apk/app-development-release.apk
+```
+
+### iOS (per flavor, no codesign)
+```bash
+fvm flutter build ios --no-codesign --flavor development \
+  --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+# Output: build/ios/iphoneos/Runner.app
+```
+
+## Flavor Configuration
+
+App IDs and display names are split per flavor across the native projects:
+
+- **Dart/behavior** — `apps/app/lib/core/config/flavor_config.dart` reads the
+  `FLAVOR` dart-define (`String.fromEnvironment`, default `development`);
+  `FlavorConfig.appName` / `FlavorConfig.serverUrl` drive the tab title and API URL.
+- **Android** — product flavors (`development`/`qa`/`production`) in
+  `apps/app/android/app/build.gradle.kts`, each with a distinct `applicationId` and a per-flavor
+  `src/<flavor>/res/values/strings.xml` (`app_name`) and `src/<flavor>/res/mipmap-*/ic_launcher.png`
+  icon source-set.
+- **iOS** — per-flavor build configurations (`Debug/Profile/Release-<flavor>`) and shared schemes
+  (`development`/`qa`/`production`). Each config sets `PRODUCT_BUNDLE_IDENTIFIER`,
+  `APP_DISPLAY_NAME` (consumed by `Info.plist` `$(APP_DISPLAY_NAME)`),
+  `DART_DEFINES` (base64 `FLAVOR=<flavor>`), `FLUTTER_TARGET`, and a per-flavor
+  `ASSETCATALOG_COMPILER_APPICON_NAME` (`AppIcon-<flavor>` catalog).
+
+Apple device vs account naming: use the Melos scripts in the root `pubspec.yaml`
+to run/build per flavor rather than invoking `flutter` ad hoc.
 
 ## Development Workflow
 

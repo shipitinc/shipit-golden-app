@@ -34,7 +34,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Redirect guard lands on /login with the shipit_ui auth card.
-      expect(find.text('ShipIt Golden App'), findsOneWidget);
+      expect(find.text(FlavorConfig.appName), findsOneWidget);
       expect(find.text('Sign In'), findsOneWidget);
       expect(find.byType(AppTextField), findsNWidgets(2));
     },

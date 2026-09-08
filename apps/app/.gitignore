@@ -24,15 +24,9 @@ coverage/
 *.log
 
 # Flutter tool-generated per-machine/platform files
-# The baseline is web-only (product.yaml): no real Android/iOS project exists,
-# so the machine-local platform scaffolding Flutter writes on `pub get`/build
-# is NOT part of the baseline and must not be committed.
+# Android (android/.gitignore) and iOS (ios/.gitignore) carry their own
+# machine-local ignore rules (local.properties, Flutter/, etc.).
 .flutter-plugins-dependencies
-android/
-ios/Flutter/
-ios/Runner/GeneratedPluginRegistrant.h
-ios/Runner/GeneratedPluginRegistrant.m
-ios/Info.plist
 
 # Golden failure artifacts (local diagnostic only; CI uploads them as artifacts)
 test/goldens/failures/

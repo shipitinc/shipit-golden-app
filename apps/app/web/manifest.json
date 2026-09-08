@@ -1,11 +1,11 @@
 {
-    "name": "shipit_golden_app",
-    "short_name": "shipit_golden_app",
+    "name": "ShipIt Golden App",
+    "short_name": "ShipIt Golden App",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "ShipIt Golden App",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

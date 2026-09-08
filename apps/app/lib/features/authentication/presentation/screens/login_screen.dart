@@ -138,7 +138,7 @@ class _AuthScreenState extends State<_AuthScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'ShipIt Golden App',
+                        FlavorConfig.appName,
                         style: AppTypography.headlineMedium,
                         textAlign: TextAlign.center,
                       ),

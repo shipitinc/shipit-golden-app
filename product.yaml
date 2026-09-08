@@ -4,11 +4,28 @@ product:
 
 frontend:
   framework: flutter
-  # Only `web` is scaffolded in this baseline. There are no real Android/iOS
-  # projects (no Gradle build, no Xcode project); claiming them here would be
-  # false. Add platforms deliberately in a later Phase.
+  # Real minima are scaffolded for each target and buildable in CI.
   targets:
     - web
+    - android
+    - ios
+
+  # Environments (flavors) projected from the flavor standard. App names are
+  # flavor-prefixed ([Dev]/[QA]) so the active environment is identifiable at
+  # a glance; production carries a plain product name.
+  flavors:
+    development:
+      android_application_id: io.letsshipit.golden
+      ios_bundle_id: io.letsshipit.golden
+      app_name: "[Dev] ShipIt Golden App"
+    qa:
+      android_application_id: io.letsshipit.golden.qa
+      ios_bundle_id: io.letsshipit.golden.qa
+      app_name: "[QA] ShipIt Golden App"
+    production:
+      android_application_id: io.letsshipit.golden.production
+      ios_bundle_id: io.letsshipit.golden.production
+      app_name: "ShipIt Golden App"
 
   toolchain:
     flutter_version_manager: fvm
@@ -35,8 +52,8 @@ design:
     integration: true
     patrol: false  # skeleton exists integration_test_patrol/; pending device/CI setup
     web: true
-    android: false  # no Android project scaffolded; platform not buildable
-    ios: false  # no iOS project scaffolded; platform not buildable
+    android: true  # real Gradle project scaffolded; per-flavor APKs build in CI
+    ios: true  # real Xcode project + schemes scaffolded; per-flavor builds in CI
 
 deployment:
   profile: standard

@@ -66,6 +66,7 @@ Lower-authority artifacts must not silently contradict higher-authority sources.
 - **Serverpod generated contracts are authoritative for client/server communication**
 - **Package boundaries must not be bypassed for convenience** — no direct dependency on implementation libraries hidden behind shipit_ui
 - **Upstream shipit_ui gaps should be reported rather than reimplemented inconsistently** — document as UPSTREAM_UI_GAP
+- **Multi-environment flavors are the standard** — `development` / `qa` / `production`, resolved from the `FLAVOR` dart-define (default `development`); per-flavor app names are prefix-tagged ([Dev]/[QA]) and app IDs follow `io.letsshipit.golden[.qa][.production]`. See `app/lib/core/config/flavor_config.dart` and `product.yaml`.
 - **Normal implementation agents do not gain production deployment authority**
 
 ## Commands (run from repository root)
@@ -75,10 +76,14 @@ Lower-authority artifacts must not silently contradict higher-authority sources.
 fvm install                          # Install pinned Flutter SDK
 melos bootstrap                      # Install all dependencies
 
-# Development
+# Development (default = development flavor)
 melos run dev                        # Start server + Flutter web
 melos run dev:server                 # Start Serverpod only
-melos run dev:app                    # Start Flutter web only
+melos run dev:app                    # Start Flutter web only (development)
+melos run dev:app:qa                 # Start Flutter web only (qa)
+melos run dev:app:production         # Start Flutter web only (production)
+melos run run:android[|:qa|:production]   # Run Android (development/qa/production)
+melos run run:ios[|:qa|:production]       # Run iOS simulator (development/qa/production)
 
 # Code Generation
 melos run generate                   # All generation (Serverpod, Freezed, JSON)
@@ -96,8 +101,14 @@ melos run test:server                # Serverpod tests
 melos run qa                         # Full QA pipeline (analyze + test + integration)
 melos run test:integration           # Flutter integration tests
 
-# Build
-melos run build:web                  # Flutter web release build
+# Build (per platform + flavor)
+melos run build:web[|:development|:qa|:production]   # Web release build
+melos run build:android:development                  # Android release APK
+melos run build:android:qa
+melos run build:android:production
+melos run build:ios:development                      # iOS build (no codesign)
+melos run build:ios:qa
+melos run build:ios:production
 ```
 
 ## Feature Organization (apps/app/lib)

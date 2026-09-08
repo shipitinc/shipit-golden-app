@@ -4,7 +4,7 @@
 
 The ShipIt Golden App is a reference implementation demonstrating the standard ShipIt product architecture. It consists of:
 
-- **Frontend**: Flutter application (web — the only scaffolded target)
+- **Frontend**: Flutter application (web, Android, and iOS targets under the standard `development`/`qa`/`production` flavors)
 - **Backend**: Serverpod (Dart) with PostgreSQL
 - **Design System**: shipit_ui components
 - **State Management**: BLoC + Freezed

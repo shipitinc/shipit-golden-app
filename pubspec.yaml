@@ -95,9 +95,89 @@ melos:
       run: cd apps/server && fvm dart run bin/main.dart
 
     dev:app:
-      description: Start Flutter web only (http://localhost:8081, API on 8080).
-      run: melos exec --scope="shipit_golden_app" -- fvm flutter run -d web-server --web-port=8081 --dart-define=API_BASE_URL=http://localhost:8080 --target=lib/app/bootstrap/app_bootstrap.dart
+      description: Start Flutter web only (development flavor, http://localhost:8081, API on 8080).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run -d web-server --web-port=8081 --dart-define=API_BASE_URL=http://localhost:8080 --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+
+    dev:app:development:
+      description: Start Flutter web only (development flavor, http://localhost:8081).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run -d web-server --web-port=8081 --dart-define=API_BASE_URL=http://localhost:8080 --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+
+    dev:app:qa:
+      description: Start Flutter web only (qa flavor, http://localhost:8081).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run -d web-server --web-port=8081 --dart-define=FLAVOR=qa --target=lib/app/bootstrap/app_bootstrap.dart
+
+    dev:app:production:
+      description: Start Flutter web only (production flavor, http://localhost:8081).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run -d web-server --web-port=8081 --dart-define=FLAVOR=production --target=lib/app/bootstrap/app_bootstrap.dart
 
     build:web:
-      description: Flutter web release build.
-      run: melos exec --scope="shipit_golden_app" -- fvm flutter build web --release --target=lib/app/bootstrap/app_bootstrap.dart
+      description: Flutter web release build (development flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build web --release --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+
+    build:web:development:
+      description: Flutter web release build (development flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build web --release --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+
+    build:web:qa:
+      description: Flutter web release build (qa flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build web --release --dart-define=FLAVOR=qa --target=lib/app/bootstrap/app_bootstrap.dart
+
+    build:web:production:
+      description: Flutter web release build (production flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build web --release --dart-define=FLAVOR=production --target=lib/app/bootstrap/app_bootstrap.dart
+
+    run:android:
+      description: Run the app on Android (development flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run --flavor development --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+
+    run:android:development:
+      description: Run the app on Android (development flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run --flavor development --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+
+    run:android:qa:
+      description: Run the app on Android (qa flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run --flavor qa --dart-define=FLAVOR=qa --target=lib/app/bootstrap/app_bootstrap.dart
+
+    run:android:production:
+      description: Run the app on Android (production flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run --flavor production --dart-define=FLAVOR=production --target=lib/app/bootstrap/app_bootstrap.dart
+
+    run:ios:
+      description: Run the app on iOS simulator (development flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run --flavor development --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+
+    run:ios:development:
+      description: Run the app on iOS simulator (development flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run --flavor development --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+
+    run:ios:qa:
+      description: Run the app on iOS simulator (qa flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run --flavor qa --dart-define=FLAVOR=qa --target=lib/app/bootstrap/app_bootstrap.dart
+
+    run:ios:production:
+      description: Run the app on iOS simulator (production flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter run --flavor production --dart-define=FLAVOR=production --target=lib/app/bootstrap/app_bootstrap.dart
+
+    build:android:development:
+      description: Release APK (development flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build apk --flavor development --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+
+    build:android:qa:
+      description: Release APK (qa flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build apk --flavor qa --dart-define=FLAVOR=qa --target=lib/app/bootstrap/app_bootstrap.dart
+
+    build:android:production:
+      description: Release APK (production flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build apk --flavor production --dart-define=FLAVOR=production --target=lib/app/bootstrap/app_bootstrap.dart
+
+    build:ios:development:
+      description: iOS build without codesigning (development flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build ios --no-codesign --flavor development --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
+
+    build:ios:qa:
+      description: iOS build without codesigning (qa flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build ios --no-codesign --flavor qa --dart-define=FLAVOR=qa --target=lib/app/bootstrap/app_bootstrap.dart
+
+    build:ios:production:
+      description: iOS build without codesigning (production flavor).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter build ios --no-codesign --flavor production --dart-define=FLAVOR=production --target=lib/app/bootstrap/app_bootstrap.dart

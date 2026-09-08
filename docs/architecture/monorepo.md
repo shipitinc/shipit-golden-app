@@ -19,7 +19,7 @@ The repository uses **Melos** for monorepo management.
 ## Package Types
 
 ### Runnable Applications (`apps/`)
-- `apps/app` — Flutter app (web target scaffolded; Android/iOS added in a later Phase)
+- `apps/app` — Flutter app (web, Android, and iOS targets scaffolded, each under the standard `development`/`qa`/`production` flavors)
 - `apps/server` — Serverpod server executable
 
 ### Libraries (`packages/`)

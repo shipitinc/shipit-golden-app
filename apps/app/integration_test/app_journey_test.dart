@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:shipit_ui/shipit_ui.dart';
 import 'package:shipit_golden_app/app/app.dart';
+import 'package:shipit_golden_app/core/core.dart';
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_bloc.dart';
 
 /// End-to-end journey against a live server.
@@ -18,7 +19,7 @@ void main() {
     await tester.pumpWidget(ShipItGoldenApp(authBloc: authBloc));
     await tester.pumpAndSettle();
 
-    expect(find.text('ShipIt Golden App'), findsOneWidget);
+    expect(find.text(FlavorConfig.appName), findsOneWidget);
     expect(find.text('Sign In'), findsOneWidget);
     expect(
       find.byType(AppTextField),

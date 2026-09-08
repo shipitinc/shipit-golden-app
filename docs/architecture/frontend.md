@@ -11,6 +11,9 @@ apps/app/lib/
 │   └── routing/
 │       └── app_router.dart   # GoRouter configuration
 ├── core/
+│   ├── config/
+│   │   ├── app_flavor.dart             # AppFlavor enum (development/qa/production)
+│   │   └── flavor_config.dart          # Compile-time per-flavor appName/serverUrl
 │   ├── errors/
 │   │   ├── app_failure.dart          # Standardized failure types
 │   │   └── error_translator.dart     # Maps exceptions to user-safe failures
@@ -37,6 +40,20 @@ apps/app/lib/
 ```
 
 ## Key Patterns
+
+### 0. Environment Flavoring
+
+The app targets the standard three environments (`development`/`qa`/`production`)
+and resolves the active one at compile time from the `FLAVOR` dart-define
+(defaults to `development` when unset). `FlavorConfig.current` exposes the
+resolved flavor; `FlavorConfig.appName` (`[Dev] ShipIt Golden App` / `[QA] ...` /
+`ShipIt Golden App`) drives the `MaterialApp.title` (browser tab) and other
+surfaces so a user can identify the environment at a glance. `FlavorConfig.serverUrl`
+defaults per flavor and can be overridden with an `API_BASE_URL` dart-define.
+
+Android product flavors and iOS schemes/build configs map one-to-one to these
+flavors (see `flutter-toolchain.md` for the platform wiring). The native app ID
+and display name come from the native project, not from Dart.
 
 ### 1. Feature-First Organization
 Each feature is self-contained with:

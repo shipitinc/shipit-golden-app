@@ -1,18 +1,17 @@
 import 'package:app_client/app_client.dart' as api;
 import 'package:flutter/foundation.dart';
 import 'package:serverpod_auth_core_flutter/serverpod_auth_core_flutter.dart';
+import 'package:shipit_golden_app/core/config/flavor_config.dart';
 import 'package:shipit_golden_app/core/networking/in_memory_auth_success_storage.dart';
 
 /// Provides the single shared Serverpod [api.Client] and the auth session
 /// manager that drives login, logout and JWT refresh for the whole app.
 ///
-/// The default server URL can be overridden at build time with
-/// `--dart-define=API_BASE_URL=http://host:port`.
+/// The server URL is resolved by [FlavorConfig.serverUrl] (compile-time
+/// dart-define): each [AppFlavor] carries a default URL which can be
+/// overridden with `--dart-define=API_BASE_URL=http://host:port`.
 class ServerpodClientProvider {
-  static const _defaultServer = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'http://localhost:8080',
-  );
+  static final String _defaultServer = FlavorConfig.serverUrl;
 
   /// The canonical shared provider used by repositories and screens.
   ///

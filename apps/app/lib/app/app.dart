@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shipit_ui/shipit_ui.dart';
 import 'package:shipit_golden_app/app/routing/app_router.dart';
+import 'package:shipit_golden_app/core/config/flavor_config.dart';
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_bloc.dart';
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_state.dart';
 
@@ -54,7 +55,7 @@ class _AppViewState extends State<_AppView> {
       bloc: widget.authBloc,
       listener: (context, state) => _router.refresh(),
       child: MaterialApp.router(
-        title: 'ShipIt Golden App',
+        title: FlavorConfig.appName,
         debugShowCheckedModeBanner: false,
         routerConfig: _router,
         theme: shipitLightTheme(),
