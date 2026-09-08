@@ -9,8 +9,8 @@ Status values:
 
 | File | Screen | Status | Design revision | Notes |
 |------|--------|--------|-----------------|-------|
-| `goldens/login_sign_in.png` | LoginScreen (sign in) | DESIGN_PENDING | (none) | Auth screen, shipit_ui components. Deterministic font pinning: `Inter` → golden_toolkit Roboto (`flutter_test_config.dart`) so baselines rasterize identically on macOS and Linux CI (text was previously a platform-default box font). |
-| `goldens/login_register.png` | LoginScreen (register) | DESIGN_PENDING | (none) | Register/request-code mode. Deterministic font pinning: `Inter` → golden_toolkit Roboto (`flutter_test_config.dart`); baseline regenerated for cross-host rasterization stability. |
+| `goldens/login_sign_in.png` | LoginScreen (sign in) | DESIGN_PENDING | (none) | Auth screen, shipit_ui components. Baseline generated on Linux (CI host) with `Inter` pinned to golden_toolkit Roboto (`flutter_test_config.dart`); font rasterization is platform-dependent so regenerate on Linux. |
+| `goldens/login_register.png` | LoginScreen (register) | DESIGN_PENDING | (none) | Register/request-code mode. Baseline generated on Linux (CI host) with `Inter` pinned to golden_toolkit Roboto (`flutter_test_config.dart`); font rasterization is platform-dependent so regenerate on Linux. |
 
 ## Policy (enforced by `test/goldens/golden_policy_test.dart`)
 
