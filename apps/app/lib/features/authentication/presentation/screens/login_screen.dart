@@ -121,70 +121,98 @@ class _AuthScreenState extends State<_AuthScreen> {
       child: Scaffold(
         body: Center(
           child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 440),
-              child: AppCard(
-                padding: EdgeInsets.all(AppSpacing.space5),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        FlavorConfig.appName,
-                        style: AppTypography.headlineMedium,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: AppSpacing.space5),
-                      if (_failureMessage != null) ...[
-                        AppInlineAlert.error(
-                          title: _isRegister
-                              ? 'Registration Failed'
-                              : 'Sign In Failed',
-                          message: _failureMessage,
-                          actionLabel: 'Retry',
-                          onAction: () => _submit(context.read()),
-                          onDismiss: _dismissFailure,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.space4,
+              ),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 440),
+                child: AppCard(
+                  padding: EdgeInsets.all(AppSpacing.space5),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (register) ...[
+                          BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                            builder: (context, state) {
+                              final submitting =
+                                  state is AuthenticationLoading ||
+                                  state is AuthenticationRegistrationSubmitting;
+                              return Row(
+                                children: [
+                                  AppTooltip(
+                                    message: 'Back to sign in',
+                                    child: IconButton(
+                                      icon: const Icon(Icons.arrow_back),
+                                      onPressed: submitting
+                                          ? null
+                                          : () => _toggleMode(),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                          const SizedBox(height: AppSpacing.space2),
+                        ],
+                        Text(
+                          FlavorConfig.appName,
+                          style: AppTypography.headlineMedium,
+                          textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: AppSpacing.space5),
-                      ],
-                      if (register && _accountRequestId == null)
-                        Text(
-                          'Enter your email to receive a verification code',
-                          style: AppTypography.bodyMedium.copyWith(
-                            color: AppColors.fgSecondaryColor,
+                        if (_failureMessage != null) ...[
+                          AppInlineAlert.error(
+                            title: _isRegister
+                                ? 'Registration Failed'
+                                : 'Sign In Failed',
+                            message: _failureMessage,
+                            actionLabel: 'Retry',
+                            onAction: () => _submit(context.read()),
+                            onDismiss: _dismissFailure,
                           ),
-                        )
-                      else if (register)
-                        Text(
-                          'Enter the code sent to "${_emailController.text}" '
-                          'and choose a password',
-                          style: AppTypography.bodyMedium.copyWith(
-                            color: AppColors.fgSecondaryColor,
+                          const SizedBox(height: AppSpacing.space5),
+                        ],
+                        if (register && _accountRequestId == null)
+                          Text(
+                            'Enter your email to receive a verification code',
+                            style: AppTypography.bodyMedium.copyWith(
+                              color: AppColors.fgSecondaryColor,
+                            ),
+                          )
+                        else if (register)
+                          Text(
+                            'Enter the code sent to "${_emailController.text}" '
+                            'and choose a password',
+                            style: AppTypography.bodyMedium.copyWith(
+                              color: AppColors.fgSecondaryColor,
+                            ),
                           ),
+                        const SizedBox(height: AppSpacing.space5),
+                        AppTextField(
+                          controller: _emailController,
+                          label: 'Email',
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Email is required';
+                            }
+                            if (!value.contains('@')) {
+                              return 'Enter a valid email';
+                            }
+                            return null;
+                          },
                         ),
-                      const SizedBox(height: AppSpacing.space5),
-                      AppTextField(
-                        controller: _emailController,
-                        label: 'Email',
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Email is required';
-                          }
-                          if (!value.contains('@')) {
-                            return 'Enter a valid email';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.space3),
-                      if (register && _accountRequestId == null)
-                        _buildRequestCodeFields()
-                      else
-                        _buildCredentialsFields(register),
-                    ],
+                        const SizedBox(height: AppSpacing.space3),
+                        if (register && _accountRequestId == null)
+                          _buildRequestCodeFields()
+                        else
+                          _buildCredentialsFields(register),
+                      ],
+                    ),
                   ),
                 ),
               ),
