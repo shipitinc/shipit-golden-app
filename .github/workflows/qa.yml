@@ -97,6 +97,13 @@ jobs:
         run: melos run generate
       - name: Test
         run: melos run test
+      - name: Upload golden failure feedback (diagnostic)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-failures
+          path: apps/app/test/goldens/failures
+          if-no-files-found: ignore
 
   # Device/server-gated suites (integration_test/, Patrol) are NOT part of the
   # default pipeline; see product.yaml and docs/qa/strategy.md.
