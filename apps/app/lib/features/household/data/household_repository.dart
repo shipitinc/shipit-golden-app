@@ -47,7 +47,5 @@ class HouseholdRepository {
     }
   }
 
-  AppFailure _mapError(Object error) {
-    return AppFailure.unknown(message: error.toString(), cause: error);
-  }
+  AppFailure _mapError(Object error) => mapAppFailure(error);
 }

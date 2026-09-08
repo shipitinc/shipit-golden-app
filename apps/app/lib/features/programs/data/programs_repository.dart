@@ -13,9 +13,7 @@ class ProgramsRepository {
       final programs = await _clientProvider.client.programs.getAll();
       return Result.success(programs.map(programFromProtocol).toList());
     } catch (e) {
-      return Result.failure(
-        AppFailure.unknown(message: e.toString(), cause: e),
-      );
+      return Result.failure(mapAppFailure(e));
     }
   }
 }
