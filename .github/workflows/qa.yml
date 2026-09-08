@@ -95,6 +95,14 @@ jobs:
           melos bootstrap
       - name: Generate
         run: melos run generate
+      - name: Regenerate goldens on Linux (baseline alignment, diagnostic)
+        working-directory: apps/app
+        run: fvm flutter test test/goldens --update-goldens
+      - name: Upload Linux-regenerated goldens
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-goldens
+          path: apps/app/test/goldens/goldens
       - name: Test
         run: melos run test
       - name: Upload golden failure feedback (diagnostic)
