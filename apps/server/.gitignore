@@ -16,8 +16,8 @@ Thumbs.db
 # Pubspec lock (ignored - managed by melos bootstrap)
 pubspec.lock
 
-# Serverpod generated
-generated/
+# Serverpod generated code under lib/src/generated/ is committed by design
+# (see root .gitignore). Nothing else in apps/server is generated at the root.
 
 # Coverage
 coverage/
