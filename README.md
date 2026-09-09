@@ -205,7 +205,7 @@ QA is orchestrated through Melos scripts (unit, server, Flutter, integration) in
   auth UI journey widget tests (redirect guard + safe failure dialog)
 - **Golden baselines** — `test/goldens/` with a policy-enforced registry
   (see `docs/qa/strategy.md`); the login baselines are `APPROVED` against
-  `shipit_ui@1207004` (2026-09-08), the rest are `DESIGN_PENDING`
+  `shipit_ui@d6abf9a` (re-approved 2026-09-09), the rest are `DESIGN_PENDING`
 - **Accessibility semantics** — `test/accessibility/`
 - **Integration / E2E** — real-server journey in `apps/app/integration_test/`;
   requires a live server and a device (not executed in the default `melos run test`)

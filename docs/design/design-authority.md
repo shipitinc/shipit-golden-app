@@ -176,8 +176,10 @@ dark canvases (UPSTREAM_UI_GAP-011 resolved in `shipit_ui@d6abf9a`).
   approved against an approved design revision; the visual contract) or
   `DESIGN_PENDING` (candidate preserving current rendering so visual
   regressions fail CI with a diff). The login baselines
-  (`login_sign_in.png`, `login_register.png`) were promoted to `APPROVED` on
-  2026-09-08 against `shipit_ui@1207004`.
+  (`login_sign_in.png`, `login_register.png`) are `APPROVED` against the
+  pinned `shipit_ui` revision (`shipit_ui@d6abf9a`, re-approved 2026-09-09
+  after the token-tree refactor migration; initially promoted 2026-09-08
+  against `shipit_ui@1207004`).
 - Approved goldens = visual contract; `flutter test --update-goldens` is NOT a
   fix. Promoting to `APPROVED` (and any subsequent regeneration) requires:
   1. Design authority approval
@@ -192,8 +194,8 @@ test/goldens/
 ├── goldens_registry.md      # status list (APPROVED / DESIGN_PENDING)
 ├── golden_policy_test.dart  # registry conformance + approved baselines
 └── goldens/
-    ├── login_sign_in.png    # APPROVED (shipit_ui@1207004, 2026-09-08)
-    └── login_register.png   # APPROVED (shipit_ui@1207004, 2026-09-08)
+    ├── login_sign_in.png    # APPROVED (shipit_ui@d6abf9a, re-approved 2026-09-09)
+    └── login_register.png   # APPROVED (shipit_ui@d6abf9a, re-approved 2026-09-09)
 ```
 
 ## Upstream Gaps
