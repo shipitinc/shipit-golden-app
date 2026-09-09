@@ -5,14 +5,13 @@ Tracking components needed by Golden App that don't exist in shipit_ui.
 > **Status of this document:** reviewed against shipit_ui revision
 > `1207004` (2026-09-08, the revision pinned in `apps/app/pubspec.yaml`).
 > GAP-001 through GAP-008 shipped upstream and the Golden App now consumes the
-> components (see **Resolved Gaps** below). GAP-009's runtime part (Inter font
-> bundling) shipped upstream as
-> [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8);
-> only the Golden App test font-pin + golden-baseline regeneration remain
-> (needs Linux + design/human approval). GAP-010 (AppTextField validation text)
-> shipped upstream as
-> [shipitinc/shipit-ui#9](https://github.com/shipitinc/shipit-ui/issues/9) and
-> the Golden App now consumes it — see below.
+> components (see **Resolved Gaps** below). GAP-009 (Inter font bundling) and
+> GAP-010 (AppTextField validation text) both shipped upstream — GAP-009 as
+> [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8) and
+> GAP-010 as
+> [shipitinc/shipit-ui#9](https://github.com/shipitinc/shipit-ui/issues/9) —
+> and the Golden App consumes both (real Inter in tests + regenerated
+> baselines; form-field validation showcase). See below.
 
 ## Resolved Gaps
 
@@ -90,18 +89,17 @@ within the revision range `2a916a5..1207004`.
 ### UPSTREAM_UI_GAP-009: Inter font not bundled by shipit_ui
 - **Desired Component**: `Inter` TTF bundled/declared in shipit_ui
   `AppTypography.fontFamily`
-- **Reason**: Golden App test harness pins the `Inter` family to
-  golden_toolkit's Roboto (`apps/app/flutter_test_config.dart`) and production
-  web falls back to the platform default because neither shipit_ui nor the app
-  ships the font asset
+- **Reason**: Golden App test harness pinned the `Inter` family to
+  golden_toolkit's Roboto (`apps/app/flutter_test_config.dart`) as a stand-in
+  and production fell back to the platform default because neither shipit_ui
+  nor the app shipped the font asset
 - **Recommended Owner**: shipit-ui
-- **shipit_ui**: runtime bundling shipped in `5d6b34a` (issue closed); Golden App
-  side remains open
+- **shipit_ui**: bundling shipped in `5d6b34a` (issue closed)
 - **Status**: resolved upstream — [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8) closed
-- **Remaining (Golden App)**: `flutter_test_config.dart` still pins the resolved
-  families (`Inter` / `packages/shipit_ui/Inter`) to golden_toolkit's Roboto so
-  approved baselines stay reviewable; swap in the real bundled Inter TTFs and
-  regenerate baselines on Linux with design/human approval
+- **Golden App**: `flutter_test_config.dart` now loads the real bundled Inter
+  TTFs under `packages/shipit_ui/Inter`; the candidate login baselines were
+  regenerated with real Inter (see `goldens_registry.md`) and verified by
+  Linux CI. Nothing pending.
 
 ### UPSTREAM_UI_GAP-010: AppTextField does not surface validation text
 - **Desired Component**: `AppTextField` integrating with Flutter `Form`
