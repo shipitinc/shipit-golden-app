@@ -59,6 +59,8 @@ jobs:
         run: |
           dart pub global activate melos 8.6.0
           melos bootstrap
+      - name: Generate + drift check
+        run: melos run generate:check
       - name: Regenerate candidate golden baselines
         shell: bash
         run: |

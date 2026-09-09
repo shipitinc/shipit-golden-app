@@ -31,6 +31,8 @@ jobs:
         run: |
           dart pub global activate melos 8.6.0
           melos bootstrap
+      - name: Generate + drift check
+        run: melos run generate:check
       - name: Analyze
         run: melos run analyze
 
@@ -117,6 +119,8 @@ jobs:
         run: |
           dart pub global activate melos 8.6.0
           melos bootstrap
+      - name: Generate + drift check
+        run: melos run generate:check
       - name: Build release APK (development)
         run: melos run build:android:development
       - name: Build release APK (qa)
@@ -145,6 +149,8 @@ jobs:
         run: |
           dart pub global activate melos 8.6.0
           melos bootstrap
+      - name: Generate + drift check
+        run: melos run generate:check
       - name: Build iOS without codesigning (development)
         run: melos run build:ios:development
       - name: Build iOS without codesigning (qa)
