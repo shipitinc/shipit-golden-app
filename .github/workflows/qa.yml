@@ -34,30 +34,6 @@ jobs:
       - name: Analyze
         run: melos run analyze
 
-  generate-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dart-lang/setup-dart@v1
-        with:
-          sdk: 3.12.2
-      - name: Activate FVM (pinned) and add to PATH
-        run: |
-          dart pub global activate fvm 4.1.2
-          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
-      - name: Install pinned Flutter SDK via FVM (.fvmrc)
-        run: fvm install
-      - name: Add FVM Flutter SDK to PATH
-        run: echo "$HOME/fvm/versions/3.44.7/bin" >> "$GITHUB_PATH"
-      - name: Activate Serverpod CLI (pinned)
-        run: dart pub global activate serverpod_cli 3.4.13
-      - name: Bootstrap
-        run: |
-          dart pub global activate melos 8.6.0
-          melos bootstrap
-      - name: Code generation is up to date
-        run: melos run generate:check
-
   test:
     runs-on: ubuntu-latest
     services:

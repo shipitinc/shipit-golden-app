@@ -65,6 +65,7 @@ Lower-authority artifacts must not silently contradict higher-authority sources.
 - **Business logic does not belong in widgets** — widgets render state, dispatch events; BLoCs coordinate transitions
 - **Loading/mutation feedback uses skeletons, not spinners, except in buttons** — see `docs/design/loading-states.md`; the members table (`member_list.dart`) is the canonical mutation-shimmer reference
 - **Serverpod generated contracts are authoritative for client/server communication**
+- **Generated code is not committed to version control** — Freezed (`*.freezed.dart`), json_serializable (`*.g.dart`), Serverpod server (`apps/server/lib/src/generated/`), and Serverpod client (`packages/app_client/lib/src/protocol/`) outputs are gitignored and regenerated via `melos run generate`
 - **Package boundaries must not be bypassed for convenience** — no direct dependency on implementation libraries hidden behind shipit_ui
 - **Upstream shipit_ui gaps should be reported rather than reimplemented inconsistently** — document as UPSTREAM_UI_GAP
 - **Multi-environment flavors are the standard** — `development` / `qa` / `production`, resolved from the `FLAVOR` dart-define (default `development`); per-flavor app names are prefix-tagged ([Dev]/[QA]) and app IDs follow `io.letsshipit.golden[.qa][.production]`. See `app/lib/core/config/flavor_config.dart` and `product.yaml`.

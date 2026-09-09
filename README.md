@@ -90,7 +90,6 @@ All commands run from repository root via Melos:
 | `melos run generate:server` | Serverpod generate only |
 | `melos run generate:client` | Regenerate Serverpod client package only |
 | `melos run generate:freezed` | Freezed/JSON generation only |
-| `melos run generate:check` | Verify generated code matches committed baselines |
 | `melos run format` | Format all code |
 | `melos run analyze` | Analyze all code |
 | `melos run test` | Run all non-integration tests |

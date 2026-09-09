@@ -101,8 +101,8 @@ dev_dependencies:
          ▼
 2. melos run generate:server     (cd apps/server && serverpod generate)
          │
-         ├── Generates Dart models/endpoints in apps/server/lib/src/generated/  (committed)
-         └── Regenerates the client in packages/app_client/lib/src/protocol/    (committed)
+         ├── Generates Dart models/endpoints in apps/server/lib/src/generated/  (gitignored)
+         └── Regenerates the client in packages/app_client/lib/src/protocol/    (gitignored)
                     │
                     ▼
 3. melos run generate:freezed    (Freezed/JSON build_runner in apps/app)
@@ -111,10 +111,10 @@ dev_dependencies:
 4. All generated code ready for use
 ```
 
-Generated output is **committed by design** so `analyze`, `test`, and fresh
-checkouts work without a prior generate step; see root `.gitignore` and
-`apps/server/.gitignore`. `melos run generate:check` regenerates and fails if
-committed baseline drift is detected (`generate && git diff --exit-code`).
+Generated output is **not committed**; run `melos run generate` after changing
+models, state classes, or endpoints so `analyze` and `test` work on fresh
+checkouts. See root `.gitignore` and `apps/server/.gitignore` for the ignored
+generated paths.
 
 ## FVM Integration
 

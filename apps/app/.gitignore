@@ -31,5 +31,6 @@ coverage/
 # Golden failure artifacts (local diagnostic only; CI uploads them as artifacts)
 test/goldens/failures/
 
-# NOTE: *.freezed.dart and *.g.dart freezed/serialization outputs are COMMITTED
-# by design (they form the immutable state contract). Do not ignore them.
+# Freezed / json_serializable generated code — regenerate with `melos run generate:freezed`
+*.freezed.dart
+*.g.dart

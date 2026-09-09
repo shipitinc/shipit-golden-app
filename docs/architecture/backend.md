@@ -29,8 +29,8 @@ apps/server/
 │   │   ├── household.yaml
 │   │   ├── household_member.yaml
 │   │   └── program.yaml
-│   └── generated/              # Serverpod generated code (committed by design:
-│                               # required for analyze/tests without a generate step)
+│   └── generated/              # Serverpod generated code (gitignored;
+│                               # regenerated via melos run generate:server)
 ├── migrations/                 # Generated migration baseline (applied on boot)
 └── test/
     ├── dart_test.yaml          # integration tag
@@ -139,7 +139,6 @@ Subsequent calls → household/programs accept Bearer access token (requireLogin
 ```bash
 melos run generate:server      # full server generate + regenerated client package
 melos run generate:client      # regenerate client package only
-melos run generate:check       # generate && git diff --exit-code
 ```
 
 `generator.yaml` declares `type: server`, the relative client package path

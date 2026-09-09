@@ -21,10 +21,11 @@ Thumbs.db
 # Melos
 .melos/
 
-# Serverpod generated (committed by design)
-#   - server protocol tree  : apps/server/lib/src/generated/
-#   - app client protocol   : packages/app_client/lib/src/protocol/
-# Do not ignore generated source; the root-level stale rule was removed.
+# Generated code — regenerate with `melos run generate`
+# Serverpod server
+apps/server/lib/src/generated/
+# Serverpod client protocol
+packages/app_client/lib/src/protocol/
 
 # Pubspec locks (committed at root, ignored in packages)
 apps/app/pubspec.lock

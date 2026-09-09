@@ -189,15 +189,16 @@ fvm dart run build_runner build --delete-conflicting-outputs
 ```
 
 ### Generated Files
-- `*.freezed.dart` — Freezed unions (committed)
-- `apps/server/lib/src/generated/` — Serverpod server protocol/endpoints (committed)
-- `packages/app_client/lib/src/protocol/` — Serverpod client protocol/endpoints (committed)
+- `*.freezed.dart` / `*.g.dart` — Freezed / json_serializable (gitignored)
+- `apps/server/lib/src/generated/` — Serverpod server protocol/endpoints (gitignored)
+- `packages/app_client/lib/src/protocol/` — Serverpod client protocol/endpoints (gitignored)
 
 > Serverpod generates plain Dart serialization (HTTP/JSON) — NOT gRPC. The
 > `*.grpc.dart` ignore pattern in `apps/app/.gitignore` / `packages/app_client/.gitignore`
-> is defensive only; no gRPC artifacts exist in this repo. Generated code is
-> committed by design (see root `.gitignore`); never delete it for CI.
-> Run `melos run generate:check` to verify committed baselines match a fresh generate.
+> is defensive only; no gRPC artifacts exist in this repo. Generated code is not
+> committed (see root `.gitignore` and AGENTS.md); run `melos run generate` (or
+> `generate:server` / `generate:freezed`) after changing models, state classes,
+> or endpoints so `analyze` and `test` can run on fresh checkouts.
 
 ## IDE Configuration
 

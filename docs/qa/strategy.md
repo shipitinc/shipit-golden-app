@@ -82,10 +82,9 @@ test/
 | `melos run test:integration` | apps/app integration_test | requires live server + device |
 | `melos run qa` | analyze + test | integration/Patrol are opt-in |
 
-`generate:check` (= `melos run generate && git diff --exit-code`) guards against
-silent regeneration of committed generated/migration baselines by failing the
-pipeline when generated output drifts from the committed baseline (the initial
-`chore: establish canonical Golden App baseline` commit).
+Since generated code is not committed (see AGENTS.md), there is no committed
+baseline to compare against; code generation runs in CI as part of the `test`
+job and locally via `melos run generate`.
 
 ## Unit Tests
 
@@ -183,8 +182,6 @@ requests. Five jobs share one toolchain bootstrap (documented in
 `docs/architecture/flutter-toolchain.md`):
 
 - **analyze** — `melos run analyze` (`fvm dart analyze .`)
-- **generate-check** — `melos run generate:check` (regeneration must produce no
-  diff against the committed baseline)
 - **test** — `melos run generate` then `melos run test`
   (unit + server + Flutter), with a PostgreSQL 16 service for the DB-backed
   `test:server` suite

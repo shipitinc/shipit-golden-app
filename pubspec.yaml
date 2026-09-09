@@ -39,10 +39,6 @@ melos:
         - generate:server
         - generate:freezed
 
-    generate:check:
-      description: Verify generated code is up to date with committed baselines.
-      run: melos run generate && git diff --exit-code
-
     generate:server:
       description: Serverpod generate only (server code + regenerated client package).
       run: cd apps/server && serverpod generate
