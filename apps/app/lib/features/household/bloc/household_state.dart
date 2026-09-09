@@ -12,6 +12,7 @@ sealed class HouseholdState with _$HouseholdState {
   const factory HouseholdState.loaded({
     required Household household,
     required List<HouseholdMember> members,
+    @Default(false) bool isMembersMutating,
   }) = HouseholdLoaded;
   const factory HouseholdState.failure({required AppFailure failure}) =
       HouseholdFailure;

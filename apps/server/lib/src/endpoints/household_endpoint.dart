@@ -45,6 +45,7 @@ class HouseholdEndpoint extends Endpoint {
     String name,
     String email,
   ) async {
+    await _simulateNetworkLatency();
     final member = HouseholdMember(
       id: _nextId++,
       householdId: 'household_1',
@@ -58,6 +59,14 @@ class HouseholdEndpoint extends Endpoint {
   }
 
   Future<void> removeMember(Session session, String memberId) async {
+    await _simulateNetworkLatency();
     _members.removeWhere((m) => m.id.toString() == memberId);
+  }
+
+  /// Deliberately mimics the latency of a real backend so loading/shimmer
+  /// states (e.g. the members-table shimmer) are visible while developing
+  /// against the local stub.
+  Future<void> _simulateNetworkLatency() async {
+    await Future<void>.delayed(const Duration(milliseconds: 600));
   }
 }

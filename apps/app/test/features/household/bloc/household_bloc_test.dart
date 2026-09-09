@@ -133,6 +133,16 @@ void main() {
             ownerId: 'u1',
             createdAt: DateTime(2026, 1, 1),
           ),
+          members: <HouseholdMember>[],
+          isMembersMutating: true,
+        ),
+        HouseholdState.loaded(
+          household: Household(
+            id: '1',
+            name: 'My Household',
+            ownerId: 'u1',
+            createdAt: DateTime(2026, 1, 1),
+          ),
           members: [
             HouseholdMember(
               id: 'm2',
@@ -176,6 +186,25 @@ void main() {
       act: (bloc) =>
           bloc.add(const HouseholdEvent.memberRemoved(memberId: 'm1')),
       expect: () => [
+        HouseholdState.loaded(
+          household: Household(
+            id: '1',
+            name: 'My Household',
+            ownerId: 'u1',
+            createdAt: DateTime(2026, 1, 1),
+          ),
+          members: [
+            HouseholdMember(
+              id: 'm1',
+              householdId: '1',
+              name: 'Jane',
+              email: 'jane@example.com',
+              role: 'member',
+              joinedAt: DateTime(2026, 1, 2),
+            ),
+          ],
+          isMembersMutating: true,
+        ),
         HouseholdState.loaded(
           household: Household(
             id: '1',

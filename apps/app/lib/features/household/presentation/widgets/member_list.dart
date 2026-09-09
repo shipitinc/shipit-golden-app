@@ -7,8 +7,9 @@ import 'package:shipit_golden_app/features/household/bloc/household_event.dart';
 
 class MemberList extends StatelessWidget {
   final List<HouseholdMember> members;
+  final bool isMutating;
 
-  const MemberList({super.key, required this.members});
+  const MemberList({super.key, required this.members, this.isMutating = false});
 
   @override
   Widget build(BuildContext context) {
@@ -17,28 +18,60 @@ class MemberList extends StatelessWidget {
       children: [
         Text('Members (${members.length})', style: AppTypography.titleMedium),
         SizedBox(height: AppSpacing.space3),
-        AppDataTable<HouseholdMember>(
-          columns: [
-            AppDataColumn.text(
-              label: 'Name',
-              value: (member) => member.name,
-              comparator: (a, b) => a.name.compareTo(b.name),
-            ),
-            AppDataColumn.text(
-              label: 'Email',
-              value: (member) => member.email,
-              comparator: (a, b) => a.email.compareTo(b.email),
-            ),
-            AppDataColumn(
-              label: '',
-              cellBuilder: (context, member) => _MemberRowMenu(member: member),
-            ),
-          ],
-          rows: members,
-          emptyTitle: 'No members yet',
-          emptyDescription: 'Tap the + button to add a member',
-        ),
+        if (isMutating)
+          const _MembersTableShimmer()
+        else
+          AppDataTable<HouseholdMember>(
+            columns: [
+              AppDataColumn.text(
+                label: 'Name',
+                value: (member) => member.name,
+                comparator: (a, b) => a.name.compareTo(b.name),
+              ),
+              AppDataColumn.text(
+                label: 'Email',
+                value: (member) => member.email,
+                comparator: (a, b) => a.email.compareTo(b.email),
+              ),
+              AppDataColumn(
+                label: '',
+                cellBuilder: (context, member) =>
+                    _MemberRowMenu(member: member),
+              ),
+            ],
+            rows: members,
+            emptyTitle: 'No members yet',
+            emptyDescription: 'Tap the + button to add a member',
+          ),
       ],
+    );
+  }
+}
+
+/// Shimmer silhouette of the members table, shown while an add/remove
+/// operation is in flight so the table never blanks out mid-mutation.
+class _MembersTableShimmer extends StatelessWidget {
+  const _MembersTableShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return AppSkeleton.shimmer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (var i = 0; i < 3; i++)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.space3),
+              child: Row(
+                children: [
+                  Expanded(child: AppSkeleton.line(width: 180)),
+                  SizedBox(width: AppSpacing.space8),
+                  Expanded(child: AppSkeleton.line(width: 240)),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

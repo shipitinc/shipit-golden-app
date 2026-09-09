@@ -63,6 +63,7 @@ Lower-authority artifacts must not silently contradict higher-authority sources.
 - **BLoC + Freezed is the standard feature/application state-management pattern**
 - **Application state is immutable** — no mutable collections exposed from state objects
 - **Business logic does not belong in widgets** — widgets render state, dispatch events; BLoCs coordinate transitions
+- **Loading/mutation feedback uses skeletons, not spinners, except in buttons** — see `docs/design/loading-states.md`; the members table (`member_list.dart`) is the canonical mutation-shimmer reference
 - **Serverpod generated contracts are authoritative for client/server communication**
 - **Package boundaries must not be bypassed for convenience** — no direct dependency on implementation libraries hidden behind shipit_ui
 - **Upstream shipit_ui gaps should be reported rather than reimplemented inconsistently** — document as UPSTREAM_UI_GAP

@@ -125,12 +125,12 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( Household household,  List<HouseholdMember> members)?  loaded,TResult Function( AppFailure failure)?  failure,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( Household household,  List<HouseholdMember> members,  bool isMembersMutating)?  loaded,TResult Function( AppFailure failure)?  failure,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case HouseholdInitial() when initial != null:
 return initial();case HouseholdLoading() when loading != null:
 return loading();case HouseholdLoaded() when loaded != null:
-return loaded(_that.household,_that.members);case HouseholdFailure() when failure != null:
+return loaded(_that.household,_that.members,_that.isMembersMutating);case HouseholdFailure() when failure != null:
 return failure(_that.failure);case _:
   return orElse();
 
@@ -149,12 +149,12 @@ return failure(_that.failure);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( Household household,  List<HouseholdMember> members)  loaded,required TResult Function( AppFailure failure)  failure,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( Household household,  List<HouseholdMember> members,  bool isMembersMutating)  loaded,required TResult Function( AppFailure failure)  failure,}) {final _that = this;
 switch (_that) {
 case HouseholdInitial():
 return initial();case HouseholdLoading():
 return loading();case HouseholdLoaded():
-return loaded(_that.household,_that.members);case HouseholdFailure():
+return loaded(_that.household,_that.members,_that.isMembersMutating);case HouseholdFailure():
 return failure(_that.failure);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -169,12 +169,12 @@ return failure(_that.failure);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( Household household,  List<HouseholdMember> members)?  loaded,TResult? Function( AppFailure failure)?  failure,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( Household household,  List<HouseholdMember> members,  bool isMembersMutating)?  loaded,TResult? Function( AppFailure failure)?  failure,}) {final _that = this;
 switch (_that) {
 case HouseholdInitial() when initial != null:
 return initial();case HouseholdLoading() when loading != null:
 return loading();case HouseholdLoaded() when loaded != null:
-return loaded(_that.household,_that.members);case HouseholdFailure() when failure != null:
+return loaded(_that.household,_that.members,_that.isMembersMutating);case HouseholdFailure() when failure != null:
 return failure(_that.failure);case _:
   return null;
 
@@ -251,7 +251,7 @@ String toString() {
 
 
 class HouseholdLoaded implements HouseholdState {
-  const HouseholdLoaded({required this.household, required final  List<HouseholdMember> members}): _members = members;
+  const HouseholdLoaded({required this.household, required final  List<HouseholdMember> members, this.isMembersMutating = false}): _members = members;
   
 
  final  Household household;
@@ -262,6 +262,7 @@ class HouseholdLoaded implements HouseholdState {
   return EqualUnmodifiableListView(_members);
 }
 
+@JsonKey() final  bool isMembersMutating;
 
 /// Create a copy of HouseholdState
 /// with the given fields replaced by the non-null parameter values.
@@ -273,16 +274,16 @@ $HouseholdLoadedCopyWith<HouseholdLoaded> get copyWith => _$HouseholdLoadedCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HouseholdLoaded&&(identical(other.household, household) || other.household == household)&&const DeepCollectionEquality().equals(other._members, _members));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HouseholdLoaded&&(identical(other.household, household) || other.household == household)&&const DeepCollectionEquality().equals(other._members, _members)&&(identical(other.isMembersMutating, isMembersMutating) || other.isMembersMutating == isMembersMutating));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,household,const DeepCollectionEquality().hash(_members));
+int get hashCode => Object.hash(runtimeType,household,const DeepCollectionEquality().hash(_members),isMembersMutating);
 
 @override
 String toString() {
-  return 'HouseholdState.loaded(household: $household, members: $members)';
+  return 'HouseholdState.loaded(household: $household, members: $members, isMembersMutating: $isMembersMutating)';
 }
 
 
@@ -293,7 +294,7 @@ abstract mixin class $HouseholdLoadedCopyWith<$Res> implements $HouseholdStateCo
   factory $HouseholdLoadedCopyWith(HouseholdLoaded value, $Res Function(HouseholdLoaded) _then) = _$HouseholdLoadedCopyWithImpl;
 @useResult
 $Res call({
- Household household, List<HouseholdMember> members
+ Household household, List<HouseholdMember> members, bool isMembersMutating
 });
 
 
@@ -310,11 +311,12 @@ class _$HouseholdLoadedCopyWithImpl<$Res>
 
 /// Create a copy of HouseholdState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? household = null,Object? members = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? household = null,Object? members = null,Object? isMembersMutating = null,}) {
   return _then(HouseholdLoaded(
 household: null == household ? _self.household : household // ignore: cast_nullable_to_non_nullable
 as Household,members: null == members ? _self._members : members // ignore: cast_nullable_to_non_nullable
-as List<HouseholdMember>,
+as List<HouseholdMember>,isMembersMutating: null == isMembersMutating ? _self.isMembersMutating : isMembersMutating // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

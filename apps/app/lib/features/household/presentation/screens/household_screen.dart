@@ -91,7 +91,10 @@ class HouseholdView extends StatelessWidget {
                   children: [
                     HouseholdHeader(household: household),
                     SizedBox(height: AppSpacing.space6),
-                    MemberList(members: members),
+                    MemberList(
+                      members: members,
+                      isMutating: state.isMembersMutating,
+                    ),
                   ],
                 ),
               ),

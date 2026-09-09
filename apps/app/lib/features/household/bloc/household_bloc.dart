@@ -61,6 +61,13 @@ class HouseholdBloc extends Bloc<HouseholdEvent, HouseholdState> {
   ) async {
     if (state is HouseholdLoaded) {
       final currentState = state as HouseholdLoaded;
+      emit(
+        HouseholdState.loaded(
+          household: currentState.household,
+          members: currentState.members,
+          isMembersMutating: true,
+        ),
+      );
       final result = await _repository.addMember(event.name, event.email);
       result.when(
         success: (member) {
@@ -84,6 +91,13 @@ class HouseholdBloc extends Bloc<HouseholdEvent, HouseholdState> {
   ) async {
     if (state is HouseholdLoaded) {
       final currentState = state as HouseholdLoaded;
+      emit(
+        HouseholdState.loaded(
+          household: currentState.household,
+          members: currentState.members,
+          isMembersMutating: true,
+        ),
+      );
       final result = await _repository.removeMember(event.memberId);
       result.when(
         success: (_) {
