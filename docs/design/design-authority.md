@@ -159,23 +159,29 @@ MaterialApp(
 ## Golden Baselines
 
 ### Policy
-- All currently-committed baselines are candidate `DESIGN_PENDING` baselines
-  (see `apps/app/test/goldens/goldens_registry.md`). They preserve current
-  rendering so visual regressions fail CI with a diff.
+- Committed baselines carry a status in
+  `apps/app/test/goldens/goldens_registry.md`: `APPROVED` (reviewed and
+  approved against an approved design revision; the visual contract) or
+  `DESIGN_PENDING` (candidate preserving current rendering so visual
+  regressions fail CI with a diff). The login baselines
+  (`login_sign_in.png`, `login_register.png`) were promoted to `APPROVED` on
+  2026-09-08 against `shipit_ui@1207004`.
 - Approved goldens = visual contract; `flutter test --update-goldens` is NOT a
   fix. Promoting to `APPROVED` (and any subsequent regeneration) requires:
   1. Design authority approval
-  2. Corresponding Penpot revision
+  2. Corresponding design revision
   3. Updated golden + registry update in the same commit
+- Regenerate baselines only on the Linux CI host via
+  `.github/workflows/goldens-update.yml` (macOS renders text ~1% differently).
 
 ### Golden Test Structure
 ```
 test/goldens/
-├── goldens_registry.md      # status list (DESIGN_PENDING / APPROVED)
-├── golden_policy_test.dart  # registry conformance + candidate baselines
+├── goldens_registry.md      # status list (APPROVED / DESIGN_PENDING)
+├── golden_policy_test.dart  # registry conformance + approved baselines
 └── goldens/
-    ├── login_sign_in.png    # DESIGN_PENDING
-    └── login_register.png   # DESIGN_PENDING
+    ├── login_sign_in.png    # APPROVED (shipit_ui@1207004, 2026-09-08)
+    └── login_register.png   # APPROVED (shipit_ui@1207004, 2026-09-08)
 ```
 
 ## Upstream Gaps

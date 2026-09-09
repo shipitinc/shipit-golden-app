@@ -106,21 +106,24 @@ integration tests and the real live failure-injection checks.
 
 ## Golden Policy
 
-See `apps/app/test/goldens/goldens_registry.md`. Baselines are
-`DESIGN_PENDING` candidate baselines (currently `login_sign_in.png`,
-`login_register.png`). `golden_policy_test.dart` enforces that every listed
-baseline exists and remains `DESIGN_PENDING` — no baseline may be silently
-promoted to `APPROVED` or silently regenerated.
+See `apps/app/test/goldens/goldens_registry.md`. Baselines are enforced by
+`golden_policy_test.dart`: each listed baseline must exist with a valid status
+— `APPROVED` (`login_sign_in.png`, `login_register.png`, promoted 2026-09-08
+against `shipit_ui@1207004`) or `DESIGN_PENDING` (candidate) — and an
+`APPROVED` baseline must reference its design revision. No baseline may be
+silently promoted or silently regenerated.
 
 Regenerating a baseline requires design/human approval:
 
 1. Restore the baseline (`git checkout -- <file>` or re-copy from the PR).
 2. Update `goldens_registry.md` describing the change.
-3. Note the `DESIGN_PENDING` → `APPROVED` transition against an approved Penpot
-   revision (or keep `DESIGN_PENDING`).
+3. Reference the design revision the (re)generated baseline is approved
+   against. Baselines regenerate only on the Linux CI host via
+   `.github/workflows/goldens-update.yml` — macOS renders text ~1% differently
+   and is never used for regeneration (`--update-goldens` on a dev machine).
 
-> These PNG baselines cannot be reviewed by an automated agent (image input is
-> not available), so they remain `DESIGN_PENDING` pending design review.
+> PNG baselines cannot be auto-reviewed by an agent; promotion to `APPROVED`
+> is a design/human decision, recorded in the registry.
 
 ## Accessibility
 

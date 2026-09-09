@@ -8,22 +8,26 @@ import 'package:shipit_golden_app/features/authentication/presentation/screens/l
 
 /// Golden baseline policy.
 ///
-/// These baselines are CANDIDATE DESIGN_PENDING baselines: they preserve the
-/// current rendered output so future visual changes are intentional and
-/// reviewable. They are NOT approved product baselines yet.
+/// Baselines carry a status in `goldens/goldens_registry.md`:
+///   - `APPROVED` — reviewed and approved against an approved design revision
+///     (login screens, promoted 2026-09-08). These are the visual contract.
+///   - `DESIGN_PENDING` — candidate baselines preserving current rendered
+///     output so future visual changes are intentional and reviewable on their
+///     way to design approval.
 ///
 /// Per AEF + AGENTS.md, approved golden baselines must never be silently
 /// regenerated. Regenerating a baseline REQUIRES design/human approval:
 ///   - restore the golden (`git checkout -- <file>` or re-copy from the PR),
 ///   - update `test/goldens/goldens_registry.md` to record the change, and
-///   - note the DESIGN_PENDING -> APPROVED transition (or keep DESIGN_PENDING).
+///   - note the design revision the new baseline is approved against.
 ///
-/// To (re)generate candidate baselines locally:
+/// To (re)generate candidate DESIGN_PENDING baselines locally:
 ///
 ///     fvm flutter test test/goldens --update-goldens
 void main() {
   group('golden baseline registry conformance', () {
-    test('every listed baseline exists and is DESIGN_PENDING', () {
+    test('every listed baseline exists, has a valid status, and approved '
+        'baselines reference a design revision', () {
       const registryPath = 'test/goldens/goldens_registry.md';
       final registry = File(registryPath).readAsLinesSync();
       final baselineRows = registry
@@ -35,21 +39,36 @@ void main() {
         isNotEmpty,
         reason: 'registry must list at least one baseline',
       );
-      for (final row in baselineRows) {
-        expect(
-          row,
-          contains('DESIGN_PENDING'),
-          reason:
-              'no baseline may be silently promoted to APPROVED without '
-              'design/human approval; update the registry deliberately.\n'
-              'Row: $row',
-        );
-      }
 
-      final listedFiles = baselineRows
-          .map((row) => RegExp('`(goldens/[^`]+)`').firstMatch(row)!.group(1)!)
-          .toList();
-      for (final file in listedFiles) {
+      const allowedStatuses = {'DESIGN_PENDING', 'APPROVED'};
+      for (final row in baselineRows) {
+        final columns = row
+            .split('|')
+            .map((cell) => cell.trim())
+            .where((cell) => cell.isNotEmpty)
+            .toList();
+        expect(columns.length, greaterThanOrEqualTo(4),
+            reason: 'malformed registry row: $row');
+        final file = columns[0].replaceAll('`', '');
+        final status = columns[2];
+        final designRevision = columns[3];
+
+        expect(
+          allowedStatuses.contains(status),
+          isTrue,
+          reason: 'unknown baseline status "$status" in:\n$row\n'
+              'Expected one of: $allowedStatuses',
+        );
+        if (status == 'APPROVED') {
+          expect(
+            designRevision.isNotEmpty && designRevision != '(none)',
+            isTrue,
+            reason:
+                'an APPROVED baseline must reference the design revision it '
+                'was approved against.\n'
+                'Row: $row',
+          );
+        }
         expect(
           File('test/goldens/$file').existsSync(),
           isTrue,
@@ -59,7 +78,7 @@ void main() {
     });
   });
 
-  group('candidate DESIGN_PENDING golden baselines', () {
+  group('approved golden baselines', () {
     late AuthenticationBloc loginBloc;
 
     setUp(() {
