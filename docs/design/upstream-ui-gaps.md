@@ -119,6 +119,23 @@ within the revision range `2a916a5..1207004`.
   validators inside a `Form`; the upgrade activates per-field error messages
   with no code change
 
+### UPSTREAM_UI_GAP-011: shipitDarkTheme() broken (light surfaces + white text)
+- **Desired Component**: `shipitDarkTheme()` that renders genuinely dark surfaces
+  with high-contrast text, via dark-adapted semantic tokens
+- **Reason**: Dark mode in the Golden App is broken — `shipitDarkTheme()`
+  reuses the static light `AppColors` for scaffold/card/appbar/input surfaces
+  (`bgBaseColor` `#F8FAFC`, `bgSubtleColor` `#F1F5F9`) while `darkTextTheme`
+  paints all text `fgInverseColor` (`#FFFFFF`), so surfaces stay light and text
+  becomes nearly invisible. Only M3-dark-`ColorScheme`-driven parts (icons,
+  primaries) respond, matching the observed "only icons adapt" symptom
+- **Recommended Owner**: shipit-ui
+- **Issue**: [shipitinc/shipit-ui#10](https://github.com/shipitinc/shipit-ui/issues/10) — open
+- **Status**: reported (2026-09-08)
+- **Workaround**: none — surfaces/text read from `MaterialApp` themes
+  (`shipitLightTheme`/`shipitDarkTheme`) with no app-side override; awaiting
+  the eventual shipit_ui dark-token revision (values must trace to approved
+  Penpot dark tokens per design-authority)
+
 ## Reporting Process
 
 When discovering a gap:
