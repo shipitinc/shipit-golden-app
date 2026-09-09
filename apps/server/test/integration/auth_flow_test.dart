@@ -3,6 +3,8 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     hide Protocol;
 import 'package:shipit_golden_server/src/auth/auth_setup.dart';
+import 'package:shipit_golden_server/src/generated/protocol.dart'
+    show EmailAlreadyRegisteredException;
 import 'package:test/test.dart';
 
 import 'test_tools/serverpod_test_tools.dart';
@@ -84,6 +86,24 @@ void main() {
             throwsA(isA<EmailAccountLoginException>()),
           );
         });
+
+        test(
+          'then registering the same email again surfaces a duplicate-account '
+          'error instead of silently swallowing it',
+          () async {
+            // Serverpod's built-in email IDP would return a fake request id
+            // (anti account-enumeration); the golden app deliberately surfaces
+            // the duplicate for product clarity — see
+            // EmailAlreadyRegisteredException.
+            expect(
+              () => endpoints.auth.startRegistration(
+                sessionBuilder,
+                email: email,
+              ),
+              throwsA(isA<EmailAlreadyRegisteredException>()),
+            );
+          },
+        );
       },
       rollbackDatabase: RollbackDatabase.disabled,
     );

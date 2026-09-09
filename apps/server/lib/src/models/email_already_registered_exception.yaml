@@ -1,0 +1,9 @@
+### Serialized to the app client so the registration form can tell the user
+### that an account already exists for the email they entered.
+###
+### Serverpod's built-in email IDP deliberately swallows this case (anti
+### account-enumeration) and returns a fake registration request id. The golden
+### app overrides AuthEndpoint.startRegistration to surface it as first-class
+### product behaviour, at the cost of leaking whether an email is registered.
+exception: EmailAlreadyRegisteredException
+fields: {}

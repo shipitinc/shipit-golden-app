@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_client/app_client.dart' as api;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart';
 import 'package:shipit_golden_app/core/errors/app_failure.dart';
 
@@ -8,12 +9,20 @@ import 'package:shipit_golden_app/core/errors/app_failure.dart';
 ///
 /// Messages are intentionally user-facing: they do not leak internal
 /// exception text or stack traces into the UI.
+///
+/// Genuine, user-correctable causes (e.g. expired verification codes, an
+/// email that is already registered) are surfaced with an actionable message.
+/// Developer-internal errors (bad payloads, server faults, unexpected
+/// exceptions) stay generic so they never expose implementation detail.
 AppFailure mapAppFailure(Object error, {String? operation}) {
   return switch (error) {
-    EmailAccountRequestException() => AppFailure.validation(
+    api.EmailAlreadyRegisteredException() => AppFailure.validation(
       message:
-          'Registration could not be completed. Please request a new '
-          'verification code and try again.',
+          'An account already exists for this email address. '
+          'Try signing in instead.',
+    ),
+    EmailAccountRequestException() => AppFailure.validation(
+      message: registrationRequestFailureMessage(error),
     ),
     AuthUserBlockedException() => AppFailure.auth(
       message: 'This account has been locked. Please contact support.',
@@ -38,6 +47,14 @@ AppFailure mapAppFailure(Object error, {String? operation}) {
     ServerpodClientBadRequest() => AppFailure.validation(
       message: 'The request was not valid. Please check your input.',
     ),
+    ServerpodClientException(statusCode: final statusCode)
+        when statusCode == 0 || statusCode == -1 =>
+      AppFailure.network(
+        message:
+            'Could not reach the server. Please check your connection '
+            'and try again.',
+        code: 'server_unreachable',
+      ),
     ServerpodClientException() => AppFailure.server(
       message: 'The server responded with an unexpected error.',
       statusCode: error.statusCode,
@@ -62,5 +79,28 @@ String loginFailureMessage(EmailAccountLoginException e) {
       'Too many sign-in attempts. Please try again later.',
     EmailAccountLoginExceptionReason.unknown =>
       'Sign in failed. Please try again.',
+  };
+}
+
+/// Human-readable message for a thrown [EmailAccountRequestException].
+///
+/// Granular only for genuinely user-correctable causes; everything else
+/// (including [EmailAccountRequestExceptionReason.unknown]) falls back to a
+/// generic retry message.
+String registrationRequestFailureMessage(EmailAccountRequestException error) {
+  return switch (error.reason) {
+    EmailAccountRequestExceptionReason.expired =>
+      'This verification code has expired. Please request a new one.',
+    EmailAccountRequestExceptionReason.invalid =>
+      'This verification code is incorrect. Please check it and try again.',
+    EmailAccountRequestExceptionReason.policyViolation =>
+      'That password does not meet the requirements. Please choose a '
+          'stronger one.',
+    EmailAccountRequestExceptionReason.tooManyAttempts =>
+      'Too many verification attempts. Please request a new code and try '
+          'again later.',
+    EmailAccountRequestExceptionReason.unknown =>
+      'Registration could not be completed. Please request a new verification '
+          'code and try again.',
   };
 }

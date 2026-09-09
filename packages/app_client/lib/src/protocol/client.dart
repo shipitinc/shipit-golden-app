@@ -34,6 +34,22 @@ class EndpointAuth extends _i1.EndpointEmailIdpBase {
   @override
   String get name => 'auth';
 
+  /// Starts registration but surfaces a duplicate email as a first-class error
+  /// instead of Serverpod's default silently-swallow behaviour (built-in
+  /// anti account-enumeration).
+  ///
+  /// NOTE: this deliberately reveals whether an email is already registered —
+  /// a product decision for the reference app (see
+  /// `email_already_registered_exception.yaml`). Keep the price in mind and
+  /// only surface this in a real product if that trade-off is accepted.
+  @override
+  _i3.Future<_i2.UuidValue> startRegistration({required String email}) =>
+      caller.callServerEndpoint<_i2.UuidValue>(
+        'auth',
+        'startRegistration',
+        {'email': email},
+      );
+
   /// Logs in the user and returns a new session.
   ///
   /// Throws an [EmailAccountLoginException] in case of errors, with reason:
@@ -55,24 +71,6 @@ class EndpointAuth extends _i1.EndpointEmailIdpBase {
       'password': password,
     },
   );
-
-  /// Starts the registration for a new user account with an email-based login
-  /// associated to it.
-  ///
-  /// Upon successful completion of this method, an email will have been
-  /// sent to [email] with a verification link, which the user must open to
-  /// complete the registration.
-  ///
-  /// Always returns a account request ID, which can be used to complete the
-  /// registration. If the email is already registered, the returned ID will not
-  /// be valid.
-  @override
-  _i3.Future<_i2.UuidValue> startRegistration({required String email}) =>
-      caller.callServerEndpoint<_i2.UuidValue>(
-        'auth',
-        'startRegistration',
-        {'email': email},
-      );
 
   /// Verifies an account request code and returns a token
   /// that can be used to complete the account creation.

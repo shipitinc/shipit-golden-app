@@ -46,6 +46,17 @@ class AuthRepository {
     try {
       final requestId = await _client.auth.startRegistration(email: email);
       return Result.success(requestId);
+    } on api.EmailAlreadyRegisteredException {
+      // Genuine, user-correctable cause: the email is taken. Serverpod's
+      // built-in email IDP would silently swallow this (anti
+      // account-enumeration); see AuthEndpoint.startRegistration.
+      return Result.failure(
+        AppFailure.validation(
+          message:
+              'An account already exists for this email address. '
+              'Try signing in instead.',
+        ),
+      );
     } catch (e) {
       return Result.failure(mapAppFailure(e));
     }

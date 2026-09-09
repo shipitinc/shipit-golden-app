@@ -12,15 +12,17 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'household.dart' as _i2;
-import 'household_member.dart' as _i3;
-import 'program.dart' as _i4;
-import 'package:app_client/src/protocol/household_member.dart' as _i5;
-import 'package:app_client/src/protocol/program.dart' as _i6;
+import 'email_already_registered_exception.dart' as _i2;
+import 'household.dart' as _i3;
+import 'household_member.dart' as _i4;
+import 'program.dart' as _i5;
+import 'package:app_client/src/protocol/household_member.dart' as _i6;
+import 'package:app_client/src/protocol/program.dart' as _i7;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i7;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i8;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i9;
+export 'email_already_registered_exception.dart';
 export 'household.dart';
 export 'household_member.dart';
 export 'program.dart';
@@ -60,48 +62,58 @@ class Protocol extends _i1.SerializationManager {
       }
     }
 
-    if (t == _i2.Household) {
-      return _i2.Household.fromJson(data) as T;
+    if (t == _i2.EmailAlreadyRegisteredException) {
+      return _i2.EmailAlreadyRegisteredException.fromJson(data) as T;
     }
-    if (t == _i3.HouseholdMember) {
-      return _i3.HouseholdMember.fromJson(data) as T;
+    if (t == _i3.Household) {
+      return _i3.Household.fromJson(data) as T;
     }
-    if (t == _i4.Program) {
-      return _i4.Program.fromJson(data) as T;
+    if (t == _i4.HouseholdMember) {
+      return _i4.HouseholdMember.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i2.Household?>()) {
-      return (data != null ? _i2.Household.fromJson(data) : null) as T;
+    if (t == _i5.Program) {
+      return _i5.Program.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i3.HouseholdMember?>()) {
-      return (data != null ? _i3.HouseholdMember.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i2.EmailAlreadyRegisteredException?>()) {
+      return (data != null
+              ? _i2.EmailAlreadyRegisteredException.fromJson(data)
+              : null)
+          as T;
     }
-    if (t == _i1.getType<_i4.Program?>()) {
-      return (data != null ? _i4.Program.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i3.Household?>()) {
+      return (data != null ? _i3.Household.fromJson(data) : null) as T;
     }
-    if (t == List<_i5.HouseholdMember>) {
+    if (t == _i1.getType<_i4.HouseholdMember?>()) {
+      return (data != null ? _i4.HouseholdMember.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i5.Program?>()) {
+      return (data != null ? _i5.Program.fromJson(data) : null) as T;
+    }
+    if (t == List<_i6.HouseholdMember>) {
       return (data as List)
-              .map((e) => deserialize<_i5.HouseholdMember>(e))
+              .map((e) => deserialize<_i6.HouseholdMember>(e))
               .toList()
           as T;
     }
-    if (t == List<_i6.Program>) {
-      return (data as List).map((e) => deserialize<_i6.Program>(e)).toList()
+    if (t == List<_i7.Program>) {
+      return (data as List).map((e) => deserialize<_i7.Program>(e)).toList()
           as T;
     }
     try {
-      return _i7.Protocol().deserialize<T>(data, t);
+      return _i8.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
-      return _i8.Protocol().deserialize<T>(data, t);
+      return _i9.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
-      _i2.Household => 'Household',
-      _i3.HouseholdMember => 'HouseholdMember',
-      _i4.Program => 'Program',
+      _i2.EmailAlreadyRegisteredException => 'EmailAlreadyRegisteredException',
+      _i3.Household => 'Household',
+      _i4.HouseholdMember => 'HouseholdMember',
+      _i5.Program => 'Program',
       _ => null,
     };
   }
@@ -119,18 +131,20 @@ class Protocol extends _i1.SerializationManager {
     }
 
     switch (data) {
-      case _i2.Household():
+      case _i2.EmailAlreadyRegisteredException():
+        return 'EmailAlreadyRegisteredException';
+      case _i3.Household():
         return 'Household';
-      case _i3.HouseholdMember():
+      case _i4.HouseholdMember():
         return 'HouseholdMember';
-      case _i4.Program():
+      case _i5.Program():
         return 'Program';
     }
-    className = _i7.Protocol().getClassNameForObject(data);
+    className = _i8.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i8.Protocol().getClassNameForObject(data);
+    className = _i9.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -143,22 +157,25 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
+    if (dataClassName == 'EmailAlreadyRegisteredException') {
+      return deserialize<_i2.EmailAlreadyRegisteredException>(data['data']);
+    }
     if (dataClassName == 'Household') {
-      return deserialize<_i2.Household>(data['data']);
+      return deserialize<_i3.Household>(data['data']);
     }
     if (dataClassName == 'HouseholdMember') {
-      return deserialize<_i3.HouseholdMember>(data['data']);
+      return deserialize<_i4.HouseholdMember>(data['data']);
     }
     if (dataClassName == 'Program') {
-      return deserialize<_i4.Program>(data['data']);
+      return deserialize<_i5.Program>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i7.Protocol().deserializeByClassName(data);
+      return _i8.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i8.Protocol().deserializeByClassName(data);
+      return _i9.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
@@ -173,10 +190,10 @@ class Protocol extends _i1.SerializationManager {
       return null;
     }
     try {
-      return _i7.Protocol().mapRecordToJson(record);
+      return _i8.Protocol().mapRecordToJson(record);
     } catch (_) {}
     try {
-      return _i8.Protocol().mapRecordToJson(record);
+      return _i9.Protocol().mapRecordToJson(record);
     } catch (_) {}
     throw Exception('Unsupported record type ${record.runtimeType}');
   }
