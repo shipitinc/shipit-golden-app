@@ -35,11 +35,19 @@ void main() {
     final appTextFields = find.byType(AppTextField);
     expect(appTextFields, findsNWidgets(2));
 
-    final emailSemantics = tester.getSemantics(appTextFields.at(0));
-    expect(emailSemantics.label, contains('Email'));
+    // AppTextField (shipit_ui) exposes the label on the internal input's
+    // semantics node: text-field flag + "Email\nEmail".
+    final emailInput = find.descendant(
+      of: appTextFields.at(0),
+      matching: find.byType(TextField),
+    );
+    expect(tester.getSemantics(emailInput).label, contains('Email'));
 
-    final passwordSemantics = tester.getSemantics(appTextFields.at(1));
-    expect(passwordSemantics.label, contains('Password'));
+    final passwordInput = find.descendant(
+      of: appTextFields.at(1),
+      matching: find.byType(TextField),
+    );
+    expect(tester.getSemantics(passwordInput).label, contains('Password'));
   });
 
   testWidgets('sign-in button meets minimum touch target size', (tester) async {

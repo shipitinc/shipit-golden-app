@@ -3,17 +3,22 @@
 Tracking components needed by Golden App that don't exist in shipit_ui.
 
 > **Status of this document:** reviewed against shipit_ui revision
-> `01f0720` (2026-09-08, the revision pinned in `apps/app/pubspec.yaml`).
+> `1207004` (2026-09-08, the revision pinned in `apps/app/pubspec.yaml`).
 > GAP-001 through GAP-008 shipped upstream and the Golden App now consumes the
-> components (see **Resolved Gaps** below). GAP-009 (Inter font bundling) remains
-> open and is tracked as
-> [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8).
+> components (see **Resolved Gaps** below). GAP-009's runtime part (Inter font
+> bundling) shipped upstream as
+> [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8);
+> only the Golden App test font-pin + golden-baseline regeneration remain
+> (needs Linux + design/human approval). GAP-010 (AppTextField validation text)
+> shipped upstream as
+> [shipitinc/shipit-ui#9](https://github.com/shipitinc/shipit-ui/issues/9) and
+> the Golden App now consumes it — see below.
 
 ## Resolved Gaps
 
 These gaps shipped in shipit_ui and the Golden App migrated to the upstream
 components. The `shipit_ui` column records the commit that closed the gap
-within the revision range `2a916a5..01f0720`.
+within the revision range `2a916a5..1207004`.
 
 ### UPSTREAM_UI_GAP-001: AppNavigationRail
 - **Desired Component**: Navigation rail for desktop/tablet layouts
@@ -90,9 +95,31 @@ within the revision range `2a916a5..01f0720`.
   web falls back to the platform default because neither shipit_ui nor the app
   ships the font asset
 - **Recommended Owner**: shipit-ui
-- **Status**: reported — [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8)
-- **Workaround**: `flutter_test_config.dart` `FontLoader('Inter')` → Roboto TTF
-  in golden tests; production web renders with a default fallback
+- **shipit_ui**: runtime bundling shipped in `5d6b34a` (issue closed); Golden App
+  side remains open
+- **Status**: resolved upstream — [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8) closed
+- **Remaining (Golden App)**: `flutter_test_config.dart` still pins the resolved
+  families (`Inter` / `packages/shipit_ui/Inter`) to golden_toolkit's Roboto so
+  approved baselines stay reviewable; swap in the real bundled Inter TTFs and
+  regenerate baselines on Linux with design/human approval
+
+### UPSTREAM_UI_GAP-010: AppTextField does not surface validation text
+- **Desired Component**: `AppTextField` integrating with Flutter `Form`
+  (validator actually enforced) and a parameter for a custom validation
+  message (`errorText`), instead of only the hardcoded
+  "Error: Please check this field"
+- **Reason**: Golden App's auth and add-member forms pass `validator`s today
+  but no validation was ever shown (the field used to be a plain `TextField`
+  wrapping the validator as dead data), and no custom `errorText` existed, so
+  field-level form validation could not be showcased
+- **Recommended Owner**: shipit-ui
+- **shipit_ui**: shipped in `2e6d491` — `AppTextField` is now a real
+  `FormField` (validator runs on `Form.validate()`/save and per
+  `autovalidateMode`) with an `errorText` parameter that takes precedence
+- **Issue**: [shipitinc/shipit-ui#9](https://github.com/shipitinc/shipit-ui/issues/9) — closed
+- **Workaround**: superseded — auth & household add-member forms already pass
+  validators inside a `Form`; the upgrade activates per-field error messages
+  with no code change
 
 ## Reporting Process
 

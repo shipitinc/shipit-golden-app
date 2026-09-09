@@ -78,6 +78,44 @@ void main() {
     );
   });
 
+  testWidgets(
+    'field-level validation errors render beneath the fields on submit',
+    (tester) async {
+      final repository = _MockAuthRepository();
+      when(() => repository.restoreSession()).thenAnswer((_) async {});
+      when(() => repository.isAuthenticated).thenReturn(false);
+
+      final bloc = AuthenticationBloc(authRepository: repository);
+      addTearDown(bloc.close);
+
+      await tester.pumpWidget(ShipItGoldenApp(authBloc: bloc));
+      await tester.pumpAndSettle();
+      bloc.add(const AuthenticationEvent.started());
+      await tester.pumpAndSettle();
+
+      await tester.enterText(
+        find.widgetWithText(AppTextField, 'Email'),
+        'not-an-email',
+      );
+      await tester.enterText(
+        find.widgetWithText(AppTextField, 'Password'),
+        'sh',
+      );
+      await tester.tap(find.text('Sign In'));
+      await tester.pumpAndSettle();
+
+      // GAP-010: validators now run through the Form and each field shows its
+      // own actionable message instead of the old hardcoded generic string.
+      expect(find.text('Enter a valid email'), findsOneWidget);
+      expect(
+        find.text('Password must be at least 8 characters'),
+        findsOneWidget,
+      );
+      expect(find.text('Error: Please check this field'), findsNothing);
+      expect(find.byType(AppInlineAlert), findsNothing);
+    },
+  );
+
   testWidgets('successful login navigates away from /login', (tester) async {
     final repository = _MockAuthRepository();
     when(() => repository.restoreSession()).thenAnswer((_) async {});

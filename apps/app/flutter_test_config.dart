@@ -6,22 +6,23 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 
 /// Deterministic font loading for golden tests.
 ///
-/// Without a bundled font, Flutter's test binding falls back to a
-/// platform-default box font whose antialiasing differs between CI
-/// (Linux) and golden-generation hosts (macOS), producing small but
-/// stable pixel diffs. Loading one concrete TTF (golden_toolkit's
-/// Roboto) makes glyph rasterization byte-identical across hosts.
+/// shipit_ui bundles the Inter TTFs and resolves every `AppTypography` style to
+/// the packaged family `packages/shipit_ui/Inter`. Approved golden baselines
+/// were captured with golden_toolkit's Roboto, so tests keep pinning the
+/// resolved families to Roboto: candidates stay byte-deterministic across
+/// hosts and approved baselines remain reviewable.
 ///
-/// UPSTREAM_UI_GAP: shipit_ui requests `Inter` (AppTypography.fontFamily)
-/// but does not bundle the TTF. We pin the family to golden_toolkit's
-/// Roboto in tests so candidates stay reviewable and deterministic.
+/// Pending migration (GAP-009 / shipit-ui #8): register the real bundled Inter
+/// TTFs here and regenerate the golden baselines on Linux with design/human
+/// approval. See `docs/design/upstream-ui-gaps.md`.
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   TestWidgetsFlutterBinding.ensureInitialized();
   await loadAppFonts();
-  final interFont = FontLoader('Inter')
-    ..addFont(
-      rootBundle.load('packages/golden_toolkit/fonts/Roboto-Regular.ttf'),
-    );
-  await interFont.load();
+  final roboto = rootBundle.load(
+    'packages/golden_toolkit/fonts/Roboto-Regular.ttf',
+  );
+  for (final family in ['Inter', 'packages/shipit_ui/Inter']) {
+    await (FontLoader(family)..addFont(roboto)).load();
+  }
   await testMain();
 }
