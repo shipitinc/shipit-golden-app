@@ -69,8 +69,8 @@ jobs:
         run: |
           dart pub global activate melos 8.6.0
           melos bootstrap
-      - name: Generate
-        run: melos run generate
+      - name: Generate + drift check
+        run: melos run generate:check
       - name: Test
         run: melos run test
       - name: Upload golden failure feedback (diagnostic)

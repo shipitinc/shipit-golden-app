@@ -39,6 +39,19 @@ melos:
         - generate:server
         - generate:freezed
 
+    generate:check:
+      description: >-
+        Drift detection. Runs the full generation pipeline, formats the output,
+        then fails if any tracked file changed. Lets CI catch model/endpoint/
+        BLoC changes that were not regenerated and committed, without re-reading
+        stale generated output (generated code is gitignored; the tracked
+        `serverpod_test_tools.dart` mirrors format style, so format is applied
+        before the diff).
+      run: |
+        melos run generate
+        melos run format
+        git diff --exit-code --quiet HEAD
+
     generate:server:
       description: Serverpod generate only (server code + regenerated client package).
       run: cd apps/server && serverpod generate

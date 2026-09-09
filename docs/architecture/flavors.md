@@ -58,7 +58,8 @@ by an `API_BASE_URL` dart-define.
   entry point) and a per-flavor `ASSETCATALOG_COMPILER_APPICON_NAME`.
 
   The default `Runner.xcscheme` (plain Debug/Release/Profile, no `--flavor`)
-  builds `io.letsshipit.shipitGoldenApp` and reads `FLAVOR` as development.
+  behaves as `development`: it builds `io.letsshipit.golden` (the development
+  bundle ID) and reads `FLAVOR` as development.
 
 ## Runtime use / display
 

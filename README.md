@@ -204,7 +204,8 @@ QA is orchestrated through Melos scripts (unit, server, Flutter, integration) in
 - **app** — repository converters, feature BLoCs, `Result`/`AppFailure` core,
   auth UI journey widget tests (redirect guard + safe failure dialog)
 - **Golden baselines** — `test/goldens/` with a policy-enforced registry
-  (see `docs/qa/strategy.md`); all currently `DESIGN_PENDING`
+  (see `docs/qa/strategy.md`); the login baselines are `APPROVED` against
+  `shipit_ui@1207004` (2026-09-08), the rest are `DESIGN_PENDING`
 - **Accessibility semantics** — `test/accessibility/`
 - **Integration / E2E** — real-server journey in `apps/app/integration_test/`;
   requires a live server and a device (not executed in the default `melos run test`)
@@ -227,10 +228,13 @@ QA is orchestrated through Melos scripts (unit, server, Flutter, integration) in
 - `docs/architecture/backend.md` — Serverpod architecture
 - `docs/architecture/state-management.md` — BLoC + Freezed patterns
 - `docs/architecture/monorepo.md` — Melos workspace structure
+- `docs/architecture/flavors.md` — Environments and native flavor wiring
 - `docs/architecture/flutter-toolchain.md` — FVM + Melos integration
 - `docs/design/design-authority.md` — Design governance
+- `docs/design/loading-states.md` — Loading/mutation feedback guidance
 - `docs/design/upstream-ui-gaps.md` — Reported shipit_ui gaps
 - `docs/qa/strategy.md` — QA strategy and coverage
+- `docs/qa/pending-actions.md` — Open/informational action items
 
 ## License
 

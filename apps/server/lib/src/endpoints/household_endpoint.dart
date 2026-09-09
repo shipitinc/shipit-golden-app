@@ -1,6 +1,15 @@
 import 'package:serverpod/serverpod.dart';
 import 'package:shipit_golden_server/src/generated/protocol.dart';
 
+// STUB / DEV_PENDING
+// ---------------------------------------------------------------------------
+// This endpoint is a local-development STUB, NOT canonical. It serves in-memory
+// data only (no PostgreSQL persistence, no real authorization beyond JWT) so
+// the reference UI can be built against stable responses. It exists to be
+// REPLACED by a DB-backed implementation; do not copy the in-memory patterns
+// below as canonical. See docs/architecture/backend.md and product.yaml.
+// ---------------------------------------------------------------------------
+
 class HouseholdEndpoint extends Endpoint {
   static int _nextId = 3;
 
