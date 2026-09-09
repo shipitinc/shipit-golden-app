@@ -178,57 +178,31 @@ class _HouseholdMemberImpl extends HouseholdMember {
 class HouseholdMemberUpdateTable extends _i1.UpdateTable<HouseholdMemberTable> {
   HouseholdMemberUpdateTable(super.table);
 
-  _i1.ColumnValue<String, String> householdId(String value) => _i1.ColumnValue(
-    table.householdId,
-    value,
-  );
+  _i1.ColumnValue<String, String> householdId(String value) =>
+      _i1.ColumnValue(table.householdId, value);
 
-  _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
-    table.name,
-    value,
-  );
+  _i1.ColumnValue<String, String> name(String value) =>
+      _i1.ColumnValue(table.name, value);
 
-  _i1.ColumnValue<String, String> email(String value) => _i1.ColumnValue(
-    table.email,
-    value,
-  );
+  _i1.ColumnValue<String, String> email(String value) =>
+      _i1.ColumnValue(table.email, value);
 
-  _i1.ColumnValue<String, String> role(String value) => _i1.ColumnValue(
-    table.role,
-    value,
-  );
+  _i1.ColumnValue<String, String> role(String value) =>
+      _i1.ColumnValue(table.role, value);
 
   _i1.ColumnValue<DateTime, DateTime> joinedAt(DateTime value) =>
-      _i1.ColumnValue(
-        table.joinedAt,
-        value,
-      );
+      _i1.ColumnValue(table.joinedAt, value);
 }
 
 class HouseholdMemberTable extends _i1.Table<int?> {
   HouseholdMemberTable({super.tableRelation})
     : super(tableName: 'household_members') {
     updateTable = HouseholdMemberUpdateTable(this);
-    householdId = _i1.ColumnString(
-      'householdId',
-      this,
-    );
-    name = _i1.ColumnString(
-      'name',
-      this,
-    );
-    email = _i1.ColumnString(
-      'email',
-      this,
-    );
-    role = _i1.ColumnString(
-      'role',
-      this,
-    );
-    joinedAt = _i1.ColumnDateTime(
-      'joinedAt',
-      this,
-    );
+    householdId = _i1.ColumnString('householdId', this);
+    name = _i1.ColumnString('name', this);
+    email = _i1.ColumnString('email', this);
+    role = _i1.ColumnString('role', this);
+    joinedAt = _i1.ColumnDateTime('joinedAt', this);
   }
 
   late final HouseholdMemberUpdateTable updateTable;
@@ -421,10 +395,7 @@ class HouseholdMemberRepository {
     HouseholdMember row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.insertRow<HouseholdMember>(
-      row,
-      transaction: transaction,
-    );
+    return session.db.insertRow<HouseholdMember>(row, transaction: transaction);
   }
 
   /// Updates all [HouseholdMember]s in the list and returns the updated rows. If
@@ -511,10 +482,7 @@ class HouseholdMemberRepository {
     List<HouseholdMember> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.delete<HouseholdMember>(
-      rows,
-      transaction: transaction,
-    );
+    return session.db.delete<HouseholdMember>(rows, transaction: transaction);
   }
 
   /// Deletes a single [HouseholdMember].
@@ -523,10 +491,7 @@ class HouseholdMemberRepository {
     HouseholdMember row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.deleteRow<HouseholdMember>(
-      row,
-      transaction: transaction,
-    );
+    return session.db.deleteRow<HouseholdMember>(row, transaction: transaction);
   }
 
   /// Deletes all rows matching the [where] expression.

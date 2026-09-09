@@ -47,8 +47,11 @@ void main() {
             .map((cell) => cell.trim())
             .where((cell) => cell.isNotEmpty)
             .toList();
-        expect(columns.length, greaterThanOrEqualTo(4),
-            reason: 'malformed registry row: $row');
+        expect(
+          columns.length,
+          greaterThanOrEqualTo(4),
+          reason: 'malformed registry row: $row',
+        );
         final file = columns[0].replaceAll('`', '');
         final status = columns[2];
         final designRevision = columns[3];
@@ -56,7 +59,8 @@ void main() {
         expect(
           allowedStatuses.contains(status),
           isTrue,
-          reason: 'unknown baseline status "$status" in:\n$row\n'
+          reason:
+              'unknown baseline status "$status" in:\n$row\n'
               'Expected one of: $allowedStatuses',
         );
         if (status == 'APPROVED') {

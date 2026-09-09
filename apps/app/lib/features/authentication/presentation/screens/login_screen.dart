@@ -122,13 +122,11 @@ class _AuthScreenState extends State<_AuthScreen> {
         body: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.space4,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: context.space.s4),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 440),
                 child: AppCard(
-                  padding: EdgeInsets.all(AppSpacing.space5),
+                  padding: EdgeInsets.all(context.space.s5),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -156,14 +154,14 @@ class _AuthScreenState extends State<_AuthScreen> {
                               );
                             },
                           ),
-                          const SizedBox(height: AppSpacing.space2),
+                          SizedBox(height: context.space.s2),
                         ],
                         Text(
                           FlavorConfig.appName,
-                          style: AppTypography.headlineMedium,
+                          style: context.text.headline.medium,
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: AppSpacing.space5),
+                        SizedBox(height: context.space.s5),
                         if (_failureMessage != null) ...[
                           AppInlineAlert.error(
                             title: _isRegister
@@ -174,24 +172,24 @@ class _AuthScreenState extends State<_AuthScreen> {
                             onAction: () => _submit(context.read()),
                             onDismiss: _dismissFailure,
                           ),
-                          const SizedBox(height: AppSpacing.space5),
+                          SizedBox(height: context.space.s5),
                         ],
                         if (register && _accountRequestId == null)
                           Text(
                             'Enter your email to receive a verification code',
-                            style: AppTypography.bodyMedium.copyWith(
-                              color: AppColors.fgSecondaryColor,
+                            style: context.text.body.medium.copyWith(
+                              color: context.color.fg.secondary,
                             ),
                           )
                         else if (register)
                           Text(
                             'Enter the code sent to "${_emailController.text}" '
                             'and choose a password',
-                            style: AppTypography.bodyMedium.copyWith(
-                              color: AppColors.fgSecondaryColor,
+                            style: context.text.body.medium.copyWith(
+                              color: context.color.fg.secondary,
                             ),
                           ),
-                        const SizedBox(height: AppSpacing.space5),
+                        SizedBox(height: context.space.s5),
                         AppTextField(
                           controller: _emailController,
                           label: 'Email',
@@ -206,7 +204,7 @@ class _AuthScreenState extends State<_AuthScreen> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: AppSpacing.space3),
+                        SizedBox(height: context.space.s3),
                         if (register && _accountRequestId == null)
                           _buildRequestCodeFields()
                         else
@@ -231,7 +229,7 @@ class _AuthScreenState extends State<_AuthScreen> {
             state is AuthenticationRegistrationSubmitting;
         return AppButton.primary(
           label: 'Request Verification Code',
-          state: loading ? AppButtonState.loading : AppButtonState.default_,
+          state: loading ? AppButtonState.loading : AppButtonState.base,
           onPressed: loading ? null : () => _submit(context.read()),
         );
       },
@@ -259,7 +257,7 @@ class _AuthScreenState extends State<_AuthScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: AppSpacing.space3),
+              SizedBox(height: context.space.s3),
             ],
             AppTextField(
               controller: _passwordController,
@@ -275,13 +273,13 @@ class _AuthScreenState extends State<_AuthScreen> {
                 return null;
               },
             ),
-            const SizedBox(height: AppSpacing.space5),
+            SizedBox(height: context.space.s5),
             AppButton.primary(
               label: register ? 'Create Account' : 'Sign In',
-              state: loading ? AppButtonState.loading : AppButtonState.default_,
+              state: loading ? AppButtonState.loading : AppButtonState.base,
               onPressed: loading ? null : () => _submit(context.read()),
             ),
-            const SizedBox(height: AppSpacing.space3),
+            SizedBox(height: context.space.s3),
             TextButton(
               onPressed: loading ? null : _toggleMode,
               child: Text(
@@ -292,11 +290,11 @@ class _AuthScreenState extends State<_AuthScreen> {
             ),
             if (!register)
               Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.space1),
+                padding: EdgeInsets.only(top: context.space.s1),
                 child: Text(
                   'Forgot password: DESIGN_PENDING',
-                  style: AppTypography.bodySmall.copyWith(
-                    color: AppColors.fgMutedColor,
+                  style: context.text.body.small.copyWith(
+                    color: context.color.fg.muted,
                   ),
                   textAlign: TextAlign.center,
                 ),

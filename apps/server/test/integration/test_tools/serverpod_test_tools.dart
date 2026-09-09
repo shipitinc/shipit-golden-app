@@ -150,30 +150,15 @@ class _InternalTestEndpoints extends TestEndpoints
     _i2.SerializationManager serializationManager,
     _i2.EndpointDispatch endpoints,
   ) {
-    auth = _AuthEndpoint(
-      endpoints,
-      serializationManager,
-    );
-    household = _HouseholdEndpoint(
-      endpoints,
-      serializationManager,
-    );
-    jwtTokens = _JwtTokensEndpoint(
-      endpoints,
-      serializationManager,
-    );
-    programs = _ProgramsEndpoint(
-      endpoints,
-      serializationManager,
-    );
+    auth = _AuthEndpoint(endpoints, serializationManager);
+    household = _HouseholdEndpoint(endpoints, serializationManager);
+    jwtTokens = _JwtTokensEndpoint(endpoints, serializationManager);
+    programs = _ProgramsEndpoint(endpoints, serializationManager);
   }
 }
 
 class _AuthEndpoint {
-  _AuthEndpoint(
-    this._endpointDispatch,
-    this._serializationManager,
-  );
+  _AuthEndpoint(this._endpointDispatch, this._serializationManager);
 
   final _i2.EndpointDispatch _endpointDispatch;
 
@@ -446,10 +431,7 @@ class _AuthEndpoint {
 }
 
 class _HouseholdEndpoint {
-  _HouseholdEndpoint(
-    this._endpointDispatch,
-    this._serializationManager,
-  );
+  _HouseholdEndpoint(this._endpointDispatch, this._serializationManager);
 
   final _i2.EndpointDispatch _endpointDispatch;
 
@@ -531,10 +513,7 @@ class _HouseholdEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'household',
           methodName: 'addMember',
-          parameters: _i1.testObjectToJson({
-            'name': name,
-            'email': email,
-          }),
+          parameters: _i1.testObjectToJson({'name': name, 'email': email}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =
@@ -583,10 +562,7 @@ class _HouseholdEndpoint {
 }
 
 class _JwtTokensEndpoint {
-  _JwtTokensEndpoint(
-    this._endpointDispatch,
-    this._serializationManager,
-  );
+  _JwtTokensEndpoint(this._endpointDispatch, this._serializationManager);
 
   final _i2.EndpointDispatch _endpointDispatch;
 
@@ -625,10 +601,7 @@ class _JwtTokensEndpoint {
 }
 
 class _ProgramsEndpoint {
-  _ProgramsEndpoint(
-    this._endpointDispatch,
-    this._serializationManager,
-  );
+  _ProgramsEndpoint(this._endpointDispatch, this._serializationManager);
 
   final _i2.EndpointDispatch _endpointDispatch;
 

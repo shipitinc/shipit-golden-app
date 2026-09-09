@@ -34,7 +34,7 @@ class AddMemberDialog {
                     return null;
                   },
                 ),
-                SizedBox(height: AppSpacing.space3),
+                SizedBox(height: context.space.s3),
                 AppTextField(
                   controller: emailController,
                   label: 'Email',
@@ -77,7 +77,7 @@ class AddMemberDialog {
                         },
                   state: isLoading
                       ? AppButtonState.loading
-                      : AppButtonState.default_,
+                      : AppButtonState.base,
                 );
               },
             ),

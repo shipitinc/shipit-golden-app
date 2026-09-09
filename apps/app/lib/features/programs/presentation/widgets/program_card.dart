@@ -10,38 +10,38 @@ class ProgramCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
-      padding: EdgeInsets.all(AppSpacing.space4),
+      padding: EdgeInsets.all(context.space.s4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Expanded(
-                child: Text(program.name, style: AppTypography.titleLarge),
+                child: Text(program.name, style: context.text.title.large),
               ),
               _StatusChip(status: program.status),
             ],
           ),
-          SizedBox(height: AppSpacing.space2),
+          SizedBox(height: context.space.s2),
           Text(
             program.description,
-            style: AppTypography.bodyMedium.copyWith(
-              color: AppColors.fgSecondaryColor,
+            style: context.text.body.medium.copyWith(
+              color: context.color.fg.secondary,
             ),
           ),
-          SizedBox(height: AppSpacing.space3),
+          SizedBox(height: context.space.s3),
           Row(
             children: [
               Icon(
                 Icons.calendar_today,
                 size: 16,
-                color: AppColors.fgSecondaryColor,
+                color: context.color.fg.secondary,
               ),
-              SizedBox(width: AppSpacing.space2),
+              SizedBox(width: context.space.s2),
               Text(
                 '${_formatDate(program.startDate)} - ${_formatDate(program.endDate)}',
-                style: AppTypography.bodySmall.copyWith(
-                  color: AppColors.fgSecondaryColor,
+                style: context.text.body.small.copyWith(
+                  color: context.color.fg.secondary,
                 ),
               ),
               const Spacer(),
@@ -75,34 +75,34 @@ class _StatusChip extends StatelessWidget {
 
     switch (status.toLowerCase()) {
       case 'active':
-        backgroundColor = AppColors.stateInfoBgColor;
-        textColor = AppColors.stateInfoFgColor;
+        backgroundColor = context.color.state.info.bg;
+        textColor = context.color.state.info.fg;
         break;
       case 'upcoming':
-        backgroundColor = AppColors.actionPrimaryBgColor;
-        textColor = AppColors.actionPrimaryFgColor;
+        backgroundColor = context.color.action.primary.bg;
+        textColor = context.color.action.primary.fg;
         break;
       case 'completed':
-        backgroundColor = AppColors.bgSubtleColor;
-        textColor = AppColors.fgSecondaryColor;
+        backgroundColor = context.color.bg.subtle;
+        textColor = context.color.fg.secondary;
         break;
       default:
-        backgroundColor = AppColors.bgSubtleColor;
-        textColor = AppColors.fgSecondaryColor;
+        backgroundColor = context.color.bg.subtle;
+        textColor = context.color.fg.secondary;
     }
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: AppSpacing.space2,
-        vertical: AppSpacing.space1,
+        horizontal: context.space.s2,
+        vertical: context.space.s1,
       ),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(AppRadius.radiusSm),
+        borderRadius: context.radius.all.sm,
       ),
       child: Text(
         status.toUpperCase(),
-        style: AppTypography.labelSmall.copyWith(
+        style: context.text.label.small.copyWith(
           color: textColor,
           fontWeight: FontWeight.w600,
         ),

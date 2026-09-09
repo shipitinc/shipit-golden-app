@@ -178,57 +178,30 @@ class _ProgramImpl extends Program {
 class ProgramUpdateTable extends _i1.UpdateTable<ProgramTable> {
   ProgramUpdateTable(super.table);
 
-  _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
-    table.name,
-    value,
-  );
+  _i1.ColumnValue<String, String> name(String value) =>
+      _i1.ColumnValue(table.name, value);
 
-  _i1.ColumnValue<String, String> description(String value) => _i1.ColumnValue(
-    table.description,
-    value,
-  );
+  _i1.ColumnValue<String, String> description(String value) =>
+      _i1.ColumnValue(table.description, value);
 
   _i1.ColumnValue<DateTime, DateTime> startDate(DateTime value) =>
-      _i1.ColumnValue(
-        table.startDate,
-        value,
-      );
+      _i1.ColumnValue(table.startDate, value);
 
   _i1.ColumnValue<DateTime, DateTime> endDate(DateTime value) =>
-      _i1.ColumnValue(
-        table.endDate,
-        value,
-      );
+      _i1.ColumnValue(table.endDate, value);
 
-  _i1.ColumnValue<String, String> status(String value) => _i1.ColumnValue(
-    table.status,
-    value,
-  );
+  _i1.ColumnValue<String, String> status(String value) =>
+      _i1.ColumnValue(table.status, value);
 }
 
 class ProgramTable extends _i1.Table<int?> {
   ProgramTable({super.tableRelation}) : super(tableName: 'programs') {
     updateTable = ProgramUpdateTable(this);
-    name = _i1.ColumnString(
-      'name',
-      this,
-    );
-    description = _i1.ColumnString(
-      'description',
-      this,
-    );
-    startDate = _i1.ColumnDateTime(
-      'startDate',
-      this,
-    );
-    endDate = _i1.ColumnDateTime(
-      'endDate',
-      this,
-    );
-    status = _i1.ColumnString(
-      'status',
-      this,
-    );
+    name = _i1.ColumnString('name', this);
+    description = _i1.ColumnString('description', this);
+    startDate = _i1.ColumnDateTime('startDate', this);
+    endDate = _i1.ColumnDateTime('endDate', this);
+    status = _i1.ColumnString('status', this);
   }
 
   late final ProgramUpdateTable updateTable;
@@ -421,10 +394,7 @@ class ProgramRepository {
     Program row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.insertRow<Program>(
-      row,
-      transaction: transaction,
-    );
+    return session.db.insertRow<Program>(row, transaction: transaction);
   }
 
   /// Updates all [Program]s in the list and returns the updated rows. If
@@ -509,10 +479,7 @@ class ProgramRepository {
     List<Program> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.delete<Program>(
-      rows,
-      transaction: transaction,
-    );
+    return session.db.delete<Program>(rows, transaction: transaction);
   }
 
   /// Deletes a single [Program].
@@ -521,10 +488,7 @@ class ProgramRepository {
     Program row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.deleteRow<Program>(
-      row,
-      transaction: transaction,
-    );
+    return session.db.deleteRow<Program>(row, transaction: transaction);
   }
 
   /// Deletes all rows matching the [where] expression.

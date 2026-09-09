@@ -35,31 +35,32 @@ Card(child: content)
 
 ### 2. Use Design Tokens
 
-Access design tokens via shipit_ui's canonical static API. Do NOT re-implement
-token access through `BuildContext` alias extensions; the canonical surface is
-`AppColors`, `AppSpacing`, `AppTypography`, `AppRadius`, etc.
+Access design tokens through shipit_ui's `AppThemeContext` extension — every
+token is read from the ambient theme via `context.*` accessors. Do NOT
+re-implement token access and do NOT reach for the (now removed) static
+`AppColors` / `AppSpacing` / `AppTypography` classes.
 
 ```dart
-// CORRECT (canonical shipit_ui static API)
-Container(color: AppColors.stateInfoBgColor)
-padding: EdgeInsets.all(AppSpacing.space5)
-Text('Title', style: AppTypography.headlineMedium)
+// CORRECT (canonical shipit_ui theme context API)
+Container(color: context.color.state.info.bg)
+padding: EdgeInsets.all(context.space.s5)
+Text('Title', style: context.text.headline.medium)
 
-// WRONG (redundant token aliases that drift from shipit_ui)
+// WRONG (arbitrary values / removed static token classes)
 Container(color: Color(0xFF3A7BD5))
 padding: EdgeInsets.all(16)
 Text('Title', style: TextStyle(fontSize: 24))
 ```
 
 ### 3. No Arbitrary Values
-- Colors → `AppColors.*` (static members: `fgSecondaryColor`, `actionPrimaryBgColor`, etc.)
-- Spacing → `AppSpacing.space5` etc.
-- Typography → `AppTypography.headlineMedium` etc.
-- Radius → `AppRadius.radiusSm` etc.
-- Breakpoints → `AppBreakpoints.*`
-- Elevation → `AppElevation.*`
-- Motion → `AppMotion.*`
-- Opacity → `AppOpacity.*`
+- Colors → `context.color.*` (`bg.base/surface/subtle/disabled`, `fg.primary/secondary/muted/inverse/disabled`, `border.base/strong/focus/error`, `action.primary.bg/bgHover/fg`, `action.secondary.bg/border/fg`, `action.disabled.*`, `state.error/success/warning/info.fg|bg`, `scrim`, `shimmer.base/highlight`, `nav.*`, `tooltip.*`, `avatar.*`, `chip.*`, `table.*`)
+- Spacing → `context.space.s0` … `s16`
+- Typography → `context.text.{display|headline|title|body|label}.{large|medium|small}`; family via `context.font.resolvedFamily`
+- Radius → `context.radius.all.{none|sm|md|lg|xl|round}` (`BorderRadius.circular`)
+- Breakpoints → `context.breakpoint.{mobile|tablet|desktop|wide|pageWidth}` (360 / 600 / 1024 / 1440 / 1200)
+- Elevation → `context.elevation.*`
+- Motion → `context.motion.*`
+- Opacity → `context.opacity.scrim`
 
 ## Design Change Process
 
@@ -93,29 +94,35 @@ Text('DESIGN_PENDING: Program detail screen')
 
 ### Breakpoints (from shipit_ui)
 ```dart
-AppBreakpoints.mobile   // 360px
-AppBreakpoints.tablet   // 600px
-AppBreakpoints.desktop  // 1024px
-AppBreakpoints.wide     // 1440px
-AppBreakpoints.pageWidth // max content width (1200px)
+context.breakpoint.mobile    // 360px
+context.breakpoint.tablet    // 600px
+context.breakpoint.desktop   // 1024px
+context.breakpoint.wide      // 1440px
+context.breakpoint.pageWidth // max content width (1200px)
 ```
 
-Detection helpers (`AppBreakpoints.isMobile(context)`, `isTablet`, `isDesktop`,
-`isWide`, `getLayoutType`) and the `AppLayoutType` enum handle comparison. The
-`AppLayout` class is a **static utility** (not a widget) with `pageConstraints`,
-`centeredPage`, `responsivePageWidth`, `responsivePadding`, `hStack`, `vStack`,
-`divider`, and fixed spacing helpers (`width2/4/6`, `height2/4/6`).
+Detection: `context.layoutType` (`AppLayoutType.compact|mobile|tablet|desktop|wide`)
+plus `context.isMobileLayout`, `context.isDesktopOrLarger`, etc. The `AppLayout`
+class is a **static utility** (not a widget) with `pageConstraints`,
+`centeredPage`, `responsivePageWidth`, `responsivePadding` (accepts
+compact/mobile/tablet/desktop variants), `hStack`, `vStack`, `divider`, and
+fixed spacing helpers (`width2/4/6`, `height2/4/6`).
 
 ### AppLayout Usage
 ```dart
 // AppLayout is a static helper, not a widget:
-child: AppLayout.centeredPage(child: content, width: AppBreakpoints.pageWidth)
+child: AppLayout.centeredPage(child: content, width: context.breakpoint.pageWidth)
 
-AppLayout.hStack(spacing: AppSpacing.space4, children: [AppButton.primary(...), ...])
+AppLayout.hStack(spacing: context.space.s4, children: [AppButton.primary(...), ...])
 AppLayout.vStack(...)
+AppLayout.responsivePadding(
+  mobilePadding: EdgeInsets.all(context.space.s3),
+  desktopPadding: EdgeInsets.all(context.space.s5),
+  child: content,
+)
 
 // Layout-type branching (640px viewport = tablet):
-switch (AppBreakpoints.getLayoutType(context)) {
+switch (context.layoutType) {
   case AppLayoutType.compact:
   case AppLayoutType.mobile:
     return _MobileLayout();
@@ -152,9 +159,14 @@ MaterialApp(
 ```
 
 ### Token Semantics
-- `colors.surface` / `colors.onSurface` — Adapt automatically
-- `colors.primary` / `colors.onPrimary` — Brand colors
-- `colors.error` / `colors.onError` — Error states
+- `context.color.bg.surface` / `context.color.fg.primary` — Adapt automatically
+- `context.color.action.primary.bg` / `context.color.action.primary.fg` — Brand colors
+- `context.color.state.error.fg` / `context.color.state.error.bg` — Error states
+
+Dark mode is governed by `AppTheme.dark` (semantic token tree) painted on dark
+surfaces (`#020617` base) with high-contrast text (`neutral50`); the regression
+test in `test/theme/dark_mode_test.dart` enforces WCAG AA contrast and distinctly
+dark canvases (UPSTREAM_UI_GAP-011 resolved in `shipit_ui@d6abf9a`).
 
 ## Golden Baselines
 

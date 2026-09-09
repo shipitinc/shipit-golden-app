@@ -126,22 +126,25 @@ messages — never `Exception.toString()` or stack traces. `userMessage` on
 ### shipit_ui Integration
 - All components from `package:shipit_ui/shipit_ui.dart`
 - Theme via `shipitLightTheme()` / `shipitDarkTheme()` from shipit_ui
-- Responsive via `AppBreakpoints` and `AppLayout` helpers (static utility class:
-  `pageConstraints`, `centeredPage`, `responsivePageWidth`, `hStack`, `vStack`)
+- Design tokens via the `AppThemeContext` extension (`context.color.*`,
+  `context.space.*`, `context.text.*`, `context.breakpoint.*`, …) — no static
+  token classes
+- Responsive via `AppLayout` helpers (static utility class: `pageConstraints`,
+  `centeredPage`, `responsivePageWidth`, `responsivePadding`, `hStack`,
+  `vStack`)
 - No custom Material widgets for common controls
 
 ### Responsive Design
 ```dart
-// shipit_ui tokens: mobile 360 / tablet 600 / desktop 1024 / wide 1440
-final type = AppLayoutType? ...;  // see AppBreakpoints.getLayoutType / AppLayoutType
+// shipit_ui tokens: compact <360 / mobile 360 / tablet 600 / desktop 1024 /
+//                   wide 1440 / pageWidth 1200
+final type = context.layoutType;   // AppLayoutType.compact|mobile|tablet|desktop|wide
 
-AppBreakpoints.isMobile(context)   // width >= 360
-AppBreakpoints.isTablet(context)   // width >= 600
-AppBreakpoints.isDesktop(context)  // width >= 1024
-AppBreakpoints.isWide(context)     // width >= 1440
-
-// Or the BuildContext extension:
-context.isMobileLayout / context.isTabletLayout / context.isDesktopLayout
+context.isMobileLayout    // width >= 360
+context.isTabletLayout    // width >= 600
+context.isDesktopLayout   // width >= 1024
+context.isWideLayout      // width >= 1440
+context.isDesktopOrLarger // width >= 1024
 ```
 
 ### Navigation

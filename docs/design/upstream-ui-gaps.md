@@ -2,16 +2,29 @@
 
 Tracking components needed by Golden App that don't exist in shipit_ui.
 
-> **Status of this document:** reviewed against shipit_ui revision
-> `1207004` (2026-09-08, the revision pinned in `apps/app/pubspec.yaml`).
-> GAP-001 through GAP-008 shipped upstream and the Golden App now consumes the
-> components (see **Resolved Gaps** below). GAP-009 (Inter font bundling) and
-> GAP-010 (AppTextField validation text) both shipped upstream — GAP-009 as
-> [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8) and
+> **Status of this document:** reviewed against shipit_ui revision `d6abf9a`
+> (2026-09-09, the revision pinned in `apps/app/pubspec.yaml`). GAP-001 through
+> GAP-008 shipped upstream and the Golden App now consumes the components (see
+> **Resolved Gaps** below). GAP-009 (Inter font bundling), GAP-010 (AppTextField
+> validation text) and GAP-011 (dark mode) all shipped upstream — GAP-009 as
+> [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8),
 > GAP-010 as
-> [shipitinc/shipit-ui#9](https://github.com/shipitinc/shipit-ui/issues/9) —
-> and the Golden App consumes both (real Inter in tests + regenerated
-> baselines; form-field validation showcase). See below.
+> [shipitinc/shipit-ui#9](https://github.com/shipitinc/shipit-ui/issues/9) and
+> GAP-011 as
+> [shipitinc/shipit-ui#10](https://github.com/shipitinc/shipit-ui/issues/10) —
+> and the Golden App consumes all three (real Inter in tests + regenerated
+> baselines; form-field validation showcase; dark mode regression test). See
+> below.
+
+## Revision History
+
+- `2026-09-08` — reviewed against `1207004` (static `AppColors` /
+  `AppTypography` / `AppSpacing` / `AppRadius` / `AppBreakpoints` class API).
+- `2026-09-09` — bumped to `d6abf9a` (token-tree refactor: token access moved
+  to the `AppThemeContext` extension — `context.color.*`, `context.space.*`,
+  `context.text.*`, `context.breakpoint.*`, etc. — static token classes were
+  deleted; `shipitDarkTheme()` fixed, GAP-011 resolved). The Golden App
+  migrated all token reads to the `context.*` surface.
 
 ## Resolved Gaps
 
@@ -122,19 +135,23 @@ within the revision range `2a916a5..1207004`.
 ### UPSTREAM_UI_GAP-011: shipitDarkTheme() broken (light surfaces + white text)
 - **Desired Component**: `shipitDarkTheme()` that renders genuinely dark surfaces
   with high-contrast text, via dark-adapted semantic tokens
-- **Reason**: Dark mode in the Golden App is broken — `shipitDarkTheme()`
-  reuses the static light `AppColors` for scaffold/card/appbar/input surfaces
+- **Reason**: Dark mode in the Golden App was broken — `shipitDarkTheme()`
+  reused the static light `AppColors` for scaffold/card/appbar/input surfaces
   (`bgBaseColor` `#F8FAFC`, `bgSubtleColor` `#F1F5F9`) while `darkTextTheme`
-  paints all text `fgInverseColor` (`#FFFFFF`), so surfaces stay light and text
-  becomes nearly invisible. Only M3-dark-`ColorScheme`-driven parts (icons,
-  primaries) respond, matching the observed "only icons adapt" symptom
+  painted text white, so surfaces stayed light and text became nearly invisible.
+  Only M3-dark-`ColorScheme`-driven parts (icons, primaries) responded, matching
+  the observed "only icons adapt" symptom
 - **Recommended Owner**: shipit-ui
-- **Issue**: [shipitinc/shipit-ui#10](https://github.com/shipitinc/shipit-ui/issues/10) — open
-- **Status**: reported (2026-09-08)
-- **Workaround**: none — surfaces/text read from `MaterialApp` themes
-  (`shipitLightTheme`/`shipitDarkTheme`) with no app-side override; awaiting
-  the eventual shipit_ui dark-token revision (values must trace to approved
-  Penpot dark tokens per design-authority)
+- **Issue**: [shipitinc/shipit-ui#10](https://github.com/shipitinc/shipit-ui/issues/10) — closed
+- **Status**: resolved in `d6abf9a` (token-tree refactor) — `AppTheme.dark`
+  paints dark surfaces (`bg.base` `#020617`) with high-contrast text
+  (`fg.primary` `neutral50`); the Golden App consumes it with a regression test
+  (`test/theme/dark_mode_test.dart`) asserting genuinely dark scaffolds and
+  WCAG AA body-text contrast, and `flutter_test_config.dart` loads fonts via
+  `AppTheme.light.font.resolvedFamily`
+- **Workaround**: none required — surfaces/text read from `MaterialApp` themes
+  (`shipitLightTheme`/`shipitDarkTheme`) with no app-side override; dark-token
+  values trace to approved Penpot dark tokens via shipit_ui maintained tokens
 
 ## Reporting Process
 

@@ -55,17 +55,17 @@ class ProgramsView extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             ProgramsLoading() => ListView(
-              padding: EdgeInsets.all(AppSpacing.space4),
+              padding: EdgeInsets.all(context.space.s4),
               children: [
                 AppSkeleton.card(),
-                const SizedBox(height: AppSpacing.space4),
+                SizedBox(height: context.space.s4),
                 AppSkeleton.card(),
-                const SizedBox(height: AppSpacing.space4),
+                SizedBox(height: context.space.s4),
                 AppSkeleton.card(),
               ],
             ),
             ProgramsFailure(:final failure) => ListView(
-              padding: EdgeInsets.all(AppSpacing.space4),
+              padding: EdgeInsets.all(context.space.s4),
               children: [
                 AppInlineAlert.error(
                   title: 'Error',
@@ -75,7 +75,7 @@ class ProgramsView extends StatelessWidget {
                     const ProgramsRefreshRequested(),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.space4),
+                SizedBox(height: context.space.s4),
                 AppSkeleton.card(autoplay: false),
               ],
             ),
@@ -87,7 +87,7 @@ class ProgramsView extends StatelessWidget {
               },
               child: programs.isEmpty
                   ? ListView(
-                      padding: EdgeInsets.all(AppSpacing.space4),
+                      padding: EdgeInsets.all(context.space.s4),
                       children: const [
                         AppEmptyState(
                           title: 'No programs available',
@@ -97,7 +97,7 @@ class ProgramsView extends StatelessWidget {
                       ],
                     )
                   : ListView.builder(
-                      padding: EdgeInsets.all(AppSpacing.space4),
+                      padding: EdgeInsets.all(context.space.s4),
                       itemCount: programs.length,
                       itemBuilder: (context, index) {
                         return ProgramCard(program: programs[index]);

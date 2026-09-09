@@ -125,12 +125,7 @@ class _HouseholdImpl extends Household {
     required String name,
     required String ownerId,
     required DateTime createdAt,
-  }) : super._(
-         id: id,
-         name: name,
-         ownerId: ownerId,
-         createdAt: createdAt,
-       );
+  }) : super._(id: id, name: name, ownerId: ownerId, createdAt: createdAt);
 
   /// Returns a shallow copy of this [Household]
   /// with some or all fields replaced by the given arguments.
@@ -154,38 +149,22 @@ class _HouseholdImpl extends Household {
 class HouseholdUpdateTable extends _i1.UpdateTable<HouseholdTable> {
   HouseholdUpdateTable(super.table);
 
-  _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
-    table.name,
-    value,
-  );
+  _i1.ColumnValue<String, String> name(String value) =>
+      _i1.ColumnValue(table.name, value);
 
-  _i1.ColumnValue<String, String> ownerId(String value) => _i1.ColumnValue(
-    table.ownerId,
-    value,
-  );
+  _i1.ColumnValue<String, String> ownerId(String value) =>
+      _i1.ColumnValue(table.ownerId, value);
 
   _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
-      _i1.ColumnValue(
-        table.createdAt,
-        value,
-      );
+      _i1.ColumnValue(table.createdAt, value);
 }
 
 class HouseholdTable extends _i1.Table<int?> {
   HouseholdTable({super.tableRelation}) : super(tableName: 'households') {
     updateTable = HouseholdUpdateTable(this);
-    name = _i1.ColumnString(
-      'name',
-      this,
-    );
-    ownerId = _i1.ColumnString(
-      'ownerId',
-      this,
-    );
-    createdAt = _i1.ColumnDateTime(
-      'createdAt',
-      this,
-    );
+    name = _i1.ColumnString('name', this);
+    ownerId = _i1.ColumnString('ownerId', this);
+    createdAt = _i1.ColumnDateTime('createdAt', this);
   }
 
   late final HouseholdUpdateTable updateTable;
@@ -197,12 +176,7 @@ class HouseholdTable extends _i1.Table<int?> {
   late final _i1.ColumnDateTime createdAt;
 
   @override
-  List<_i1.Column> get columns => [
-    id,
-    name,
-    ownerId,
-    createdAt,
-  ];
+  List<_i1.Column> get columns => [id, name, ownerId, createdAt];
 }
 
 class HouseholdInclude extends _i1.IncludeObject {
@@ -372,10 +346,7 @@ class HouseholdRepository {
     Household row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.insertRow<Household>(
-      row,
-      transaction: transaction,
-    );
+    return session.db.insertRow<Household>(row, transaction: transaction);
   }
 
   /// Updates all [Household]s in the list and returns the updated rows. If
@@ -460,10 +431,7 @@ class HouseholdRepository {
     List<Household> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.delete<Household>(
-      rows,
-      transaction: transaction,
-    );
+    return session.db.delete<Household>(rows, transaction: transaction);
   }
 
   /// Deletes a single [Household].
@@ -472,10 +440,7 @@ class HouseholdRepository {
     Household row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.db.deleteRow<Household>(
-      row,
-      transaction: transaction,
-    );
+    return session.db.deleteRow<Household>(row, transaction: transaction);
   }
 
   /// Deletes all rows matching the [where] expression.

@@ -84,12 +84,7 @@ class _HouseholdImpl extends Household {
     required String name,
     required String ownerId,
     required DateTime createdAt,
-  }) : super._(
-         id: id,
-         name: name,
-         ownerId: ownerId,
-         createdAt: createdAt,
-       );
+  }) : super._(id: id, name: name, ownerId: ownerId, createdAt: createdAt);
 
   /// Returns a shallow copy of this [Household]
   /// with some or all fields replaced by the given arguments.

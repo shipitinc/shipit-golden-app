@@ -10,24 +10,24 @@ class HouseholdHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
-      padding: EdgeInsets.all(AppSpacing.space5),
+      padding: EdgeInsets.all(context.space.s5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               AppAvatar(name: household.name, size: AppAvatarSize.xl),
-              SizedBox(width: AppSpacing.space3),
+              SizedBox(width: context.space.s3),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(household.name, style: AppTypography.headlineSmall),
-                    SizedBox(height: AppSpacing.space1),
+                    Text(household.name, style: context.text.headline.small),
+                    SizedBox(height: context.space.s1),
                     Text(
                       'Owner ID: ${household.ownerId}',
-                      style: AppTypography.bodySmall.copyWith(
-                        color: AppColors.fgSecondaryColor,
+                      style: context.text.body.small.copyWith(
+                        color: context.color.fg.secondary,
                       ),
                     ),
                   ],
@@ -35,21 +35,21 @@ class HouseholdHeader extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: AppSpacing.space3),
-          Divider(color: AppColors.borderStrongColor),
-          SizedBox(height: AppSpacing.space3),
+          SizedBox(height: context.space.s3),
+          Divider(color: context.color.border.strong),
+          SizedBox(height: context.space.s3),
           Row(
             children: [
               Icon(
                 Icons.calendar_today,
                 size: 16,
-                color: AppColors.fgSecondaryColor,
+                color: context.color.fg.secondary,
               ),
-              SizedBox(width: AppSpacing.space2),
+              SizedBox(width: context.space.s2),
               Text(
                 'Created: ${_formatDate(household.createdAt)}',
-                style: AppTypography.bodySmall.copyWith(
-                  color: AppColors.fgSecondaryColor,
+                style: context.text.body.small.copyWith(
+                  color: context.color.fg.secondary,
                 ),
               ),
             ],

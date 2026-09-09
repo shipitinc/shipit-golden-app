@@ -16,8 +16,8 @@ class MemberList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Members (${members.length})', style: AppTypography.titleMedium),
-        SizedBox(height: AppSpacing.space3),
+        Text('Members (${members.length})', style: context.text.title.medium),
+        SizedBox(height: context.space.s3),
         if (isMutating)
           const _MembersTableShimmer()
         else
@@ -61,11 +61,11 @@ class _MembersTableShimmer extends StatelessWidget {
         children: [
           for (var i = 0; i < 3; i++)
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.space3),
+              padding: EdgeInsets.symmetric(vertical: context.space.s3),
               child: Row(
                 children: [
                   Expanded(child: AppSkeleton.line(width: 180)),
-                  SizedBox(width: AppSpacing.space8),
+                  SizedBox(width: context.space.s8),
                   Expanded(child: AppSkeleton.line(width: 240)),
                 ],
               ),

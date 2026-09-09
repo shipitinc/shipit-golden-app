@@ -57,15 +57,15 @@ class HouseholdView extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             HouseholdLoading() => ListView(
-              padding: EdgeInsets.all(AppSpacing.space4),
+              padding: EdgeInsets.all(context.space.s4),
               children: [
                 AppSkeleton.card(),
-                const SizedBox(height: AppSpacing.space4),
+                SizedBox(height: context.space.s4),
                 AppSkeleton.card(),
               ],
             ),
             HouseholdFailure(:final failure) => ListView(
-              padding: EdgeInsets.all(AppSpacing.space4),
+              padding: EdgeInsets.all(context.space.s4),
               children: [
                 AppInlineAlert.error(
                   title: 'Error',
@@ -75,7 +75,7 @@ class HouseholdView extends StatelessWidget {
                     const HouseholdRefreshRequested(),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.space4),
+                SizedBox(height: context.space.s4),
                 AppSkeleton.card(autoplay: false),
               ],
             ),
@@ -87,10 +87,10 @@ class HouseholdView extends StatelessWidget {
                   );
                 },
                 child: ListView(
-                  padding: EdgeInsets.all(AppSpacing.space4),
+                  padding: EdgeInsets.all(context.space.s4),
                   children: [
                     HouseholdHeader(household: household),
-                    SizedBox(height: AppSpacing.space6),
+                    SizedBox(height: context.space.s6),
                     MemberList(
                       members: members,
                       isMutating: state.isMembersMutating,
