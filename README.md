@@ -90,6 +90,8 @@ All commands run from repository root via Melos:
 | `melos run generate:server` | Serverpod generate only |
 | `melos run generate:client` | Regenerate Serverpod client package only |
 | `melos run generate:freezed` | Freezed/JSON generation only |
+| `melos run generate:check` | Drift gate (tracked diff + generated-manifest hash) |
+| `melos run generate:manifest` | Re-snapshot `.generated_manifest.json` after model changes |
 | `melos run format` | Format all code |
 | `melos run analyze` | Analyze all code |
 | `melos run test` | Run all non-integration tests |
@@ -205,7 +207,7 @@ QA is orchestrated through Melos scripts (unit, server, Flutter, integration) in
   auth UI journey widget tests (redirect guard + safe failure dialog)
 - **Golden baselines** — `test/goldens/` with a policy-enforced registry
   (see `docs/qa/strategy.md`); the login baselines are `APPROVED` against
-  `shipit_ui@d6abf9a` (re-approved 2026-09-09), the rest are `DESIGN_PENDING`
+  `shipit_ui@18d1a5d6` (re-approved 2026-09-10), the rest are `DESIGN_PENDING`
 - **Accessibility semantics** — `test/accessibility/`
 - **Integration / E2E** — real-server journey in `apps/app/integration_test/`;
   requires a live server and a device (not executed in the default `melos run test`)
@@ -216,6 +218,7 @@ QA is orchestrated through Melos scripts (unit, server, Flutter, integration) in
 
 ## Known Limitations
 
+- **Web sessions are in-memory only** — page reload silently discards JWT tokens; the user appears logged out. See `docs/architecture/frontend.md` (Session Persistence).
 - Verification codes are logged to the server console in development (no email provider configured); `config/` email SMTP is a DEV_PENDING integration
 - No real-time features
 - No offline support

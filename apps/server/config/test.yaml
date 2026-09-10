@@ -1,5 +1,7 @@
 server:
-  port: 8081
+  # 8081 is the Flutter web dev port (melos run dev:app); keep the test server
+  # off it so a local test boot can never collide with the app under dev.
+  port: 8082
   host: localhost
 
 database:

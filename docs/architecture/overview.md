@@ -134,6 +134,6 @@ ProgramsScreen → ProgramsBloc → ProgramsRepository → Serverpod generated c
 | Serverpod | 3.4.13 | Latest stable |
 | Melos | 8.6.0 | Latest stable |
 | FVM | 4.1.2 | Latest stable |
-| shipit_ui | 0.1.0 | Git pinned SHA `d6abf9a` |
+| shipit_ui | 0.1.0 | Git pinned SHA `18d1a5d6` |
 | bloc | 9.0.0 | Latest stable |
 | freezed | 3.0.0 | Latest stable |

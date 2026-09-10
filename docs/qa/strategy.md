@@ -29,6 +29,8 @@ are declared but not yet in the standard pipeline.
 ```
 test/
 ├── core/
+│   ├── errors/
+│   │   └── error_translator_test.dart
 │   └── result_test.dart
 ├── features/
 │   ├── authentication/
@@ -36,15 +38,20 @@ test/
 │   │   └── presentation/authentication_flow_widget_test.dart
 │   ├── household/
 │   │   ├── bloc/household_bloc_test.dart
-│   │   └── data/household_converters_test.dart
+│   │   ├── data/household_converters_test.dart
+│   │   └── presentation/
+│   │       ├── add_member_dialog_test.dart
+│   │       └── member_list_widget_test.dart
 │   └── programs/
 │       ├── bloc/programs_bloc_test.dart
 │       └── data/program_converters_test.dart
 ├── goldens/
 │   ├── golden_policy_test.dart     # registry conformance + candidate baselines
 │   └── goldens_registry.md         # baseline list + DESIGN_PENDING/APPROVED status
-└── accessibility/
-    └── accessibility_semantics_test.dart
+├── accessibility/
+│   └── accessibility_semantics_test.dart
+└── theme/
+    └── dark_mode_test.dart         # dark-mode WCAG AA contrast regression
 ```
 
 ### apps/app/integration_test/ (real-server journey, opt-in)
@@ -75,6 +82,9 @@ test/
 | Command | Scope | Notes |
 |---------|-------|-------|
 | `melos run analyze` | all | `fvm dart analyze .` |
+| `melos run generate` | all | Serverpod + Freezed/JSON generation |
+| `melos run generate:check` | all | Drift gate: generate + format, fail if any tracked file changed or the gitignored generated output hash no longer matches `.generated_manifest.json` |
+| `melos run generate:manifest` | all | Re-snapshot `.generated_manifest.json` after a *legitimate* model/endpoint change |
 | `melos run test:unit` | app_client | generated protocol round-trips |
 | `melos run test:server` | apps/server | DB-backed integration, tag `integration` |
 | `melos run test:flutter` | apps/app | unit + widget + golden + accessibility |
@@ -82,9 +92,17 @@ test/
 | `melos run test:integration` | apps/app integration_test | requires live server + device |
 | `melos run qa` | analyze + test | integration/Patrol are opt-in |
 
-Since generated code is not committed (see AGENTS.md), there is no committed
-baseline to compare against; code generation runs in CI as part of the `test`
-job and locally via `melos run generate`.
+Since generated code is not committed (see AGENTS.md), drift detection cannot
+rely on a tracked-only diff: Freezed `.freezed.dart`/`.g.dart`, the Serverpod
+server output (`apps/server/lib/src/generated/`) and the regenerated client
+(`packages/app_client/lib/src/protocol/`) are all gitignored, so a model field
+change is invisible to `git diff`. `generate:check` therefore also compares a
+SHA-256 manifest of the regenerated output (`.generated_manifest.json`,
+maintained by `tool/update_generated_manifest.dart`) against the committed
+snapshot — model/endpoint drift fails CI until the change is re-manifested and
+committed together (also catching hand-edits to the committed
+`serverpod_test_tools.dart` mirror). Code generation runs in CI as part of the
+`test` job and locally via `melos run generate`.
 
 ## Unit Tests
 
@@ -99,8 +117,9 @@ integration tests and the real live failure-injection checks.
 `authentication_flow_widget_test.dart` covers the real UI:
 
 - unauthenticated user on a protected route is redirected to `/login`
-- failed login surfaces a safe, human-readable `AppDialog` (never raw exception
-  text — semantic error handling via `ErrorTranslator` + `AppFailure.userMessage`)
+- failed login surfaces a safe, human-readable `AppInlineAlert` (never raw
+  exception text — semantic error handling via `ErrorTranslator` +
+  `AppFailure.userMessage`)
 - successful login navigates away from `/login`
 
 ## Golden Policy
@@ -108,7 +127,8 @@ integration tests and the real live failure-injection checks.
 See `apps/app/test/goldens/goldens_registry.md`. Baselines are enforced by
 `golden_policy_test.dart`: each listed baseline must exist with a valid status
 — `APPROVED` (`login_sign_in.png`, `login_register.png`, promoted 2026-09-08
-against `shipit_ui@1207004`, re-approved 2026-09-09 against `shipit_ui@d6abf9a`) or `DESIGN_PENDING` (candidate) — and an
+against `shipit_ui@1207004`, re-approved 2026-09-09 against `shipit_ui@d6abf9a`,
+re-approved 2026-09-10 against `shipit_ui@18d1a5d6`) or `DESIGN_PENDING` (candidate) — and an
 `APPROVED` baseline must reference its design revision. No baseline may be
 silently promoted or silently regenerated.
 
@@ -182,9 +202,12 @@ requests. Five jobs share one toolchain bootstrap (documented in
 `docs/architecture/flutter-toolchain.md`):
 
 - **analyze** — `melos run analyze` (`fvm dart analyze .`)
-- **test** — `melos run generate` then `melos run test`
+- **test** — `melos run generate:check` (drift gate) then `melos run test`
   (unit + server + Flutter), with a PostgreSQL 16 service for the DB-backed
   `test:server` suite
+- **build-web** — web release builds for `development`/`qa`/`production`
+  flavors (`melos run build:web:*`) on ubuntu (proves `product.yaml`
+  `qa.web: true`)
 - **build-android** — release APKs for `development`/`qa`/`production` flavors
   (`melos run build:android:*`) on ubuntu with JDK 17 + Android SDK (platform
   36, build-tools 36, pinned NDK)

@@ -12,6 +12,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
+  crypto: ^3.0.3
   melos: ^8.6.0
   flutter_lints: ^6.0.0
 
@@ -42,15 +43,28 @@ melos:
     generate:check:
       description: >-
         Drift detection. Runs the full generation pipeline, formats the output,
-        then fails if any tracked file changed. Lets CI catch model/endpoint/
-        BLoC changes that were not regenerated and committed, without re-reading
-        stale generated output (generated code is gitignored; the tracked
-        `serverpod_test_tools.dart` mirrors format style, so format is applied
-        before the diff).
+        verifies no tracked file changed, then compares a hash of the gitignored
+        generated output against the committed `.generated_manifest.json`.
+        A tracked-only diff cannot see field-level changes in models/endpoints
+        (Freezed `.g.dart`, Serverpod client/server output are gitignored), so
+        the manifest fingerprints the regenerated output; model drift fails CI
+        until `melos run generate:manifest` is committed with the change.
       run: |
         melos run generate
         melos run format
         git diff --exit-code --quiet HEAD
+        fvm dart run tool/update_generated_manifest.dart check
+
+    generate:manifest:
+      description: >-
+        Regenerate the generated-output manifest after a *legitimate* model or
+        endpoint change. Run the full generation pipeline, format, then snapshot
+        the new generated output into `.generated_manifest.json` (commit it
+        together with the model/endpoint change).
+      run: |
+        melos run generate
+        melos run format
+        fvm dart run tool/update_generated_manifest.dart
 
     generate:server:
       description: Serverpod generate only (server code + regenerated client package).

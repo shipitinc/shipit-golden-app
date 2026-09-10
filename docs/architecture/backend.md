@@ -175,7 +175,7 @@ serverpod/serverpod discussion #5403):
 - **development.yaml** — port 8080, db `shipit_golden`,
   `applyMigrations: true` (fresh checkout starts with `docker compose up` +
   `melos run dev:server`).
-- **test.yaml** — port 8081, db `shipit_golden_test`.
+- **test.yaml** — port 8082 (8081 is reserved for the Flutter web dev server), db `shipit_golden_test`.
 - **passwords.yaml** — Serverpod Auth secrets (`jwtRefreshTokenHashPepper`,
   `jwtHmacSha512PrivateKey`, `emailSecretHashPepper`) and the `database`
   password. NEVER commit production secrets.

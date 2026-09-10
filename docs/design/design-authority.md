@@ -178,11 +178,10 @@ dark canvases (UPSTREAM_UI_GAP-011 resolved in `shipit_ui@d6abf9a`).
   regressions fail CI with a diff). The login baselines
   (`login_sign_in.png`, `login_register.png`) are `APPROVED` against
   `shipit_ui@d6abf9a` (re-approved 2026-09-09 after the token-tree refactor
-  migration; initially promoted 2026-09-08 against `shipit_ui@1207004`).
-  The GAP-012 migration to `shipit_ui@18d1a5d6` (`AppTextButton` /
-  `AppIconButton`) changes the login rendering, so the baselines require
-  regeneration + re-approval against `shipit_ui@18d1a5d6` via the
-  `goldens-update.yml` workflow with design/human approval — tracked in
+  migration; initially promoted 2026-09-08 against `shipit_ui@1207004`),
+  and were re-approved 2026-09-10 against `shipit_ui@18d1a5d6` (the GAP-012
+  `AppTextButton` / `AppIconButton` migration) via the `goldens-update.yml`
+  workflow with design/human approval, recorded in
   `docs/qa/pending-actions.md`.
 - Approved goldens = visual contract; `flutter test --update-goldens` is NOT a
   fix. Promoting to `APPROVED` (and any subsequent regeneration) requires:
@@ -198,8 +197,8 @@ test/goldens/
 ├── goldens_registry.md      # status list (APPROVED / DESIGN_PENDING)
 ├── golden_policy_test.dart  # registry conformance + approved baselines
 └── goldens/
-    ├── login_sign_in.png    # APPROVED (shipit_ui@d6abf9a, re-approved 2026-09-09; re-approval pending vs 18d1a5d6)
-    └── login_register.png   # APPROVED (shipit_ui@d6abf9a, re-approved 2026-09-09; re-approval pending vs 18d1a5d6)
+    ├── login_sign_in.png    # APPROVED (re-approved 2026-09-10 vs shipit_ui@18d1a5d6)
+    └── login_register.png   # APPROVED (re-approved 2026-09-10 vs shipit_ui@18d1a5d6)
 ```
 
 ## Upstream Gaps

@@ -36,7 +36,8 @@ class ServerpodClientProvider {
   }
 
   /// Sessions persist in the secure keychain on mobile/desktop. On web the
-  /// keychain is unavailable, so sessions are kept in memory only.
+  /// keychain is unavailable, so sessions are kept in memory only and are
+  /// silently lost on a full page reload (see docs/architecture/frontend.md).
   static ClientAuthSuccessStorage _defaultStorage() {
     if (kIsWeb) return InMemoryAuthSuccessStorage();
     return SecureClientAuthSuccessStorage();

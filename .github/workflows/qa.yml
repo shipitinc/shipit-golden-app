@@ -86,9 +86,40 @@ jobs:
 
   # Build jobs prove the release artifacts compile for every defined flavor
   # (development/qa/production) with the pinned toolchain, in addition to the
-  # analysis/generation/test gates above. Android uses JDK 17 + Android SDK
-  # (platform 36, build-tools 36, pinned NDK); iOS builds without code signing
-  # on macOS. Both run through the same Melos build:scripts in the workspace.
+  # analysis/generation/test gates above. Web builds on ubuntu; Android uses
+  # JDK 17 + Android SDK (platform 36, build-tools 36, pinned NDK); iOS builds
+  # without code signing on macOS. All run through the same Melos build:*
+  # scripts in the workspace.
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.12.2
+      - name: Activate FVM (pinned) and add to PATH
+        run: |
+          dart pub global activate fvm 4.1.2
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+      - name: Install pinned Flutter SDK via FVM (.fvmrc)
+        run: fvm install
+      - name: Add FVM Flutter SDK to PATH
+        run: echo "$HOME/fvm/versions/3.44.7/bin" >> "$GITHUB_PATH"
+      - name: Activate Serverpod CLI (pinned)
+        run: dart pub global activate serverpod_cli 3.4.13
+      - name: Bootstrap
+        run: |
+          dart pub global activate melos 8.6.0
+          melos bootstrap
+      - name: Generate + drift check
+        run: melos run generate:check
+      - name: Build web release (development)
+        run: melos run build:web:development
+      - name: Build web release (qa)
+        run: melos run build:web:qa
+      - name: Build web release (production)
+        run: melos run build:web:production
+
   build-android:
     runs-on: ubuntu-latest
     steps:

@@ -152,6 +152,29 @@ context.isDesktopOrLarger // width >= 1024
 - Routes defined in `AppRouter`
 - Authentication redirects in router redirect
 
+## Session Persistence (ServerpodClientProvider)
+
+`ServerpodClientProvider` manages the shared Serverpod `api.Client` and
+`FlutterAuthSessionManager`. Session storage is platform-dependent:
+
+| Platform | Storage | Survives reload? |
+|----------|---------|-------------------|
+| Android / iOS / Desktop | `SecureClientAuthSuccessStorage` (OS keychain) | Yes |
+| Web | `InMemoryAuthSuccessStorage` | **No** |
+
+On web the browser's Secure Storage API is unavailable, so JWT access and
+refresh tokens are held in memory only. A full page reload (or navigation that
+destroys the Dart VM) silently discards the session — the user appears logged
+out without an explicit logout event. This is a known limitation of the
+Serverpod Flutter client on web; a persistent web storage adapter would need an
+explicit design task per AEF to implement (e.g. `localStorage` or cookie-based
+persistence with CSRF protections).
+
+Repositories never access storage directly; they go through
+`ServerpodClientProvider.shared` which owns the single client and session
+manager. Tests replace `ServerpodClientProvider.shared` with an in-memory
+provider so assertions do not touch the OS keychain.
+
 ## Dependency Injection
 - Constructor injection for repositories/services
 - BLoCs receive repositories via constructor
