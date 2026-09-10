@@ -56,7 +56,7 @@ Text('Title', style: TextStyle(fontSize: 24))
 - Colors → `context.color.*` (`bg.base/surface/subtle/disabled`, `fg.primary/secondary/muted/inverse/disabled`, `border.base/strong/focus/error`, `action.primary.bg/bgHover/fg`, `action.secondary.bg/border/fg`, `action.disabled.*`, `state.error/success/warning/info.fg|bg`, `scrim`, `shimmer.base/highlight`, `nav.*`, `tooltip.*`, `avatar.*`, `chip.*`, `table.*`)
 - Spacing → `context.space.s0` … `s16`
 - Typography → `context.text.{display|headline|title|body|label}.{large|medium|small}`; family via `context.font.resolvedFamily`
-- Radius → `context.radius.all.{none|sm|md|lg|xl|round}` (`BorderRadius.circular`)
+- Radius → `context.radius.all.{none|sm|md|lg|xl|full}` (`BorderRadius.circular`)
 - Breakpoints → `context.breakpoint.{mobile|tablet|desktop|wide|pageWidth}` (360 / 600 / 1024 / 1440 / 1200)
 - Elevation → `context.elevation.*`
 - Motion → `context.motion.*`

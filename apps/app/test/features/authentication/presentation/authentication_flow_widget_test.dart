@@ -72,10 +72,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AppInlineAlert), findsOneWidget);
-    expect(
-      find.text('Authentication required: Invalid credentials'),
-      findsOneWidget,
-    );
+    expect(find.text('Invalid credentials'), findsOneWidget);
   });
 
   testWidgets(

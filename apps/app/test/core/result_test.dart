@@ -50,10 +50,7 @@ void main() {
   group('AppFailure userMessage', () {
     test('maps each failure type to a human readable message', () {
       expect(AppFailure.network(message: 'x').userMessage, 'Network error: x');
-      expect(
-        AppFailure.auth(message: 'x').userMessage,
-        'Authentication required: x',
-      );
+      expect(AppFailure.auth(message: 'x').userMessage, 'x');
       expect(
         AppFailure.authorization(message: 'x').userMessage,
         'Access denied: x',

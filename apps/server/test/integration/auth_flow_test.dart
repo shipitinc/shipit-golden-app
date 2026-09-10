@@ -1,5 +1,5 @@
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    show AuthSuccess;
+    show AuthSuccess, RefreshTokenMalformedException;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     hide Protocol;
 import 'package:shipit_golden_server/src/auth/auth_setup.dart';
@@ -75,6 +75,33 @@ void main() {
           );
           expect(success.token, isNotEmpty);
           expect(success.refreshToken, isNotEmpty);
+        });
+
+        test(
+          'then a valid refresh token issues a fresh token pair for the same '
+          'user',
+          () async {
+            expect(registered.refreshToken, isNotEmpty);
+            final refreshed = await endpoints.jwtTokens.refreshAccessToken(
+              sessionBuilder,
+              refreshToken: registered.refreshToken!,
+            );
+            // Refresh happened, not a replay of the registration response.
+            expect(refreshed.token, isNotEmpty);
+            expect(refreshed.token, isNot(registered.token));
+            expect(refreshed.refreshToken, isNotEmpty);
+            expect(refreshed.authUserId, registered.authUserId);
+          },
+        );
+
+        test('then a garbage refresh token is rejected as malformed', () async {
+          expect(
+            () => endpoints.jwtTokens.refreshAccessToken(
+              sessionBuilder,
+              refreshToken: 'garbage-refresh-token',
+            ),
+            throwsA(isA<RefreshTokenMalformedException>()),
+          );
         });
 
         test('then login with a wrong password is rejected', () async {

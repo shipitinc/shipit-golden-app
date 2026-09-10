@@ -31,10 +31,13 @@ sealed class AppFailure with _$AppFailure {
 }
 
 extension AppFailureExtension on AppFailure {
+  /// User-facing message. Auth messages are already complete sentences (e.g.
+  /// "Incorrect email or password.", "Your session has expired. Please sign in
+  /// again."), so no blanket prefix is prepended.
   String get userMessage {
     return switch (this) {
       NetworkFailure(:final message) => 'Network error: $message',
-      AuthFailure(:final message) => 'Authentication required: $message',
+      AuthFailure(:final message) => message,
       AuthorizationFailure(:final message) => 'Access denied: $message',
       ValidationFailure(:final message) => 'Validation error: $message',
       ServerFailure(:final message) => 'Server error: $message',

@@ -125,13 +125,31 @@ generated paths.
 
 ### Melos Script Integration (`pubspec.yaml` `melos:` section)
 ```yaml
-scripts:
-  analyze: melos exec -- dart analyze
-  test: melos exec -- flutter test
-  generate:freezed: melos exec --scope=app -- dart run build_runner build
+melos:
+  scripts:
+    analyze:
+      description: Analyze all code.
+      exec: fvm dart analyze .
+
+    generate:freezed:
+      description: Freezed/JSON generation only.
+      run: melos exec --scope="shipit_golden_app" -- fvm dart run build_runner build
+
+    test:flutter:
+      description: Flutter app tests.
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter test
+
+    test:
+      description: Run all tests.
+      steps:
+        - test:unit
+        - test:server
+        - test:flutter
 ```
 
-The `melos exec` command runs in each package directory with the FVM Flutter SDK available.
+Melos scopes match the package names in the workspace (e.g.
+`shipit_golden_app`, `shipit_golden_server`, `app_client`), and every package
+command runs through the FVM-pinned SDK (`fvm dart` / `fvm flutter`).
 
 ## CI/CD Integration
 

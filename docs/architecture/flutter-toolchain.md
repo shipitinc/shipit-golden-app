@@ -190,8 +190,9 @@ to run/build per flavor rather than invoking `flutter` ad hoc.
 
 ### Hot Reload / Restart
 ```bash
-# Web
-fvm flutter run -d web-server --web-port=8080
+# Web (8081 is the canonical Flutter web dev port; Serverpod owns 8080 —
+# see root pubspec.yaml melos `dev:app` scripts)
+fvm flutter run -d web-server --web-port=8081
 ```
 
 ### Device Selection
@@ -205,11 +206,15 @@ fvm flutter emulators
 ### build_runner
 ```bash
 # Watch mode (development)
-fvm dart run build_runner watch --delete-conflicting-outputs
+fvm dart run build_runner watch
 
 # One-time (CI)
-fvm dart run build_runner build --delete-conflicting-outputs
+fvm dart run build_runner build
 ```
+
+> Current build_runner (2.15.x) deletes conflicting outputs by default; the
+> legacy `--delete-conflicting-outputs` flag was removed and is silently
+> ignored, so it is not passed (see root `pubspec.yaml` `generate:freezed`).
 
 ### Generated Files
 - `*.freezed.dart` / `*.g.dart` — Freezed / json_serializable (gitignored)
@@ -260,6 +265,17 @@ rm -rf .dart_tool
 melos bootstrap
 melos run generate
 ```
+
+### Known Benign Warnings
+
+- **`build:web` icon-font warning** — `flutter build web` may print a line such
+  as "Expected to find fonts for {CupertinoIcons}, but found {MaterialIcons}".
+  This is the icon tree-shaker noticing the Flutter SDK's built-in
+  `CupertinoIcons` class (compiled into the app dill via the framework) while
+  the app does not depend on the `cupertino_icons` package. It is benign:
+  nothing imports `CupertinoIcons` and the build succeeds. Do NOT add a
+  `cupertino_icons` dependency to silence it — that would only ship an unused
+  font.
 
 ## Performance
 

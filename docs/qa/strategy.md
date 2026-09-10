@@ -14,7 +14,7 @@ are declared but not yet in the standard pipeline.
         ┌┴─────────────┴┐
         │  Integration  │  ← apps/app/integration_test (real server, opt-in) + server integration
        ┌┴───────────────┴┐
-       │   Golden        │  ← test/goldens (APPROVED baselines)
+       │   Golden        │  ← test/goldens (APPROVED baselines; gated to Linux CI host)
       ┌┴─────────────────┴┐
       │    Widget         │  ← auth UI journey widget tests (redirect + failure dialog)
      ┌┴───────────────────┴┐
@@ -46,8 +46,12 @@ test/
 │       ├── bloc/programs_bloc_test.dart
 │       └── data/program_converters_test.dart
 ├── goldens/
-│   ├── golden_policy_test.dart     # registry conformance + candidate baselines
-│   └── goldens_registry.md         # baseline list + DESIGN_PENDING/APPROVED status
+│   ├── golden_policy_test.dart      # approved-baseline pixel comparisons (@Tags(['golden']), Linux-CI gated)
+│   ├── golden_registry_test.dart    # registry conformance (runs on any host)
+│   └── goldens_registry.md          # baseline list + DESIGN_PENDING/APPROVED status
+├── core/
+│   └── networking/
+│       └── session_restore_test.dart  # keychain-backed session restore across app restarts
 ├── accessibility/
 │   └── accessibility_semantics_test.dart
 └── theme/
@@ -66,15 +70,16 @@ device. NOT executed in `melos run test` (see gating).
 `qa.patrol: false`; running Patrol requires Patrol CLI + a device and is a
 documented pending integration.
 
-### apps/server/test/
+### apps/server/
 
 ```
-test/
-├── dart_test.yaml                       # registers the integration tag
-├── protocol_test.dart
-└── integration/
-    ├── test_tools/serverpod_test_tools.dart  # generated DB-backed wrappers
-    └── auth_flow_test.dart              # registration/login/protection/JWT
+apps/server/
+├── dart_test.yaml                       # registers the integration tag (suite root)
+└── test/
+    ├── protocol_test.dart
+    └── integration/
+        ├── test_tools/serverpod_test_tools.dart  # generated DB-backed wrappers
+        └── auth_flow_test.dart              # registration/login/protection/JWT
 ```
 
 ## Running Tests (`melos run *`, from repository root)
@@ -87,7 +92,8 @@ test/
 | `melos run generate:manifest` | all | Re-snapshot `.generated_manifest.json` after a *legitimate* model/endpoint change |
 | `melos run test:unit` | app_client | generated protocol round-trips |
 | `melos run test:server` | apps/server | DB-backed integration, tag `integration` |
-| `melos run test:flutter` | apps/app | unit + widget + golden + accessibility |
+| `melos run test:flutter` | apps/app | unit + widget + accessibility; golden pixel comparisons excluded via `--exclude-tags golden` so a fresh dev machine (macOS renders text ~1% differently) is never red by design |
+| `melos run test:golden` | apps/app test/goldens | `--tags golden`; authoritative ONLY on the Linux CI host (platform of record for approved baselines) |
 | `melos run test` | unit+server+flutter | default non-integration suite |
 | `melos run test:integration` | apps/app integration_test | requires live server + device |
 | `melos run qa` | analyze + test | integration/Patrol are opt-in |
@@ -132,6 +138,14 @@ re-approved 2026-09-10 against `shipit_ui@18d1a5d6`) or `DESIGN_PENDING` (candid
 `APPROVED` baseline must reference its design revision. No baseline may be
 silently promoted or silently regenerated.
 
+The approved-baseline visual comparisons are tagged `@Tags(['golden'])` so
+`melos run test:flutter` excludes them (`--exclude-tags golden`); the
+registry-conformance checks are untagged and run everywhere. The pixel
+comparisons are enforced on the Linux CI host via `melos run test:golden`
+(a step of the `test` job in `.github/workflows/qa.yml`) — the platform of
+record. A macOS dev machine is therefore never red "by design" for the ~1%
+text rasterization difference.
+
 Regenerating a baseline requires design/human approval:
 
 1. Restore the baseline (`git checkout -- <file>` or re-copy from the PR).
@@ -162,6 +176,8 @@ keyboard review.
 - register → verify → login issues tokens
 - `hasAccount` is false for unauthenticated sessions (no account leakage)
 - wrong password → `EmailAccountLoginException` (typed 400)
+- a valid JWT refresh token issues a fresh token pair; a garbage refresh token
+  is rejected as `RefreshTokenMalformedException`
 - `household`/`programs` reject unauthenticated calls →
   `ServerpodUnauthenticatedException` (`requireLogin`)
 
@@ -203,8 +219,9 @@ requests. Five jobs share one toolchain bootstrap (documented in
 
 - **analyze** — `melos run analyze` (`fvm dart analyze .`)
 - **test** — `melos run generate:check` (drift gate) then `melos run test`
-  (unit + server + Flutter), with a PostgreSQL 16 service for the DB-backed
-  `test:server` suite
+  (unit + server + Flutter) and `melos run test:golden` (approved-baseline
+  pixel comparisons, Linux-authoritative), with a PostgreSQL 16 service for the
+  DB-backed `test:server` suite
 - **build-web** — web release builds for `development`/`qa`/`production`
   flavors (`melos run build:web:*`) on ubuntu (proves `product.yaml`
   `qa.web: true`)

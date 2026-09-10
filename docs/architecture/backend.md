@@ -95,20 +95,17 @@ services once, after the `Serverpod(...)` constructor:
 void configureAuthServices(Serverpod pod) {
   pod.initializeAuthServices(
     tokenManagerBuilders: [JwtConfigFromPasswords()],
-    identityProviderBuilders: [
-      EmailIdpConfigFromPasswords(
-        passwordHashPepperKey: 'emailSecretHashPepper',
-        service: EmailIdpConfigWithDevCodeLogging(pod),
-      ),
-    ],
+    identityProviderBuilders: [_emailIdpConfig()],
   );
 }
 ```
 
-The `EmailIdpConfig` is decorated to log verification codes to the server
-console for the development workflow (no SMTP provider yet). `test.yaml`
-configures mailGun/test overrides; `serverpod_test_tools.dart` exercises the
-same `configureAuthServices` in a `setUp()`.
+The `EmailIdpConfig` (built by `_emailIdpConfig`) logs verification codes to
+the server console via inline `sendRegistrationVerificationCode` /
+`sendPasswordResetVerificationCode` callbacks for the development workflow (no
+SMTP provider yet). The same `configureAuthServices` / 
+`configureAuthServicesSingleton` (used by the test harness in a `setUp()`) is
+exercised by `serverpod_test_tools.dart`.
 
 ## Authentication
 

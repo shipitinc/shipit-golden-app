@@ -57,7 +57,7 @@ class AddMemberDialog {
               label: 'Cancel',
               onPressed: () => Navigator.pop(context),
             ),
-            BlocBuilder<HouseholdBloc, dynamic>(
+            BlocBuilder<HouseholdBloc, HouseholdState>(
               builder: (context, state) {
                 final isLoading = state is HouseholdLoading;
                 return AppButton.primary(

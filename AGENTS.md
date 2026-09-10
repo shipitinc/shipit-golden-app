@@ -103,8 +103,9 @@ melos run format                     # Format all code
 melos run analyze                    # Analyze all code
 melos run test                       # Run all tests
 melos run test:unit                  # Dart unit tests
-melos run test:flutter               # Flutter tests
 melos run test:server                # Serverpod tests
+melos run test:flutter               # Flutter tests (golden pixel comparisons excluded)
+melos run test:golden                # Golden tests — Linux-CI-authoritative (do not treat macOS diffs as a failure)
 melos run qa                         # Full QA pipeline (analyze + test only; integration/Patrol are opt-in)
 melos run test:integration           # Flutter integration tests
 

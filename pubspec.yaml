@@ -76,7 +76,7 @@ melos:
 
     generate:freezed:
       description: Freezed/JSON generation only.
-      run: melos exec --scope="shipit_golden_app" -- fvm dart run build_runner build --delete-conflicting-outputs
+      run: melos exec --scope="shipit_golden_app" -- fvm dart run build_runner build
 
     seed:
       description: Seed the database with reference data (idempotent).
@@ -98,8 +98,18 @@ melos:
       run: melos exec --scope="shipit_golden_server" -- fvm dart test
 
     test:flutter:
-      description: Flutter app tests.
-      run: melos exec --scope="shipit_golden_app" -- fvm flutter test
+      description: >-
+        Flutter app tests (golden pixel comparisons excluded — they run only
+        via `test:golden` on the Linux CI host, the platform of record for
+        approved baselines).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter test --exclude-tags golden
+
+    test:golden:
+      description: >-
+        Golden baseline tests. Authoritative ONLY on the Linux CI host
+        (approved baselines are gated there; macOS renders text ~1% differently
+        so `melos run test:golden` on a dev machine is expected to diff).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter test test/goldens --tags golden
 
     test:integration:
       description: Flutter integration tests.
