@@ -49,24 +49,47 @@ Melos runs commands in package directories. FVM Flutter is available because:
 3. Melos inherits shell environment
 
 ### Melos Scripts (`pubspec.yaml` `melos:` section)
+
+Scripts are defined in the workspace `pubspec.yaml` under the `melos:` key
+(Melos 8). Multi-step scripts use `steps:` to compose sub-scripts:
+
 ```yaml
-scripts:
-  analyze: melos exec -- dart analyze
-  test: melos exec -- flutter test
-  build:web:development: melos exec --scope=shipit_golden_app -- flutter build web --release --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
-  build:web:qa: melos exec --scope=shipit_golden_app -- flutter build web --release --dart-define=FLAVOR=qa --target=lib/app/bootstrap/app_bootstrap.dart
-  build:web:production: melos exec --scope=shipit_golden_app -- flutter build web --release --dart-define=FLAVOR=production --target=lib/app/bootstrap/app_bootstrap.dart
-  build:android:development: melos exec --scope=shipit_golden_app -- flutter build apk --flavor development --dart-define=FLAVOR=development --target=lib/app/bootstrap/app_bootstrap.dart
-  dev:app:qa: melos exec --scope=shipit_golden_app -- flutter run -d web-server --web-port=8081 --dart-define=FLAVOR=qa --target=lib/app/bootstrap/app_bootstrap.dart
-  run:ios:production: melos exec --scope=shipit_golden_app -- flutter run --flavor production --dart-define=FLAVOR=production --target=lib/app/bootstrap/app_bootstrap.dart
-  generate:freezed: melos exec --scope=shipit_golden_app -- fvm dart run build_runner build --delete-conflicting-outputs
-  test:unit: melos exec --scope=app_client -- fvm dart test
-  test:server: melos exec --scope=shipit_golden_server -- fvm dart test
-  test:flutter: melos exec --scope=shipit_golden_app -- fvm flutter test
+melos:
+  scripts:
+    format:
+      description: Format all Dart code.
+      exec: fvm dart format .
+
+    analyze:
+      description: Analyze all code.
+      exec: fvm dart analyze .
+
+    generate:
+      description: Run all code generation (Serverpod, Freezed, JSON serialization).
+      steps:
+        - generate:server
+        - generate:freezed
+
+    test:
+      description: Run all tests.
+      steps:
+        - test:unit
+        - test:server
+        - test:flutter
+
+    qa:
+      description: >-
+        Run default QA pipeline (analyze + tests). Device/server-gated suites
+        (integration, Patrol) are opt-in; see docs/qa/strategy.md.
+      steps:
+        - analyze
+        - test
 ```
 
-The full matrix of `dev:app:*`, `run:android:*`, `run:ios:*`, `build:web:*`,
-`build:android:*` and `build:ios:*` scripts lives in the root `pubspec.yaml`.
+Single-step scripts use `run:` (for shell pipelines) or `exec:` (for simple
+commands). The full matrix of `dev:app:*`, `run:android:*`, `run:ios:*`,
+`build:web:*`, `build:android:*` and `build:ios:*` scripts lives in the
+root `pubspec.yaml`.
 
 ## Flutter Upgrade Workflow
 

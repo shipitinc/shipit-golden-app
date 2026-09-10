@@ -60,12 +60,8 @@ else
   AppDataTable(...);
 ```
 
-The dev stub (`household_endpoint.dart`) adds ~600 ms simulated latency to
-add/remove so loading states are visible in local development.
-
 ## Reference files
 
 - `apps/app/lib/features/household/bloc/household_bloc.dart`
 - `apps/app/lib/features/household/presentation/widgets/member_list.dart`
 - `apps/app/lib/features/household/presentation/screens/household_screen.dart`
-- `apps/server/lib/src/endpoints/household_endpoint.dart` (latency stub)

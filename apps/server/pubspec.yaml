@@ -19,3 +19,11 @@ dev_dependencies:
 
 executables:
   main: bin/main.dart
+
+serverpod:
+  scripts:
+    # NB: deliberately NOT `--role maintenance` — the dev config sets
+    # `applyMigrations: true`, which makes Serverpod 3.4.13 maintenance mode
+    # exit after the (already-applied) migration step before the seed body
+    # runs. The seed script calls `pod.shutdown()` itself instead.
+    seed: dart bin/seed.dart

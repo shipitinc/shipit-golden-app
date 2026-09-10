@@ -8,6 +8,7 @@ import 'package:shipit_golden_server/src/generated/protocol.dart'
 import 'package:test/test.dart';
 
 import 'test_tools/serverpod_test_tools.dart';
+import 'test_tools/test_server_config.dart';
 
 void main() {
   group('Email IDP auth', () {
@@ -106,6 +107,7 @@ void main() {
         );
       },
       rollbackDatabase: RollbackDatabase.disabled,
+      configOverride: useEphemeralApiPort(),
     );
   });
 
@@ -138,6 +140,6 @@ void main() {
           throwsA(isA<ServerpodUnauthenticatedException>()),
         );
       });
-    });
+    }, configOverride: useEphemeralApiPort());
   });
 }

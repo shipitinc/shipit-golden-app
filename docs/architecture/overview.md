@@ -107,11 +107,22 @@ User Input → LoginScreen → AuthenticationBloc → AuthRepository → Serverp
 ```
 HouseholdScreen → HouseholdBloc → HouseholdRepository → Serverpod generated client (household)
                                                                   ↓
-                                                        Serverpod HouseholdEndpoint
+                                                        Serverpod HouseholdEndpoint (PostgreSQL-backed)
                                                                   ↓
                                                         PostgreSQL (Household, Members)
                                                                   ↓
                                                         HouseholdState.loaded
+```
+
+### Programs Flow
+```
+ProgramsScreen → ProgramsBloc → ProgramsRepository → Serverpod generated client (programs)
+                                                                ↓
+                                                      Serverpod ProgramsEndpoint (PostgreSQL-backed)
+                                                                ↓
+                                                      PostgreSQL (Programs)
+                                                                ↓
+                                                      ProgramsState.loaded
 ```
 
 ## Technology Stack Versions
@@ -123,6 +134,6 @@ HouseholdScreen → HouseholdBloc → HouseholdRepository → Serverpod generate
 | Serverpod | 3.4.13 | Latest stable |
 | Melos | 8.6.0 | Latest stable |
 | FVM | 4.1.2 | Latest stable |
-| shipit_ui | 0.1.0 | Git main |
+| shipit_ui | 0.1.0 | Git pinned SHA `d6abf9a` |
 | bloc | 9.0.0 | Latest stable |
 | freezed | 3.0.0 | Latest stable |

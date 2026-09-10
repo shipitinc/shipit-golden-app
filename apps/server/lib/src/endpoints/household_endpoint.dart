@@ -1,81 +1,106 @@
 import 'package:serverpod/serverpod.dart';
 import 'package:shipit_golden_server/src/generated/protocol.dart';
 
-// STUB / DEV_PENDING
-// ---------------------------------------------------------------------------
-// This endpoint is a local-development STUB, NOT canonical. It serves in-memory
-// data only (no PostgreSQL persistence, no real authorization beyond JWT) so
-// the reference UI can be built against stable responses. It exists to be
-// REPLACED by a DB-backed implementation; do not copy the in-memory patterns
-// below as canonical. See docs/architecture/backend.md and product.yaml.
-// ---------------------------------------------------------------------------
-
+/// Household endpoint backed by PostgreSQL.
+///
+/// Each authenticated user owns exactly one household, created automatically on
+/// first access. Any authenticated member can add or remove members.
 class HouseholdEndpoint extends Endpoint {
-  static int _nextId = 3;
-
-  /// In-memory member store for the dev stub so that id-based add/remove
-  /// operations are stable within a server process lifetime.
-  static final List<HouseholdMember> _members = [
-    HouseholdMember(
-      id: 1,
-      householdId: 'household_1',
-      name: 'John Doe',
-      email: 'john@example.com',
-      role: 'owner',
-      joinedAt: DateTime.now().subtract(const Duration(days: 30)),
-    ),
-    HouseholdMember(
-      id: 2,
-      householdId: 'household_1',
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      role: 'member',
-      joinedAt: DateTime.now().subtract(const Duration(days: 15)),
-    ),
-  ];
-
   @override
   bool get requireLogin => true;
 
+  /// Returns the household owned by the authenticated user, creating one
+  /// (with the caller as owner-member) if it does not yet exist.
   Future<Household> getCurrent(Session session) async {
-    return Household(
-      name: 'Demo Household',
-      ownerId: session.authenticated!.userIdentifier,
-      createdAt: DateTime.now().subtract(const Duration(days: 90)),
+    final ownerId = session.authenticated!.userIdentifier;
+    final household = await _findHouseholdByOwner(session, ownerId);
+    if (household != null) return household;
+
+    // First access — auto-create household and add the owner as a member.
+    final created = await Household.db.insertRow(
+      session,
+      Household(
+        name: 'My Household',
+        ownerId: ownerId,
+        createdAt: DateTime.now(),
+      ),
+    );
+    await HouseholdMember.db.insertRow(
+      session,
+      HouseholdMember(
+        householdId: created.id.toString(),
+        name: 'Owner',
+        email: '',
+        role: 'owner',
+        joinedAt: DateTime.now(),
+      ),
+    );
+    return created;
+  }
+
+  /// Returns all members of the authenticated user's household.
+  Future<List<HouseholdMember>> getMembers(Session session) async {
+    final household = await _requireHousehold(session);
+    return HouseholdMember.db.find(
+      session,
+      where: (m) => m.householdId.equals(household.id.toString()),
     );
   }
 
-  Future<List<HouseholdMember>> getMembers(Session session) async {
-    return List.unmodifiable(_members);
-  }
-
+  /// Adds a member to the authenticated user's household.
   Future<HouseholdMember> addMember(
     Session session,
     String name,
     String email,
   ) async {
-    await _simulateNetworkLatency();
-    final member = HouseholdMember(
-      id: _nextId++,
-      householdId: 'household_1',
-      name: name,
-      email: email,
-      role: 'member',
-      joinedAt: DateTime.now(),
+    final household = await _requireHousehold(session);
+    return HouseholdMember.db.insertRow(
+      session,
+      HouseholdMember(
+        householdId: household.id.toString(),
+        name: name,
+        email: email,
+        role: 'member',
+        joinedAt: DateTime.now(),
+      ),
     );
-    _members.add(member);
-    return member;
   }
 
+  /// Removes a member from the authenticated user's household by member ID.
   Future<void> removeMember(Session session, String memberId) async {
-    await _simulateNetworkLatency();
-    _members.removeWhere((m) => m.id.toString() == memberId);
+    final household = await _requireHousehold(session);
+    final memberIdInt = int.parse(memberId);
+    await HouseholdMember.db.deleteWhere(
+      session,
+      where: (m) =>
+          m.id.equals(memberIdInt) &
+          m.householdId.equals(household.id.toString()),
+    );
   }
 
-  /// Deliberately mimics the latency of a real backend so loading/shimmer
-  /// states (e.g. the members-table shimmer) are visible while developing
-  /// against the local stub.
-  Future<void> _simulateNetworkLatency() async {
-    await Future<void>.delayed(const Duration(milliseconds: 600));
+  /// Finds the household owned by [ownerId], or `null` if none exists.
+  Future<Household?> _findHouseholdByOwner(
+    Session session,
+    String ownerId,
+  ) async {
+    final households = await Household.db.find(
+      session,
+      where: (h) => h.ownerId.equals(ownerId),
+      limit: 1,
+    );
+    return households.isEmpty ? null : households.first;
+  }
+
+  /// Returns the authenticated user's household, throwing if none exists.
+  Future<Household> _requireHousehold(Session session) async {
+    final ownerId = session.authenticated!.userIdentifier;
+    final household = await _findHouseholdByOwner(session, ownerId);
+    if (household == null) {
+      throw StateError(
+        'No household found for user $ownerId. '
+        'Call getCurrent first to auto-create.',
+      );
+    }
+    return household;
   }
 }

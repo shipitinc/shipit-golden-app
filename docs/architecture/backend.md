@@ -11,7 +11,8 @@ owns real authentication (email registration + JWT), households, and programs.
 ```
 apps/server/
 ├── bin/
-│   └── main.dart               # Entry point
+│   ├── main.dart               # Entry point
+│   └── seed.dart               # One-off DB seeder (melos run seed)
 ├── config/
 │   ├── development.yaml        # Ports, db name, applyMigrations
 │   ├── passwords.yaml          # Secrets + test db password (never committed in prod)
@@ -55,7 +56,7 @@ class: Household
 table: households
 fields:
   name: String
-  ownerId: String?  # references the Serverpod Auth user id
+  ownerId: String  # references the Serverpod Auth user id
 ```
 
 ### 2. Endpoints (Dart)
@@ -73,13 +74,15 @@ class AuthEndpoint extends EmailIdpBaseEndpoint {
 }
 ```
 
-Protected product endpoints enforce auth server-side:
+Protected product endpoints enforce auth server-side and persist to PostgreSQL
+via the generated `*.db` repositories:
 
 ```dart
-@serverpod.Serializer(serializer: 'household/getCurrent')
+// household_endpoint.dart — DB-backed
 Future<Household> getCurrent(Session session) {
   // requireLogin throws ServerpodUnauthenticatedException (HTTP 401)
-  // when no valid JWT is present, before the handler runs.
+  // when no valid JWT is present, before the handler runs. The household is
+  // looked up by the authenticated user's id and auto-created on first access.
 }
 ```
 
@@ -150,6 +153,22 @@ The generated client (`packages/app_client`) contains endpoint client classes
 serialization. Generated contracts are authoritative for client/server
 communication; the app maps protocol models to feature domain models via
 dedicated converters.
+
+## Database Seeding
+
+Serverpod 3.4.13 has no built-in seed command, so seeding follows the canonical
+one-off maintenance pattern (see `apps/server/bin/seed.dart` and the
+serverpod/serverpod discussion #5403):
+
+- `bin/seed.dart` starts the server, opens a session, and inserts the reference
+  household (owner + members) and sample programs.
+- Seeding is **idempotent**: each step checks for existing rows before inserting.
+- Run it with `melos run seed` from the repository root (or `serverpod run seed`
+  from `apps/server`).
+- The seed owner uses a fixed id
+  (`00000000-0000-0000-0000-000000000001`) so it never collides with real auth
+  users, which get UUIDs from `EmailIdp`. On first access the household endpoint
+  auto-creates a household for any real user.
 
 ## Configuration
 

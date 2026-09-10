@@ -100,7 +100,7 @@ melos run test                       # Run all tests
 melos run test:unit                  # Dart unit tests
 melos run test:flutter               # Flutter tests
 melos run test:server                # Serverpod tests
-melos run qa                         # Full QA pipeline (analyze + test + integration)
+melos run qa                         # Full QA pipeline (analyze + test only; integration/Patrol are opt-in)
 melos run test:integration           # Flutter integration tests
 
 # Build (per platform + flavor)

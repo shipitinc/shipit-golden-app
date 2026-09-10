@@ -14,7 +14,7 @@ are declared but not yet in the standard pipeline.
         ┌┴─────────────┴┐
         │  Integration  │  ← apps/app/integration_test (real server, opt-in) + server integration
        ┌┴───────────────┴┐
-       │   Golden        │  ← test/goldens (DESIGN_PENDING candidate baselines)
+       │   Golden        │  ← test/goldens (APPROVED baselines)
       ┌┴─────────────────┴┐
       │    Widget         │  ← auth UI journey widget tests (redirect + failure dialog)
      ┌┴───────────────────┴┐
@@ -108,7 +108,7 @@ integration tests and the real live failure-injection checks.
 See `apps/app/test/goldens/goldens_registry.md`. Baselines are enforced by
 `golden_policy_test.dart`: each listed baseline must exist with a valid status
 — `APPROVED` (`login_sign_in.png`, `login_register.png`, promoted 2026-09-08
-against `shipit_ui@1207004`) or `DESIGN_PENDING` (candidate) — and an
+against `shipit_ui@1207004`, re-approved 2026-09-09 against `shipit_ui@d6abf9a`) or `DESIGN_PENDING` (candidate) — and an
 `APPROVED` baseline must reference its design revision. No baseline may be
 silently promoted or silently regenerated.
 

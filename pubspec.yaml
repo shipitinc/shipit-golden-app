@@ -64,6 +64,10 @@ melos:
       description: Freezed/JSON generation only.
       run: melos exec --scope="shipit_golden_app" -- fvm dart run build_runner build --delete-conflicting-outputs
 
+    seed:
+      description: Seed the database with reference data (idempotent).
+      run: cd apps/server && fvm dart run bin/seed.dart
+
     test:
       description: Run all tests.
       steps:
