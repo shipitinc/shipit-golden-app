@@ -182,8 +182,9 @@ within the revision range `2a916a5..1207004`.
   toggle) and `AppIconButton` (back arrow); `household_screen.dart` and
   `programs_screen.dart` use `AppIconButton` for the refresh and sign-out
   actions (replacing the raw `IconButton` + `AppTooltip` composition). Login
-  golden baselines PAL pending re-approval against `shipit_ui@18d1a5d6` (see
-  pending-actions.md).
+  golden baselines were regenerated and re-approved against
+  `shipit_ui@18d1a5d6` via `goldens-update.yml` (recorded in
+  `goldens_registry.md`; pending-actions.md #6 completed 2026-09-10).
 
 ## Reporting Process
 
