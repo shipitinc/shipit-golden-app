@@ -141,14 +141,15 @@ class _AuthScreenState extends State<_AuthScreen> {
                                   state is AuthenticationRegistrationSubmitting;
                               return Row(
                                 children: [
-                                  AppTooltip(
-                                    message: 'Back to sign in',
-                                    child: IconButton(
-                                      icon: const Icon(Icons.arrow_back),
-                                      onPressed: submitting
-                                          ? null
-                                          : () => _toggleMode(),
-                                    ),
+                                  AppIconButton(
+                                    icon: Icons.arrow_back,
+                                    tooltip: 'Back to sign in',
+                                    state: submitting
+                                        ? AppButtonState.disabled
+                                        : AppButtonState.base,
+                                    onPressed: submitting
+                                        ? null
+                                        : () => _toggleMode(),
                                   ),
                                 ],
                               );
@@ -280,13 +281,12 @@ class _AuthScreenState extends State<_AuthScreen> {
               onPressed: loading ? null : () => _submit(context.read()),
             ),
             SizedBox(height: context.space.s3),
-            TextButton(
+            AppTextButton(
+              label: register
+                  ? 'Already have an account? Sign in'
+                  : 'New here? Create an account',
+              state: loading ? AppButtonState.disabled : AppButtonState.base,
               onPressed: loading ? null : _toggleMode,
-              child: Text(
-                register
-                    ? 'Already have an account? Sign in'
-                    : 'New here? Create an account',
-              ),
             ),
             if (!register)
               Padding(

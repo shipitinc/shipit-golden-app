@@ -32,24 +32,23 @@ class HouseholdView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Household'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
+          AppIconButton(
+            icon: Icons.refresh,
+            tooltip: 'Refresh',
             onPressed: () {
               context.read<HouseholdBloc>().add(
                 const HouseholdRefreshRequested(),
               );
             },
           ),
-          AppTooltip(
-            message: 'Sign out',
-            child: IconButton(
-              icon: const Icon(Icons.logout),
-              onPressed: () {
-                context.read<AuthenticationBloc>().add(
-                  const AuthenticationEvent.logoutRequested(),
-                );
-              },
-            ),
+          AppIconButton(
+            icon: Icons.logout,
+            tooltip: 'Sign out',
+            onPressed: () {
+              context.read<AuthenticationBloc>().add(
+                const AuthenticationEvent.logoutRequested(),
+              );
+            },
           ),
         ],
       ),

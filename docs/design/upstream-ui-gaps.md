@@ -2,19 +2,22 @@
 
 Tracking components needed by Golden App that don't exist in shipit_ui.
 
-> **Status of this document:** reviewed against shipit_ui revision `d6abf9a`
+> **Status of this document:** reviewed against shipit_ui revision `18d1a5d6`
 > (2026-09-09, the revision pinned in `apps/app/pubspec.yaml`). GAP-001 through
 > GAP-008 shipped upstream and the Golden App now consumes the components (see
 > **Resolved Gaps** below). GAP-009 (Inter font bundling), GAP-010 (AppTextField
-> validation text) and GAP-011 (dark mode) all shipped upstream — GAP-009 as
+> validation text), GAP-011 (dark mode) and GAP-012 (AppTextButton /
+> AppIconButton) all shipped upstream — GAP-009 as
 > [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8),
 > GAP-010 as
-> [shipitinc/shipit-ui#9](https://github.com/shipitinc/shipit-ui/issues/9) and
+> [shipitinc/shipit-ui#9](https://github.com/shipitinc/shipit-ui/issues/9),
 > GAP-011 as
-> [shipitinc/shipit-ui#10](https://github.com/shipitinc/shipit-ui/issues/10) —
-> and the Golden App consumes all three (real Inter in tests + regenerated
-> baselines; form-field validation showcase; dark mode regression test). See
-> below.
+> [shipitinc/shipit-ui#10](https://github.com/shipitinc/shipit-ui/issues/10) and
+> GAP-012 as
+> [shipitinc/shipit-ui#11](https://github.com/shipitinc/shipit-ui/issues/11) —
+> and the Golden App consumes all of them (real Inter in tests + regenerated
+> baselines; form-field validation showcase; dark mode regression test;
+> auth/household/programs buttons). See below.
 
 ## Revision History
 
@@ -25,6 +28,12 @@ Tracking components needed by Golden App that don't exist in shipit_ui.
   `context.text.*`, `context.breakpoint.*`, etc. — static token classes were
   deleted; `shipitDarkTheme()` fixed, GAP-011 resolved). The Golden App
   migrated all token reads to the `context.*` surface.
+- `2026-09-09` — bumped to `18d1a5d6` (GAP-012 resolved: `AppTextButton` and
+  `AppIconButton` shipped in
+  [shipitinc/shipit-ui#11](https://github.com/shipitinc/shipit-ui/issues/11),
+  closing the last open gap). The Golden App swapped the login-screen
+  `TextButton`/`IconButton` workarounds and the household/programs app-bar
+  `IconButton`s for the upstream components.
 
 ## Resolved Gaps
 
@@ -152,6 +161,29 @@ within the revision range `2a916a5..1207004`.
 - **Workaround**: none required — surfaces/text read from `MaterialApp` themes
   (`shipitLightTheme`/`shipitDarkTheme`) with no app-side override; dark-token
   values trace to approved Penpot dark tokens via shipit_ui maintained tokens
+
+### UPSTREAM_UI_GAP-012: AppTextButton and AppIconButton variants
+- **Desired Component**: `AppTextButton` (text/link-style button, e.g. "New
+  here? Create an account") and `AppIconButton` (icon-only button, e.g. the
+  back arrow on the register mode of the login screen and the refresh/sign-out
+  actions in the household/programs app bars)
+- **Reason**: shipit_ui v0.1.0 ships only `AppButton` (primary/secondary with
+  optional icon); the Golden App login screen needs both variants but must not
+  silently reimplement shipit_ui, so it fell back to raw Material
+  `TextButton`/`IconButton` with `UPSTREAM_UI_GAP` comments
+- **Recommended Owner**: shipit-ui
+- **shipit_ui**: shipped in `18d1a5d6` (`AppTextButton`, `AppIconButton`,
+  matching the `AppButton` conventions — `context.*` tokens, `AppButtonState`,
+  `semanticLabel`, 44 px tap targets; mapped to approved Penpot boards
+  `component/button/text` and `component/button/icon`)
+- **Issue**: [shipitinc/shipit-ui#11](https://github.com/shipitinc/shipit-ui/issues/11) — closed
+- **Status**: resolved 2026-09-09
+- **Workaround**: removed — `login_screen.dart` uses `AppTextButton` (mode
+  toggle) and `AppIconButton` (back arrow); `household_screen.dart` and
+  `programs_screen.dart` use `AppIconButton` for the refresh and sign-out
+  actions (replacing the raw `IconButton` + `AppTooltip` composition). Login
+  golden baselines PAL pending re-approval against `shipit_ui@18d1a5d6` (see
+  pending-actions.md).
 
 ## Reporting Process
 
