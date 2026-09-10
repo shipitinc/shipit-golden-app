@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shipit_golden_app/core/core.dart';
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_event.dart';
@@ -16,6 +17,7 @@ class AuthenticationBloc
     on<AuthenticationRegisterRequested>(_onRegisterRequested);
     on<AuthenticationVerifyRegistrationCode>(_onVerifyRegistrationCode);
     on<AuthenticationLogoutRequested>(_onLogoutRequested);
+    on<AuthenticationSessionExpired>(_onSessionExpired);
   }
 
   Future<void> _onStarted(
@@ -29,9 +31,10 @@ class AuthenticationBloc
         emit(AuthenticationState.authenticated(token: info.token, email: ''));
         return;
       }
-    } catch (_) {
+    } catch (e) {
       // Secure-storage/keychain failures must not crash startup; fall through
-      // to the unauthenticated state.
+      // to the unauthenticated state. Log so the failure is not invisible.
+      debugPrint('[authentication] session restore failed: $e');
     }
     emit(const AuthenticationState.unauthenticated());
   }
@@ -96,6 +99,21 @@ class AuthenticationBloc
     Emitter<AuthenticationState> emit,
   ) async {
     await _authRepository.logout();
+    emit(const AuthenticationState.unauthenticated());
+  }
+
+  Future<void> _onSessionExpired(
+    AuthenticationSessionExpired event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    debugPrint('[authentication] session expired; ending local session');
+    try {
+      await _authRepository.logout();
+    } catch (e) {
+      // Clearing the local session must not throw the app into an error
+      // screen; the unauthenticated state below is authoritative regardless.
+      debugPrint('[authentication] failed to clear session on expiry: $e');
+    }
     emit(const AuthenticationState.unauthenticated());
   }
 }

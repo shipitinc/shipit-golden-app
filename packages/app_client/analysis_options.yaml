@@ -1,0 +1,4 @@
+# Analyzer configuration for the Serverpod generated client package (pure
+# Dart, no Flutter). Generation may be re-run at any time; the protocol output
+# is gitignored and fingerprinted by the generated-manifest tool.
+include: package:lints/recommended.yaml

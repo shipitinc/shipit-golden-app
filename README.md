@@ -87,8 +87,8 @@ All commands run from repository root via Melos:
 |---------|-------------|
 | `melos bootstrap` | Install all dependencies |
 | `melos run generate` | Generate all code (Serverpod, Freezed, JSON) |
-| `melos run generate:server` | Serverpod generate only |
-| `melos run generate:client` | Regenerate Serverpod client package only |
+| `melos run generate:server` | Serverpod generate (server output + client package) |
+| `melos run generate:client` | Serverpod generate (same as `generate:server`; Serverpod has no client-only mode) |
 | `melos run generate:freezed` | Freezed/JSON generation only |
 | `melos run generate:check` | Drift gate (tracked diff + generated-manifest hash) |
 | `melos run generate:manifest` | Re-snapshot `.generated_manifest.json` after model changes |

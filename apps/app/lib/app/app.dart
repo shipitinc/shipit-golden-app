@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:shipit_ui/shipit_ui.dart';
 import 'package:shipit_golden_app/app/routing/app_router.dart';
 import 'package:shipit_golden_app/core/config/flavor_config.dart';
+import 'package:shipit_golden_app/core/networking/session_expired_notifier.dart';
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_bloc.dart';
+import 'package:shipit_golden_app/features/authentication/bloc/authentication_event.dart';
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_state.dart';
 
 class ShipItGoldenApp extends StatelessWidget {
@@ -41,10 +43,19 @@ class _AppViewState extends State<_AppView> {
   void initState() {
     super.initState();
     _router = AppRouter.create(widget.authBloc);
+    // A mid-session 401 (expired/invalidated JWT) surfaces as a
+    // `session_expired` failure in whichever feature screen made the call.
+    // End the session so the router redirect lands the user back on login.
+    SessionExpiredNotifier.add(_onSessionExpired);
+  }
+
+  void _onSessionExpired() {
+    widget.authBloc.add(const AuthenticationEvent.sessionExpired());
   }
 
   @override
   void dispose() {
+    SessionExpiredNotifier.remove(_onSessionExpired);
     _router.dispose();
     super.dispose();
   }

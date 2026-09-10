@@ -41,6 +41,7 @@ class HouseholdView extends StatelessWidget {
               );
             },
           ),
+          // DESIGN_PENDING: Household settings screen
           AppIconButton(
             icon: Icons.logout,
             tooltip: 'Sign out',
@@ -103,6 +104,8 @@ class HouseholdView extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => AddMemberDialog.show(context),
+        tooltip: 'Add member',
+        // DESIGN_PENDING: Member invitation flow (invite-by-code/email)
         child: const Icon(Icons.person_add),
       ),
     );

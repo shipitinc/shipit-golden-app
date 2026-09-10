@@ -112,7 +112,6 @@ sealed class AppFailure with _$AppFailure {
   const factory AppFailure.authorization({required String message, String? code}) = AuthorizationFailure;
   const factory AppFailure.validation({required String message, Map<String, String>? fields}) = ValidationFailure;
   const factory AppFailure.server({required String message, int? statusCode}) = ServerFailure;
-  const factory AppFailure.unavailable({required String message}) = UnavailableFailure;
   const factory AppFailure.unknown({required String message, Object? cause}) = UnknownFailure;
 }
 ```

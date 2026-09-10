@@ -1,0 +1,36 @@
+# Production Serverpod configuration (reference template).
+#
+# The Golden App is a reference implementation, not a deployable product, so
+# this file is deliberately a template: values that depend on a real
+# environment are placeholders to be filled at deploy time, and no secrets
+# appear here (see config/passwords.yaml -> `production`).
+#
+# Serverpod ignores unknown keys silently, so only keys it actually reads
+# (Serverpod 3.4 shared config.dart) are listed. Secrets and host-specific
+# values can also be supplied via SERVERPOD_* env vars at deploy time
+# (e.g. SERVERPOD_API_SERVER_PORT, SERVERPOD_PASSWORD_DATABASE).
+apiServer:
+  # Local port Serverpod binds behind the reverse proxy.
+  port: 8080
+  # Public address/scheme used when the server builds external links
+  # (e.g. verification emails). Replace <DEPLOY_HOST_DOMAIN_OR_IP> at deploy time.
+  publicHost: <DEPLOY_HOST_DOMAIN_OR_IP>
+  publicPort: 443
+  publicScheme: https
+
+# Production migrations are applied explicitly by the deployment run, never
+# auto-applied on boot. This MUST stay false (dev config sets true for a fresh
+# local checkout convenience).
+applyMigrations: false
+
+database:
+  host: <DB_HOST>
+  port: 5432
+  name: shipit_golden
+  user: <DB_USER>
+  # password is in passwords.yaml -> production (or SERVERPOD_PASSWORD_DATABASE)
+  maxConnectionCount: 25
+  # Require TLS between Serverpod and PostgreSQL. Set false only when the
+  # database is reached over a private network that already guarantees
+  # transport encryption (e.g. a managed DB on the same VPC).
+  requireSsl: true

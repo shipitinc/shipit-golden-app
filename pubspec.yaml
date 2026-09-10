@@ -14,7 +14,7 @@ dependencies:
 dev_dependencies:
   crypto: ^3.0.3
   melos: ^8.6.0
-  flutter_lints: ^6.0.0
+  lints: ^6.1.0
 
 flutter:
   uses-material-design: true
@@ -67,15 +67,24 @@ melos:
         fvm dart run tool/update_generated_manifest.dart
 
     generate:server:
-      description: Serverpod generate only (server code + regenerated client package).
-      run: cd apps/server && serverpod generate
+      description: >-
+        Regenerate the Serverpod server output and the client package
+        (full `serverpod generate` for apps/server).
+      run: serverpod generate --directory apps/server
 
     generate:client:
-      description: Regenerate the Serverpod client package only.
+      description: >-
+        Regenerate the Serverpod client package (same full `serverpod
+        generate` for apps/server as generate:server — Serverpod 3.4.13 has no
+        client-only mode, so both scripts produce identical output).
       run: serverpod generate --directory apps/server
 
     generate:freezed:
-      description: Freezed/JSON generation only.
+      description: >-
+        Freezed/JSON generation only. Scoped to the app package: server and
+        app_client output is fully Serverpod-generated, and the manifest tool
+        does not fingerprint *.grpc.dart (unused today) — see
+        tool/update_generated_manifest.dart.
       run: melos exec --scope="shipit_golden_app" -- fvm dart run build_runner build
 
     seed:

@@ -26,4 +26,10 @@ sealed class AuthenticationEvent with _$AuthenticationEvent {
 
   const factory AuthenticationEvent.logoutRequested() =
       AuthenticationLogoutRequested;
+
+  /// A mid-session request was rejected because the JWT expired or was
+  /// invalidated server-side. Ends the local session so the router redirect
+  /// returns the user to the login screen.
+  const factory AuthenticationEvent.sessionExpired() =
+      AuthenticationSessionExpired;
 }

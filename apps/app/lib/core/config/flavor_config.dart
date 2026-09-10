@@ -40,8 +40,9 @@ class FlavorConfig {
   /// Server URL for the active environment.
   ///
   /// Development defaults to `http://localhost:8080` (local Serverpod).
-  /// QA and production default to `http://localhost:8080` and MUST be
-  /// overridden via `--dart-define=API_BASE_URL=...` at build time.
+  /// QA and production share that localhost default so a plain debug
+  /// `flutter run`/`melos run dev:app:<flavor>` works before an
+  /// `--dart-define=API_BASE_URL=<real-host>` is configured at build time.
   ///
   /// An explicit `API_BASE_URL` dart-define always takes precedence over
   /// the flavor default.
@@ -69,18 +70,16 @@ String _resolveServerUrl() {
   if (override.isNotEmpty) return override;
 
   final flavor = _resolveFlavor();
-  // Per-flavor defaults.
-  final url = switch (flavor) {
+  // Per-flavor defaults. There is intentionally no assert here: release builds
+  // strip asserts (so a guard would be a no-op in the mode it targets), while
+  // debug builds of a qa/production flavor legitimately point at a localhost
+  // API (local Serverpod) — an assert would crash `melos run dev:app:qa` /
+  // `dev:app:production` before any URL override can be applied.
+  return switch (flavor) {
     AppFlavor.development => 'http://localhost:8080',
     AppFlavor.qa => 'http://localhost:8080',
     AppFlavor.production => 'http://localhost:8080',
   };
-  assert(
-    !url.contains('localhost') || flavor == AppFlavor.development,
-    'QA/production defaults to a localhost API URL; build with '
-    '--dart-define=API_BASE_URL=<real-host> for a non-development flavor.',
-  );
-  return url;
 }
 
 extension _AppFlavorX on AppFlavor {

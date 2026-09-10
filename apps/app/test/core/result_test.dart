@@ -64,10 +64,6 @@ void main() {
         'Server error: x',
       );
       expect(
-        AppFailure.unavailable(message: 'x').userMessage,
-        'Service unavailable: x',
-      );
-      expect(
         AppFailure.unknown(message: 'x').userMessage,
         'An unexpected error occurred: x',
       );

@@ -1,7 +1,7 @@
 {
-  "apps/app/lib/core/errors/app_failure.freezed.dart": "829c2c4105fad132d601b10a7a8627f022089a4b635f6f3a23a75343ce9a2c7b",
+  "apps/app/lib/core/errors/app_failure.freezed.dart": "97abfef1c206665554aa11ded2c098edf8bd1a022d9888b22b73866a7bfd6238",
   "apps/app/lib/core/networking/result.freezed.dart": "f2f6c0f8a37b9bb78872713fd1a5d22c9d0c70e58f0c5bf06a3e0ef619d32886",
-  "apps/app/lib/features/authentication/bloc/authentication_event.freezed.dart": "f15a4c85d259e351907912cba9cee6ecfbc902dbd9195511e08e6ab5bd49c838",
+  "apps/app/lib/features/authentication/bloc/authentication_event.freezed.dart": "e7e05b23b9485249bc3f84dcb1bb93594dd369b08d5b2815fdc59509cc170d9c",
   "apps/app/lib/features/authentication/bloc/authentication_state.freezed.dart": "1527e357168cf8e1ecd35486b254f2eec7d6d925f5648f5ae7c54564327a7702",
   "apps/app/lib/features/household/bloc/household_event.freezed.dart": "89c8b3bb919785ee45640f341ee1f30dbe50056acce4066d9135326eea1b8912",
   "apps/app/lib/features/household/bloc/household_state.freezed.dart": "cbd369e0175eb89f02154f18a8c119a2a55c3074c203df090c6235d29ffc8361",
@@ -11,17 +11,17 @@
   "apps/app/lib/features/programs/bloc/programs_state.freezed.dart": "6b98123301a834fd90b7f2e61a15a0db598364d9eb4e318fa6b881856241576f",
   "apps/app/lib/features/programs/domain/program.freezed.dart": "dc3ec5d699047b596fcf024797a802bdbd3e10b4dad0d23ebcf59280b5bcf3b3",
   "apps/server/lib/src/generated/email_already_registered_exception.dart": "fae41da2af5309879af511a3378cc5d002cae9272a4122788c87f6f9da365046",
-  "apps/server/lib/src/generated/endpoints.dart": "4a0ee123b0f8402513e2ec9c37bce8616352422da818f646060305571d9c3982",
+  "apps/server/lib/src/generated/endpoints.dart": "65f6bca483eda64d154a150b41cdd21a41cd35d571d792e1b7dd0f8e9e22e12f",
   "apps/server/lib/src/generated/household.dart": "7d9036a804b1fda42e28910aa9896ac397fea9a577430b04d21743cb814e2b9c",
   "apps/server/lib/src/generated/household_member.dart": "bfa0a17b53c657060ab094e019788b23ae24a31b3cc7b2dbcaa7bc35aae7e143",
   "apps/server/lib/src/generated/program.dart": "e7355e5c7451005ff41605ece0ee0f4254a51ef5d0fd1eec8d4bbf0b6aee3b10",
-  "apps/server/lib/src/generated/protocol.dart": "81788a32cc275b6a3d575fb6b038368a7c62779a2807b076405b7ce5a49aca7c",
+  "apps/server/lib/src/generated/protocol.dart": "49e4476459a2061d7b7fe8c83846dfa058e9ffff3b82509ba73a0a7eea31ebd8",
   "apps/server/lib/src/generated/protocol.yaml": "5738a50fbf888d5dd22977055888020bb89abd3378755478234dcb026f64ff77",
   "apps/server/test/integration/test_tools/serverpod_test_tools.dart": "7ea53dc9a19145ee1dbee4ce04a763968f103fb1dd8ec613cf4c1ac835590a1d",
-  "packages/app_client/lib/src/protocol/client.dart": "f3e7da4f0cacec2dbb88a2487a52ec789e0f118c7ce76eea2e9bc960a3c0ddbc",
+  "packages/app_client/lib/src/protocol/client.dart": "93389179906dd833e2cd3795e42f3f68cfbe8e8ee8e3c98168966ae07b057500",
   "packages/app_client/lib/src/protocol/email_already_registered_exception.dart": "a18c9942ad33dc80af6247cc0a0db6b521b8297b5a6682cfa0bc4c4f3e8ecbf5",
   "packages/app_client/lib/src/protocol/household.dart": "25f2cae1f3e09f613c170e7bcad457448e6acf15974ff9b47fcd7199e9baa7b9",
   "packages/app_client/lib/src/protocol/household_member.dart": "ef6f9707989fd707b6c449b270972019273f036851ef455e883e7bd74f7d4f71",
   "packages/app_client/lib/src/protocol/program.dart": "ec7c2b50dec67c77c6a4855cd11243c81514e9ef235700e3e15a528781f924c6",
-  "packages/app_client/lib/src/protocol/protocol.dart": "c009fc3dad65d49efdff60829151048c253e09316df3edcf84c7e9dd17a7a448"
+  "packages/app_client/lib/src/protocol/protocol.dart": "97d495d4fba3078e998e43b706215a84529631b5d1e2449bc4cb94240e14841d"
 }

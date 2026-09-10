@@ -15,5 +15,5 @@ dependencies:
   serverpod_serialization: 3.4.13
 
 dev_dependencies:
-  build_runner: ^2.4.0
   test: ^1.25.0
+  lints: ^6.1.0

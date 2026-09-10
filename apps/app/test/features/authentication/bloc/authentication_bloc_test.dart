@@ -180,5 +180,35 @@ void main() {
       act: (bloc) => bloc.add(const AuthenticationEvent.logoutRequested()),
       expect: () => [const AuthenticationState.unauthenticated()],
     );
+
+    blocTest<AuthenticationBloc, AuthenticationState>(
+      'ends the session when a mid-session JWT expires',
+      build: () {
+        when(() => repository.logout()).thenAnswer((_) async {});
+        return bloc;
+      },
+      seed: () => const AuthenticationState.authenticated(
+        token: 'expired-token',
+        email: 'user@example.com',
+      ),
+      act: (bloc) => bloc.add(const AuthenticationEvent.sessionExpired()),
+      expect: () => [const AuthenticationState.unauthenticated()],
+    );
+
+    blocTest<AuthenticationBloc, AuthenticationState>(
+      'still ends the session when clearing storage fails on expiry',
+      build: () {
+        when(
+          () => repository.logout(),
+        ).thenAnswer((_) async => throw Exception('keychain-unavailable'));
+        return bloc;
+      },
+      seed: () => const AuthenticationState.authenticated(
+        token: 'expired-token',
+        email: 'user@example.com',
+      ),
+      act: (bloc) => bloc.add(const AuthenticationEvent.sessionExpired()),
+      expect: () => [const AuthenticationState.unauthenticated()],
+    );
   });
 }

@@ -1,6 +1,5 @@
 import 'package:app_client/app_client.dart' as api;
 import 'package:serverpod_auth_core_flutter/serverpod_auth_core_flutter.dart';
-import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart';
 import 'package:shipit_golden_app/core/core.dart';
 
 /// Handles authentication and registration via the shared Serverpod client.
@@ -28,15 +27,6 @@ class AuthRepository {
       );
       await _sessionManager.updateSignedInUser(success);
       return Result.success(success);
-    } on EmailAccountLoginException catch (e) {
-      return Result.failure(
-        AppFailure.auth(
-          message: loginFailureMessage(e),
-          code: 'login_${e.reason.name}',
-        ),
-      );
-    } on AuthUserBlockedException {
-      return Result.failure(mapAppFailure(AuthUserBlockedException()));
     } catch (e) {
       return Result.failure(mapAppFailure(e));
     }
@@ -46,17 +36,6 @@ class AuthRepository {
     try {
       final requestId = await _client.auth.startRegistration(email: email);
       return Result.success(requestId);
-    } on api.EmailAlreadyRegisteredException {
-      // Genuine, user-correctable cause: the email is taken. Serverpod's
-      // built-in email IDP would silently swallow this (anti
-      // account-enumeration); see AuthEndpoint.startRegistration.
-      return Result.failure(
-        AppFailure.validation(
-          message:
-              'An account already exists for this email address. '
-              'Try signing in instead.',
-        ),
-      );
     } catch (e) {
       return Result.failure(mapAppFailure(e));
     }

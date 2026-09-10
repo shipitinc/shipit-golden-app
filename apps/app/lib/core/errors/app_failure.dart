@@ -23,9 +23,6 @@ sealed class AppFailure with _$AppFailure {
   const factory AppFailure.server({required String message, int? statusCode}) =
       ServerFailure;
 
-  const factory AppFailure.unavailable({required String message}) =
-      UnavailableFailure;
-
   const factory AppFailure.unknown({required String message, Object? cause}) =
       UnknownFailure;
 }
@@ -41,7 +38,6 @@ extension AppFailureExtension on AppFailure {
       AuthorizationFailure(:final message) => 'Access denied: $message',
       ValidationFailure(:final message) => 'Validation error: $message',
       ServerFailure(:final message) => 'Server error: $message',
-      UnavailableFailure(:final message) => 'Service unavailable: $message',
       UnknownFailure(:final message) =>
         'An unexpected error occurred: $message',
     };

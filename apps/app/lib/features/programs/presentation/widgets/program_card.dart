@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shipit_ui/shipit_ui.dart';
+import 'package:shipit_golden_app/core/core.dart';
 import 'package:shipit_golden_app/features/programs/domain/program.dart';
 
 class ProgramCard extends StatelessWidget {
@@ -34,7 +35,7 @@ class ProgramCard extends StatelessWidget {
             children: [
               Icon(
                 Icons.calendar_today,
-                size: 16,
+                size: kSmallIconSize,
                 color: context.color.fg.secondary,
               ),
               SizedBox(width: context.space.s2),
@@ -64,6 +65,10 @@ class ProgramCard extends StatelessWidget {
 }
 
 class _StatusChip extends StatelessWidget {
+  // No shipit_ui text token carries this semibold emphasis yet; a named
+  // constant keeps the intent legible without an upstream token.
+  static const FontWeight _labelWeight = FontWeight.w600;
+
   final String status;
 
   const _StatusChip({required this.status});
@@ -104,7 +109,7 @@ class _StatusChip extends StatelessWidget {
         status.toUpperCase(),
         style: context.text.label.small.copyWith(
           color: textColor,
-          fontWeight: FontWeight.w600,
+          fontWeight: _labelWeight,
         ),
       ),
     );

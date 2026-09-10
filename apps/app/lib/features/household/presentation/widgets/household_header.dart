@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shipit_ui/shipit_ui.dart';
+import 'package:shipit_golden_app/core/core.dart';
 import 'package:shipit_golden_app/features/household/domain/household.dart';
 
 class HouseholdHeader extends StatelessWidget {
@@ -36,13 +37,13 @@ class HouseholdHeader extends StatelessWidget {
             ],
           ),
           SizedBox(height: context.space.s3),
-          Divider(color: context.color.border.strong),
+          AppLayout.divider(color: context.color.border.strong),
           SizedBox(height: context.space.s3),
           Row(
             children: [
               Icon(
                 Icons.calendar_today,
-                size: 16,
+                size: kSmallIconSize,
                 color: context.color.fg.secondary,
               ),
               SizedBox(width: context.space.s2),

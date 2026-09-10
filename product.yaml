@@ -50,7 +50,7 @@ design:
     widget: true
     golden: true
     accessibility: true
-    integration: true
+    integration: true  # opt-in: requires a live server + device; NOT in the default qa.yml pipeline (see docs/qa/strategy.md)
     patrol: false  # skeleton exists integration_test_patrol/; pending device/CI setup
     web: true
     android: true  # real Gradle project scaffolded with buildable per-flavor APKs

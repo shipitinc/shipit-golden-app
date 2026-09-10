@@ -1,0 +1,12 @@
+# Analyzer configuration for the Serverpod backend (pure Dart, no Flutter).
+#
+# Melos `analyze`/CI run `dart analyze` across all workspace packages; this
+# file opts the server package into the recommended lint set instead of the
+# implicit defaults (which carry none of the curated rules from `lints`).
+include: package:lints/recommended.yaml
+
+linter:
+  rules:
+    # Serverpod-generated and mirror files may flag revision-style stamps in
+    # doc comments (e.g. `internal_serverpod_cli` dates); there is no public
+    # API drift here, so keep the noise floor at the recommended set.
