@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 # The toolchain is pinned by FVM (.fvmrc -> 3.44.7 / Dart 3.12.2). Every
 # package command runs through `melos`, which invokes `fvm flutter/dart`, so
