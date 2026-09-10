@@ -18,14 +18,15 @@ apps/app/lib/
 │   │   ├── app_failure.dart          # Standardized failure types
 │   │   └── error_translator.dart     # Maps exceptions to user-safe failures
 │   ├── networking/
-│   │   └── serverpod_client_provider.dart  # Shared Serverpod client/session
+│   │   ├── serverpod_client_provider.dart       # Shared Serverpod client/session
+│   │   ├── result.dart                          # Result<T> success/failure wrapper
+│   │   └── in_memory_auth_success_storage.dart  # Web session storage (in-memory)
 │   └── shared/
 │       └── extensions.dart   # Immutability helpers
 └── features/
     ├── authentication/
     │   ├── bloc/
     │   ├── data/
-    │   ├── domain/
     │   └── presentation/
     ├── household/
     │   ├── bloc/
@@ -140,11 +141,11 @@ messages — never `Exception.toString()` or stack traces. `userMessage` on
 //                   wide 1440 / pageWidth 1200
 final type = context.layoutType;   // AppLayoutType.compact|mobile|tablet|desktop|wide
 
-context.isMobileLayout    // width >= 360
-context.isTabletLayout    // width >= 600
-context.isDesktopLayout   // width >= 1024
+context.isMobileLayout    // 360 <= width < 600
+context.isTabletLayout    // 600 <= width < 1024
+context.isDesktopLayout   // 1024 <= width < 1440
 context.isWideLayout      // width >= 1440
-context.isDesktopOrLarger // width >= 1024
+context.isDesktopOrLarger // width >= 1024 (token-index comparison, desktop+)
 ```
 
 ### Navigation

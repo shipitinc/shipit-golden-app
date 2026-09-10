@@ -22,13 +22,18 @@ class AuthenticationBloc
     AuthenticationStarted event,
     Emitter<AuthenticationState> emit,
   ) async {
-    await _authRepository.restoreSession();
-    if (_authRepository.isAuthenticated) {
-      final info = _authRepository.authInfo!;
-      emit(AuthenticationState.authenticated(token: info.token, email: ''));
-    } else {
-      emit(const AuthenticationState.unauthenticated());
+    try {
+      await _authRepository.restoreSession();
+      if (_authRepository.isAuthenticated) {
+        final info = _authRepository.authInfo!;
+        emit(AuthenticationState.authenticated(token: info.token, email: ''));
+        return;
+      }
+    } catch (_) {
+      // Secure-storage/keychain failures must not crash startup; fall through
+      // to the unauthenticated state.
     }
+    emit(const AuthenticationState.unauthenticated());
   }
 
   Future<void> _onLoginRequested(

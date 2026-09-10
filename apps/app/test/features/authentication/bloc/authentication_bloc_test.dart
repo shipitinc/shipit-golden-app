@@ -59,6 +59,18 @@ void main() {
     );
 
     blocTest<AuthenticationBloc, AuthenticationState>(
+      'falls through to unauthenticated when session restore throws',
+      build: () {
+        when(
+          () => repository.restoreSession(),
+        ).thenAnswer((_) async => throw Exception('keychain-unavailable'));
+        return bloc;
+      },
+      act: (bloc) => bloc.add(const AuthenticationEvent.started()),
+      expect: () => [const AuthenticationState.unauthenticated()],
+    );
+
+    blocTest<AuthenticationBloc, AuthenticationState>(
       'emits authenticated when login succeeds',
       build: () {
         when(

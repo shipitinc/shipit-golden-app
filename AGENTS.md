@@ -60,7 +60,7 @@ Lower-authority artifacts must not silently contradict higher-authority sources.
 - **Flutter product UI uses shipit_ui** — import from `package:shipit_ui/shipit_ui.dart`
 - **Substantial UI changes require design authority** — no inventing consequential UX
 - **Approved golden baselines cannot be silently regenerated** — changed goldens require design/human approval per AEF. Baselines regenerate ONLY on the Linux CI host via `.github/workflows/goldens-update.yml` — macOS renders text ~1% differently and `--update-goldens` on a dev machine is never a fix
-- **`passwords.yaml` dev values are not production-safe** — values in `config/passwords.yaml` exist for local/CI dev only; never treat them as deployable secrets, promote them silently to a host env, or commit production secrets
+- **`passwords.yaml` dev values are not production-safe** — values in `apps/server/config/passwords.yaml` exist for local/CI dev only; never treat them as deployable secrets, promote them silently to a host env, or commit production secrets
 - **Web session persistence changes require an explicit AEF task** — the web client intentionally keeps sessions in memory (see `docs/architecture/frontend.md`); adding persistent web storage is a consequential change to be done as its own task per AEF, not as an opportunistic edit
 - **BLoC + Freezed is the standard feature/application state-management pattern**
 - **Application state is immutable** — no mutable collections exposed from state objects
@@ -135,7 +135,6 @@ lib/
     ├── authentication/
     │   ├── bloc/
     │   ├── data/
-    │   ├── domain/
     │   └── presentation/
     ├── household/
     │   ├── bloc/

@@ -29,7 +29,8 @@ apps/server/
 │   ├── models/                 # DB models (YAML)
 │   │   ├── household.yaml
 │   │   ├── household_member.yaml
-│   │   └── program.yaml
+│   │   ├── program.yaml
+│   │   └── email_already_registered_exception.yaml
 │   └── generated/              # Serverpod generated code (gitignored;
 │                               # regenerated via melos run generate:server)
 ├── migrations/                 # Generated migration baseline (applied on boot)
@@ -37,8 +38,9 @@ apps/server/
     ├── dart_test.yaml          # integration tag
     ├── protocol_test.dart
     └── integration/            # DB-backed auth integration tests
-        ├── test_tools/         # generated serverpod_test_tools.dart
-        └── auth_flow_test.dart
+        ├── test_tools/         # serverpod_test_tools.dart + test_server_config.dart
+        ├── auth_flow_test.dart
+        └── household_programs_test.dart
 ```
 
 ## Key Components
@@ -100,8 +102,8 @@ void configureAuthServices(Serverpod pod) {
 }
 ```
 
-The `EmailIdpConfig` (built by `_emailIdpConfig`) logs verification codes to
-the server console via inline `sendRegistrationVerificationCode` /
+The `EmailIdpConfigFromPasswords` (built by `_emailIdpConfig`) logs verification
+codes to the server console via inline `sendRegistrationVerificationCode` /
 `sendPasswordResetVerificationCode` callbacks for the development workflow (no
 SMTP provider yet). The same `configureAuthServices` / 
 `configureAuthServicesSingleton` (used by the test harness in a `setUp()`) is

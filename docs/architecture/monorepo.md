@@ -136,8 +136,8 @@ melos:
       run: melos exec --scope="shipit_golden_app" -- fvm dart run build_runner build
 
     test:flutter:
-      description: Flutter app tests.
-      run: melos exec --scope="shipit_golden_app" -- fvm flutter test
+      description: Flutter app tests (golden pixel comparisons excluded).
+      run: melos exec --scope="shipit_golden_app" -- fvm flutter test --exclude-tags golden
 
     test:
       description: Run all tests.

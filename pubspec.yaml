@@ -94,8 +94,12 @@ melos:
       run: melos exec --scope="app_client" -- fvm dart test
 
     test:server:
-      description: Serverpod server tests.
-      run: melos exec --scope="shipit_golden_server" -- fvm dart test
+      description: >-
+        Serverpod server tests. Runs test files serially (`-j 1`): each
+        `withServerpod` suite boots its own Serverpod + PostgreSQL pool, and
+        cross-file parallelism would stack pools and trip the postgres driver's
+        pool-lock timeout. See apps/server/dart_test.yaml.
+      run: melos exec --scope="shipit_golden_server" -- fvm dart test -j 1
 
     test:flutter:
       description: >-

@@ -102,15 +102,17 @@ blocTest<FeatureBloc, FeatureState>(
 ## Dependency Injection
 
 ```dart
-// In app.dart
+// In app.dart — only the app-wide AuthenticationBloc is provided at the root.
 MultiBlocProvider(
   providers: [
     BlocProvider(create: (_) => AuthenticationBloc()),
-    BlocProvider(create: (_) => HouseholdBloc()),
-    BlocProvider(create: (_) => ProgramsBloc()),
   ],
   child: AppView(),
 )
+
+// HouseholdBloc and ProgramsBloc are feature-scoped: they are provided per
+// screen (a BlocProvider wrapping HouseholdScreen / ProgramsScreen), not at
+// the app root.
 ```
 
 ## What Does NOT Need BLoC

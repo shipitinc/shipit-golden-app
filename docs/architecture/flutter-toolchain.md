@@ -222,7 +222,7 @@ fvm dart run build_runner build
 - `packages/app_client/lib/src/protocol/` — Serverpod client protocol/endpoints (gitignored)
 
 > Serverpod generates plain Dart serialization (HTTP/JSON) — NOT gRPC. The
-> `*.grpc.dart` ignore pattern in `apps/app/.gitignore` / `packages/app_client/.gitignore`
+> `*.grpc.dart` ignore pattern in `packages/app_client/.gitignore`
 > is defensive only; no gRPC artifacts exist in this repo. Generated code is not
 > committed (see root `.gitignore` and AGENTS.md); run `melos run generate` (or
 > `generate:server` / `generate:freezed`) after changing models, state classes,

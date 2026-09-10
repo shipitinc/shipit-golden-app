@@ -68,12 +68,19 @@ String _resolveServerUrl() {
   const override = String.fromEnvironment('API_BASE_URL');
   if (override.isNotEmpty) return override;
 
+  final flavor = _resolveFlavor();
   // Per-flavor defaults.
-  return switch (_resolveFlavor()) {
+  final url = switch (flavor) {
     AppFlavor.development => 'http://localhost:8080',
     AppFlavor.qa => 'http://localhost:8080',
     AppFlavor.production => 'http://localhost:8080',
   };
+  assert(
+    !url.contains('localhost') || flavor == AppFlavor.development,
+    'QA/production defaults to a localhost API URL; build with '
+    '--dart-define=API_BASE_URL=<real-host> for a non-development flavor.',
+  );
+  return url;
 }
 
 extension _AppFlavorX on AppFlavor {

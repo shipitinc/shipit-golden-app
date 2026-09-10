@@ -1,9 +1,12 @@
 tags:
   integration:
     skip: false
-# Each `withServerpod` group boots a Serverpod instance with its own PostgreSQL
-# connection pool. Running test files in parallel stacks these pools and trips
-# the postgres driver's pool-lock timeout (TimeoutException: Failed to acquire
-# pool lock), so suites must run serially. Groups also bind ephemeral ports;
-# see test/integration/test_tools/test_server_config.dart.
+# `concurrency: 1` limits parallel *tests within a single suite/file* only; it
+# does not serialize files. `auth_flow_test.dart` and
+# `household_programs_test.dart` each boot their own Serverpod instance with a
+# PostgreSQL connection pool, and running files in parallel stacks these pools
+# and trips the postgres driver's pool-lock timeout (TimeoutException: Failed
+# to acquire pool lock). The `melos run test:server` script therefore passes
+# `-j 1` to `dart test` to run files serially. Groups also bind ephemeral
+# ports; see test/integration/test_tools/test_server_config.dart.
 concurrency: 1

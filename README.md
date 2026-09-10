@@ -97,7 +97,7 @@ All commands run from repository root via Melos:
 | `melos run test` | Run all non-integration tests |
 | `melos run test:unit` | Dart unit tests (app_client) |
 | `melos run test:server` | Serverpod server tests |
-| `melos run test:flutter` | Flutter app tests (unit + widget + golden + accessibility) |
+| `melos run test:flutter` | Flutter app tests (unit + widget + accessibility; golden pixel comparisons run only via `test:golden`) |
 | `melos run test:integration` | Flutter integration tests (requires live server + device) |
 | `melos run qa` | Full QA pipeline (analyze + test; integration is opt-in) |
 | `melos run dev` | Start dev servers (server + app) |
