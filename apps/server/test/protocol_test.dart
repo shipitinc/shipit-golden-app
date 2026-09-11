@@ -26,7 +26,7 @@ void main() {
         householdId: 'household_1',
         name: 'Jane Smith',
         email: 'jane@example.com',
-        role: 'member',
+        role: HouseholdMemberRole.member,
         joinedAt: DateTime.utc(2026, 2, 1),
       );
 
@@ -36,7 +36,7 @@ void main() {
       expect(restored.id, 7);
       expect(restored.householdId, 'household_1');
       expect(restored.name, 'Jane Smith');
-      expect(restored.role, 'member');
+      expect(restored.role, HouseholdMemberRole.member);
       expect(restored.joinedAt, DateTime.utc(2026, 2, 1));
     });
 
@@ -47,7 +47,7 @@ void main() {
         description: 'Annual summer camp for families',
         startDate: DateTime.utc(2026, 6, 15),
         endDate: DateTime.utc(2026, 8, 15),
-        status: 'active',
+        status: ProgramStatus.active,
       );
 
       final json = original.toJsonForProtocol();
@@ -55,7 +55,7 @@ void main() {
 
       expect(restored.id, 3);
       expect(restored.name, 'Summer Camp');
-      expect(restored.status, 'active');
+      expect(restored.status, ProgramStatus.active);
       expect(restored.startDate, DateTime.utc(2026, 6, 15));
       expect(restored.endDate, DateTime.utc(2026, 8, 15));
     });

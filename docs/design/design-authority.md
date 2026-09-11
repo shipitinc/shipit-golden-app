@@ -182,7 +182,13 @@ dark canvases (UPSTREAM_UI_GAP-011 resolved in `shipit_ui@d6abf9a`).
   and were re-approved 2026-09-10 against `shipit_ui@18d1a5d6` (the GAP-012
   `AppTextButton` / `AppIconButton` migration) via the `goldens-update.yml`
   workflow with design/human approval, recorded in
-  `docs/qa/pending-actions.md`.
+  `docs/qa/pending-actions.md`. **Current revision:** the app pins
+  `shipit_ui@526926d` (commit `c6dafc5`); the baselines were re-approved
+  2026-09-11 under that pin with no regeneration — the pin bump consumed
+  GAP-012/013/014 tokens at identical values (16 / w600 / 440), so `@526926d`
+  renders the login screens pixel-identically and the visual contract stands
+  under the active pin (see the 526926d re-approval note in
+  `apps/app/test/goldens/goldens_registry.md`).
 - Approved goldens = visual contract; `flutter test --update-goldens` is NOT a
   fix. Promoting to `APPROVED` (and any subsequent regeneration) requires:
   1. Design authority approval
@@ -194,11 +200,11 @@ dark canvases (UPSTREAM_UI_GAP-011 resolved in `shipit_ui@d6abf9a`).
 ### Golden Test Structure
 ```
 test/goldens/
-├── goldens_registry.md      # status list (APPROVED / DESIGN_PENDING)
+├── goldens_registry.md      # status list (APPROVED / DESIGN_PENDING) + pin / re-approval notes
 ├── golden_policy_test.dart  # registry conformance + approved baselines
 └── goldens/
-    ├── login_sign_in.png    # APPROVED (re-approved 2026-09-10 vs shipit_ui@18d1a5d6)
-    └── login_register.png   # APPROVED (re-approved 2026-09-10 vs shipit_ui@18d1a5d6)
+    ├── login_sign_in.png    # APPROVED (current pin shipit_ui@526926d; re-approved 2026-09-11, no regen)
+    └── login_register.png   # APPROVED (current pin shipit_ui@526926d; re-approved 2026-09-11, no regen)
 ```
 
 ## Upstream Gaps

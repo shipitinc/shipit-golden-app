@@ -49,7 +49,7 @@ void main() {
             expect(members, hasLength(1));
             final owner = members.first;
             expect(owner.name, 'Owner');
-            expect(owner.role, 'owner');
+            expect(owner.role, HouseholdMemberRole.owner);
             expect(owner.householdId, household.id.toString());
           },
         );
@@ -62,7 +62,7 @@ void main() {
             'jane@example.com',
           );
 
-          expect(added.role, 'member');
+          expect(added.role, HouseholdMemberRole.member);
           expect(added.id, isNotNull);
 
           final members = await endpoints.household.getMembers(authed);
@@ -126,14 +126,14 @@ void main() {
                 description: 'Annual summer camp for families',
                 startDate: DateTime(2024, 6, 15),
                 endDate: DateTime(2024, 8, 15),
-                status: 'active',
+                status: ProgramStatus.active,
               ),
               Program(
                 name: 'Winter Workshop',
                 description: 'Creative winter activities',
                 startDate: DateTime(2024, 12, 1),
                 endDate: DateTime(2024, 12, 20),
-                status: 'upcoming',
+                status: ProgramStatus.upcoming,
               ),
             ]);
 

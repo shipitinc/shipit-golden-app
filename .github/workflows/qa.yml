@@ -192,5 +192,5 @@ jobs:
       - name: Build iOS without codesigning (production)
         run: melos run build:ios:production
 
-  # Device/server-gated suites (integration_test/, Patrol) are NOT part of the
+  # Device/server-gated suites (integration_test/) are NOT part of the
   # default pipeline; see product.yaml and docs/qa/strategy.md.

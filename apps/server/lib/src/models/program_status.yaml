@@ -1,0 +1,5 @@
+enum: ProgramStatus
+values:
+  - active
+  - upcoming
+  - completed

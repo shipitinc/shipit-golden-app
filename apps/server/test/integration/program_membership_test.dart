@@ -39,14 +39,14 @@ void main() {
                 description: 'Annual summer camp for families',
                 startDate: DateTime(2026, 6, 15),
                 endDate: DateTime(2026, 8, 15),
-                status: 'active',
+                status: ProgramStatus.active,
               ),
               Program(
                 name: 'Winter Workshop 2026',
                 description: 'Creative winter activities',
                 startDate: DateTime(2026, 12, 1),
                 endDate: DateTime(2026, 12, 20),
-                status: 'upcoming',
+                status: ProgramStatus.upcoming,
               ),
             ]);
           } finally {

@@ -41,7 +41,7 @@ void main() {
           householdId: 'h_1',
           name: 'Jane Smith',
           email: 'jane@example.com',
-          role: 'member',
+          role: api.HouseholdMemberRole.member,
           joinedAt: DateTime(2026, 2, 1),
         ),
       );

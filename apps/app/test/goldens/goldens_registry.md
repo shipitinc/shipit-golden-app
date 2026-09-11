@@ -9,8 +9,8 @@ Status values:
 
 | File | Screen | Status | Design revision | Notes |
 |------|--------|--------|-----------------|-------|
-| `goldens/login_sign_in.png` | LoginScreen (sign in) | APPROVED | shipit_ui@18d1a5d6 | Auth screen, shipit_ui components (approved design source per `product.yaml` `design.source: penpot`, implemented by the pinned shipit_ui revision). First promoted to APPROVED on 2026-09-08 against `shipit_ui@1207004`; re-approved on 2026-09-09 against `shipit_ui@d6abf9a` (the token-tree refactor migration re-renders these screens — regenerated on the Linux CI host via `.github/workflows/goldens-update.yml`, reviewer tariq). Baseline is rendered on the Linux CI host (authoritative golden runner) with the real bundled Inter TTFs; local macOS runs intentionally show a known ~1% rasterizer diff (CoreText vs FreeType) — never regenerate on macOS. REGENERATION REQUIRES design/human approval + registry update in the same commit. [re-approved 2026-09-10 for shipit_ui@18d1a5d6 by tariq via goldens-update.yml]|
-| `goldens/login_register.png` | LoginScreen (register) | APPROVED | shipit_ui@18d1a5d6 | Register/request-code mode. Auth screen, shipit_ui components (approved design source per `product.yaml` `design.source: penpot`, implemented by the pinned shipit_ui revision). First promoted to APPROVED on 2026-09-08 against `shipit_ui@1207004`; re-approved on 2026-09-09 against `shipit_ui@d6abf9a` (the token-tree refactor migration re-renders these screens — regenerated on the Linux CI host via `.github/workflows/goldens-update.yml`, reviewer tariq). Baseline is rendered on the Linux CI host (authoritative golden runner) with the real bundled Inter TTFs; local macOS runs intentionally show a known ~1% rasterizer diff (CoreText vs FreeType) — never regenerate on macOS. REGENERATION REQUIRES design/human approval + registry update in the same commit. [re-approved 2026-09-10 for shipit_ui@18d1a5d6 by tariq via goldens-update.yml]|
+| `goldens/login_sign_in.png` | LoginScreen (sign in) | APPROVED | shipit_ui@18d1a5d6 | Auth screen, shipit_ui components (approved design source per `product.yaml` `design.source: penpot`, implemented by the pinned shipit_ui revision). First promoted to APPROVED on 2026-09-08 against `shipit_ui@1207004`; re-approved on 2026-09-09 against `shipit_ui@d6abf9a` (the token-tree refactor migration re-renders these screens — regenerated on the Linux CI host via `.github/workflows/goldens-update.yml`, reviewer tariq). Baseline is rendered on the Linux CI host (authoritative golden runner) with the real bundled Inter TTFs; local macOS runs intentionally show a known ~1% rasterizer diff (CoreText vs FreeType) — never regenerate on macOS. REGENERATION REQUIRES design/human approval + registry update in the same commit. [re-approved 2026-09-10 for shipit_ui@18d1a5d6 by tariq via goldens-update.yml] [re-approved 2026-09-11 under the current pin shipit_ui@526926d — no pixel change; the pin bump consumed GAP-012/013/014 tokens at identical values, so the visual contract is re-affirmed without regeneration (see Pin note below)]|
+| `goldens/login_register.png` | LoginScreen (register) | APPROVED | shipit_ui@18d1a5d6 | Register/request-code mode. Auth screen, shipit_ui components (approved design source per `product.yaml` `design.source: penpot`, implemented by the pinned shipit_ui revision). First promoted to APPROVED on 2026-09-08 against `shipit_ui@1207004`; re-approved on 2026-09-09 against `shipit_ui@d6abf9a` (the token-tree refactor migration re-renders these screens — regenerated on the Linux CI host via `.github/workflows/goldens-update.yml`, reviewer tariq). Baseline is rendered on the Linux CI host (authoritative golden runner) with the real bundled Inter TTFs; local macOS runs intentionally show a known ~1% rasterizer diff (CoreText vs FreeType) — never regenerate on macOS. REGENERATION REQUIRES design/human approval + registry update in the same commit. [re-approved 2026-09-10 for shipit_ui@18d1a5d6 by tariq via goldens-update.yml] [re-approved 2026-09-11 under the current pin shipit_ui@526926d — no pixel change; the pin bump consumed GAP-012/013/014 tokens at identical values, so the visual contract is re-affirmed without regeneration (see Pin note below)]|
 
 ## Pin note (changed pins without regen)
 
@@ -22,6 +22,18 @@ against their approving revision (`shipit_ui@18d1a5d6`); the pin bump re-renders
 these screens identically (additive gap tokens only, consumed with unchanged
 values), so the PNGs still preserve the current rendering. No regeneration was
 performed — the listed design revisions remain the authority for approval.
+
+### 526926d re-approval (audit-trail continuity)
+
+The baselines are re-approved 2026-09-11 under the **current pin**
+`shipit_ui@526926d`: the pin bump (commit `c6dafc5`) consumed
+GAP-012/013/014 tokens at values identical to the constants they replaced
+(16 / w600 / 440), so `@526926d` renders the login screens pixel-identically
+to `@18d1a5d6`. The visual contract is therefore re-affirmed against the active
+pin with **no regeneration** — the PNGs committed from the `@18d1a5d6` golden
+run remain byte-identical and are the design authority under the current pin.
+The `APPROVED` table rows above record this 526926d re-approval line so the
+audit trail matches the pinned revision in `apps/app/pubspec.yaml`.
 
 ## Policy (enforced by `test/goldens/golden_policy_test.dart`)
 

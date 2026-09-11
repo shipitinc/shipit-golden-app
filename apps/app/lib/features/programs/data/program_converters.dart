@@ -10,6 +10,6 @@ Program programFromProtocol(api.Program program) {
     description: program.description,
     startDate: program.startDate,
     endDate: program.endDate,
-    status: program.status,
+    status: program.status.name,
   );
 }

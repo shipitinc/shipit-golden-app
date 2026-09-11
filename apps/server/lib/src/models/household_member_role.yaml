@@ -1,0 +1,4 @@
+enum: HouseholdMemberRole
+values:
+  - owner
+  - member

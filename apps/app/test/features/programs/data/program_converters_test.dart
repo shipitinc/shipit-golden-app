@@ -12,7 +12,7 @@ void main() {
           description: 'Annual summer camp for families',
           startDate: DateTime(2026, 6, 15),
           endDate: DateTime(2026, 8, 15),
-          status: 'active',
+          status: api.ProgramStatus.active,
         ),
       );
 
@@ -31,7 +31,7 @@ void main() {
           description: 'Winter workshop',
           startDate: DateTime(2026, 12, 1),
           endDate: DateTime(2026, 12, 20),
-          status: 'upcoming',
+          status: api.ProgramStatus.upcoming,
         ),
       );
 

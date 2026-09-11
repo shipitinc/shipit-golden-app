@@ -3,14 +3,14 @@
 This document reflects the ACTUAL test surface of the ShipIt Golden App. It is
 kept in sync with `product.yaml` (the QA manifest) and the `melos:` scripts in
 the workspace `pubspec.yaml` (Melos 8).
-Status fields in `product.yaml` are the source of truth; some suites (Patrol)
+Status fields in `product.yaml` are the source of truth; some suites (integration)
 are declared but not yet in the standard pipeline.
 
 ## Test Pyramid
 
 ```
          ┌─────────────┐
-         │   E2E       │  ← Patrol skeleton (integration_test_patrol/) — NOT in pipeline
+         │   E2E       │  ← not yet in pipeline
         ┌┴─────────────┴┐
         │  Integration  │  ← apps/app/integration_test (real server, opt-in) + server integration
        ┌┴───────────────┴┐
@@ -66,12 +66,6 @@ test/
 failure dialog. Requires `docker compose up` + `melos run dev:server` and a
 device. NOT executed in `melos run test` (see gating).
 
-### apps/app/integration_test_patrol/ (skeleton only)
-
-`smoke_test.dart` documents the future Patrol structure. `product.yaml` sets
-`qa.patrol: false`; running Patrol requires Patrol CLI + a device and is a
-documented pending integration.
-
 ### apps/server/
 
 ```
@@ -98,7 +92,7 @@ apps/server/
 | `melos run test:golden` | apps/app test/goldens | `--tags golden`; authoritative ONLY on the Linux CI host (platform of record for approved baselines) |
 | `melos run test` | unit+server+flutter | default non-integration suite |
 | `melos run test:integration` | apps/app integration_test | requires live server + device |
-| `melos run qa` | analyze + test | integration/Patrol are opt-in |
+| `melos run qa` | analyze + test | integration is opt-in |
 
 Since generated code is not committed (see AGENTS.md), drift detection cannot
 rely on a tracked-only diff: Freezed `.freezed.dart`/`.g.dart`, the Serverpod
@@ -211,12 +205,6 @@ and are the canonical references for error translation:
 
 These map to the app's `ErrorTranslator` (e.g. unauthorized → `session_expired`).
 
-## Patrol (Skeleton)
-
-`apps/app/integration_test_patrol/smoke_test.dart` documents the intended E2E
-structure. It is disabled in the standard pipeline (`product.yaml`
-`qa.patrol: false`) pending Patrol CLI + device/CI integration.
-
 ## CI Pipeline
 
 `.github/workflows/qa.yml` is committed and runs on push to `main` and on pull
@@ -240,8 +228,8 @@ requests. Five jobs share one toolchain bootstrap (documented in
 Because every Melos script invokes `fvm flutter`/`fvm dart` and `generate:server`
 invokes the Serverpod CLI, each job provisions FVM (`dart pub global activate
 fvm` + `fvm install` from `.fvmrc`) and the pinned Serverpod CLI
-(`dart pub global activate serverpod_cli`), and puts both on `PATH`. Integration
-and Patrol suites remain opt-in and device-gated (see `product.yaml`).
+(`dart pub global activate serverpod_cli`), and puts both on `PATH`. The
+integration suite is opt-in and device-gated (see `product.yaml`).
 
 ## Failure Classification
 

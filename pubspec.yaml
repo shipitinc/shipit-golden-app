@@ -130,8 +130,8 @@ melos:
 
     qa:
       description: >-
-        Run default QA pipeline (analyze + tests). Device/server-gated suites
-        (integration, Patrol) are opt-in; see docs/qa/strategy.md.
+        Run default QA pipeline (analyze + tests). The device/server-gated
+        integration suite is opt-in; see docs/qa/strategy.md.
       steps:
         - analyze
         - test

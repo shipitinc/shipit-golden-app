@@ -57,6 +57,7 @@ Lower-authority artifacts must not silently contradict higher-authority sources.
 - **Flutter SDK version is pinned by FVM** — `.fvmrc` contains the exact version (3.44.7)
 - **Agents must not use arbitrary/global Flutter SDK versions** — all Flutter/Dart commands via `fvm flutter` / `fvm dart`
 - **Flutter upgrades are explicit repository changes** — update `.fvmrc`, run migration workflow, commit
+- **Serverpod CLI is pinned to 3.4.13** — `melos run generate:server` runs the ambient `serverpod` CLI, activated via `dart pub global activate serverpod_cli 3.4.13` (must match the `serverpod` SDK version; CI pins it in every `qa.yml` job). Unlike FVM there is no per-repository activation file — this is a documented known gap (see `docs/architecture/flutter-toolchain.md`); drift is caught by `generate:check`'s manifest gate.
 - **Flutter product UI uses shipit_ui** — import from `package:shipit_ui/shipit_ui.dart`
 - **Substantial UI changes require design authority** — no inventing consequential UX
 - **Approved golden baselines cannot be silently regenerated** — changed goldens require design/human approval per AEF. Baselines regenerate ONLY on the Linux CI host via `.github/workflows/goldens-update.yml` — macOS renders text ~1% differently and `--update-goldens` on a dev machine is never a fix
@@ -106,7 +107,7 @@ melos run test:unit                  # Dart unit tests
 melos run test:server                # Serverpod tests
 melos run test:flutter               # Flutter tests (golden pixel comparisons excluded)
 melos run test:golden                # Golden tests — Linux-CI-authoritative (do not treat macOS diffs as a failure)
-melos run qa                         # Full QA pipeline (analyze + test only; integration/Patrol are opt-in)
+melos run qa                         # Full QA pipeline (analyze + test only; integration is opt-in)
 melos run test:integration           # Flutter integration tests
 
 # Build (per platform + flavor)

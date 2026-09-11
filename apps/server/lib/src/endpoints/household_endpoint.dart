@@ -40,7 +40,7 @@ class HouseholdEndpoint extends Endpoint {
         householdId: household.id.toString(),
         name: name,
         email: email,
-        role: 'member',
+        role: HouseholdMemberRole.member,
         joinedAt: DateTime.now(),
       ),
     );

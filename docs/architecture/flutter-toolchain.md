@@ -39,6 +39,38 @@ fvm dart run build_runner build
 
 **Never use global Flutter** for this repository.
 
+## Serverpod CLI
+
+`melos run generate:server` invokes the ambient `serverpod` CLI (Windows
+`serverpod.exe`). Like FVM for Flutter, the CLI must be pinned for
+bit-reproducible generation — but unlike FVM there is no per-repository
+activation file for Dart global tools, so the pin is enforced by convention plus
+the drift gate below.
+
+### Pinned Version
+- **serverpod_cli**: 3.4.13 (must match the `serverpod` SDK dependency in
+  `apps/server/pubspec.yaml`)
+
+### Activation (local + CI)
+```bash
+dart pub global activate serverpod_cli 3.4.13
+export PATH="$PATH:$HOME/.pub-cache/bin"   # if not already present
+serverpod --version  # expect "Serverpod version: 3.4.13"
+```
+
+CI pins the exact version in every job of `.github/workflows/qa.yml`
+(`dart pub global activate serverpod_cli 3.4.13`).
+
+### Known Gap (not pinned at repository level)
+A Dart global activation is **ambient and machine-level** — it is not scoped to
+this repository the way `.fvmrc` scopes the Flutter SDK. A developer with an
+out-of-date or newer global `serverpod_cli` would silently regenerate from a
+different generator until `melos run generate:check` (which fingerprints the
+gitignored generated output into `.generated_manifest.json`) fails the drift
+gate in CI. If the CLI were upgradeable per-project this would be closed by an
+FVM-style activation; for now the version contract is the documentation above
+plus the manifest gate.
+
 ## Melos + FVM Integration
 
 ### Script Execution
@@ -79,8 +111,8 @@ melos:
 
     qa:
       description: >-
-        Run default QA pipeline (analyze + tests). Device/server-gated suites
-        (integration, Patrol) are opt-in; see docs/qa/strategy.md.
+        Run default QA pipeline (analyze + tests). The device/server-gated
+        integration suite is opt-in; see docs/qa/strategy.md.
       steps:
         - analyze
         - test

@@ -21,7 +21,7 @@ HouseholdMember householdMemberFromProtocol(api.HouseholdMember member) {
     householdId: member.householdId,
     name: member.name,
     email: member.email,
-    role: member.role,
+    role: member.role.name,
     joinedAt: member.joinedAt,
   );
 }

@@ -219,8 +219,8 @@ QA is orchestrated through Melos scripts (unit, server, Flutter, integration) in
 - **Integration / E2E** — real-server journey in `apps/app/integration_test/`;
   requires a live server and a device (not executed in the default `melos run test`)
 
-> `melos run qa` runs analyze + tests. The integration suite and Patrol require
-> a running server and device; they are opt-in (see `product.yaml` and
+> `melos run qa` runs analyze + tests. The integration suite requires
+> a running server and device; it is opt-in (see `product.yaml` and
 > `docs/qa/strategy.md` for gating).
 
 ## Known Limitations
@@ -229,7 +229,6 @@ QA is orchestrated through Melos scripts (unit, server, Flutter, integration) in
 - Verification codes are logged to the server console in development (no email provider configured); `config/` email SMTP is a DEV_PENDING integration
 - No real-time features
 - No offline support
-- Patrol E2E skeleton only (`integration_test_patrol/`), not yet in the standard QA pipeline
 
 ## Documentation
 

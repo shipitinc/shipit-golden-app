@@ -27,7 +27,7 @@ void main() {
         description: 'Annual summer camp',
         startDate: DateTime.utc(2026, 6, 15),
         endDate: DateTime.utc(2026, 8, 15),
-        status: 'active',
+        status: api.ProgramStatus.active,
       );
 
       final json = original.toJson();
@@ -35,7 +35,7 @@ void main() {
 
       expect(restored.id, 3);
       expect(restored.name, 'Summer Camp');
-      expect(restored.status, 'active');
+      expect(restored.status, api.ProgramStatus.active);
     });
   });
 }

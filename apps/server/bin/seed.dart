@@ -59,14 +59,14 @@ Future<void> seedHousehold(Session session) async {
       householdId: household.id.toString(),
       name: 'John Doe',
       email: 'john@example.com',
-      role: 'owner',
+      role: HouseholdMemberRole.owner,
       joinedAt: DateTime.now(),
     ),
     HouseholdMember(
       householdId: household.id.toString(),
       name: 'Jane Smith',
       email: 'jane@example.com',
-      role: 'member',
+      role: HouseholdMemberRole.member,
       joinedAt: DateTime.now().subtract(const Duration(days: 15)),
     ),
   ]);
@@ -83,14 +83,14 @@ Future<void> seedPrograms(Session session) async {
       description: 'Annual summer camp for families',
       startDate: DateTime(2024, 6, 15),
       endDate: DateTime(2024, 8, 15),
-      status: 'active',
+      status: ProgramStatus.active,
     ),
     Program(
       name: 'Winter Workshop',
       description: 'Creative winter activities',
       startDate: DateTime(2024, 12, 1),
       endDate: DateTime(2024, 12, 20),
-      status: 'upcoming',
+      status: ProgramStatus.upcoming,
     ),
   ]);
 }

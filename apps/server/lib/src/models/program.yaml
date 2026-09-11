@@ -5,4 +5,4 @@ fields:
   description: String
   startDate: DateTime
   endDate: DateTime
-  status: String
+  status: ProgramStatus

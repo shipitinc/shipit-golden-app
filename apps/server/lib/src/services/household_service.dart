@@ -39,7 +39,7 @@ class HouseholdService {
         householdId: created.id.toString(),
         name: 'Owner',
         email: '',
-        role: 'owner',
+        role: HouseholdMemberRole.owner,
         joinedAt: DateTime.now(),
       ),
     );
