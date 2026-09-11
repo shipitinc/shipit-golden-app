@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shipit_ui/shipit_ui.dart';
 import 'package:shipit_golden_app/features/programs/domain/program.dart';
+import 'package:shipit_golden_app/features/programs/presentation/widgets/program_date_range.dart';
+import 'package:shipit_golden_app/features/programs/presentation/widgets/program_status_chip.dart';
 
 class ProgramCard extends StatelessWidget {
   final Program program;
@@ -19,7 +22,7 @@ class ProgramCard extends StatelessWidget {
               Expanded(
                 child: Text(program.name, style: context.text.title.large),
               ),
-              _StatusChip(status: program.status),
+              ProgramStatusChip(status: program.status),
             ],
           ),
           SizedBox(height: context.space.s2),
@@ -39,7 +42,7 @@ class ProgramCard extends StatelessWidget {
               ),
               SizedBox(width: context.space.s2),
               Text(
-                '${_formatDate(program.startDate)} - ${_formatDate(program.endDate)}',
+                formatProgramDateRange(program.startDate, program.endDate),
                 style: context.text.body.small.copyWith(
                   color: context.color.fg.secondary,
                 ),
@@ -48,64 +51,12 @@ class ProgramCard extends StatelessWidget {
               AppButton.secondary(
                 label: 'View Details',
                 onPressed: () {
-                  // DESIGN_PENDING: Navigate to program detail
+                  context.push('/programs/${program.id}');
                 },
               ),
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  final String status;
-
-  const _StatusChip({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    Color backgroundColor;
-    Color textColor;
-
-    switch (status.toLowerCase()) {
-      case 'active':
-        backgroundColor = context.color.state.info.bg;
-        textColor = context.color.state.info.fg;
-        break;
-      case 'upcoming':
-        backgroundColor = context.color.action.primary.bg;
-        textColor = context.color.action.primary.fg;
-        break;
-      case 'completed':
-        backgroundColor = context.color.bg.subtle;
-        textColor = context.color.fg.secondary;
-        break;
-      default:
-        backgroundColor = context.color.bg.subtle;
-        textColor = context.color.fg.secondary;
-    }
-
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.space.s2,
-        vertical: context.space.s1,
-      ),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: context.radius.all.sm,
-      ),
-      child: Text(
-        status.toUpperCase(),
-        style: context.text.label.small.copyWith(
-          color: textColor,
-          fontWeight: context.font.weight.semibold,
-        ),
       ),
     );
   }

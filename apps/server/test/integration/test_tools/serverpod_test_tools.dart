@@ -20,6 +20,7 @@ import 'package:shipit_golden_server/src/generated/household.dart' as _i5;
 import 'package:shipit_golden_server/src/generated/household_member.dart'
     as _i6;
 import 'package:shipit_golden_server/src/generated/program.dart' as _i7;
+import 'package:shipit_golden_server/src/generated/program_member.dart' as _i8;
 import 'package:shipit_golden_server/src/generated/protocol.dart';
 import 'package:shipit_golden_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -630,6 +631,130 @@ class _ProgramsEndpoint {
                   _localCallContext.arguments,
                 )
                 as _i3.Future<List<_i7.Program>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i7.Program?> getById(
+    _i1.TestSessionBuilder sessionBuilder,
+    int programId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'programs',
+            method: 'getById',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'programs',
+          methodName: 'getById',
+          parameters: _i1.testObjectToJson({'programId': programId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i7.Program?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i8.ProgramMember> joinProgram(
+    _i1.TestSessionBuilder sessionBuilder,
+    int programId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'programs',
+            method: 'joinProgram',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'programs',
+          methodName: 'joinProgram',
+          parameters: _i1.testObjectToJson({'programId': programId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i8.ProgramMember>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i8.ProgramMember?> getMembership(
+    _i1.TestSessionBuilder sessionBuilder,
+    int programId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'programs',
+            method: 'getMembership',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'programs',
+          methodName: 'getMembership',
+          parameters: _i1.testObjectToJson({'programId': programId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i8.ProgramMember?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<void> cancelMembership(
+    _i1.TestSessionBuilder sessionBuilder,
+    int programId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'programs',
+            method: 'cancelMembership',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'programs',
+          methodName: 'cancelMembership',
+          parameters: _i1.testObjectToJson({'programId': programId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<void>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

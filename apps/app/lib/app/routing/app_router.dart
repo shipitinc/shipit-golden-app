@@ -4,6 +4,7 @@ import 'package:shipit_golden_app/features/authentication/bloc/authentication_bl
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_state.dart';
 import 'package:shipit_golden_app/features/authentication/presentation/screens/login_screen.dart';
 import 'package:shipit_golden_app/features/household/presentation/screens/household_screen.dart';
+import 'package:shipit_golden_app/features/programs/presentation/screens/program_details_screen.dart';
 import 'package:shipit_golden_app/features/programs/presentation/screens/programs_screen.dart';
 
 class AppRouter {
@@ -52,6 +53,13 @@ class AppRouter {
                   path: '/programs',
                   name: 'programs',
                   builder: (context, state) => const ProgramsScreen(),
+                ),
+                GoRoute(
+                  path: '/programs/:id',
+                  name: 'program-details',
+                  builder: (context, state) => ProgramDetailsScreen(
+                    programId: state.pathParameters['id']!,
+                  ),
                 ),
               ],
             ),

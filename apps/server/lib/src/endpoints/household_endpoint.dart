@@ -1,6 +1,8 @@
 import 'package:serverpod/serverpod.dart';
 import 'package:shipit_golden_server/src/generated/protocol.dart';
 
+import '../services/household_service.dart';
+
 /// Household endpoint backed by PostgreSQL.
 ///
 /// Each authenticated user owns exactly one household, created automatically on
@@ -13,29 +15,7 @@ class HouseholdEndpoint extends Endpoint {
   /// (with the caller as owner-member) if it does not yet exist.
   Future<Household> getCurrent(Session session) async {
     final ownerId = session.authenticated!.userIdentifier;
-    final household = await _findHouseholdByOwner(session, ownerId);
-    if (household != null) return household;
-
-    // First access — auto-create household and add the owner as a member.
-    final created = await Household.db.insertRow(
-      session,
-      Household(
-        name: 'My Household',
-        ownerId: ownerId,
-        createdAt: DateTime.now(),
-      ),
-    );
-    await HouseholdMember.db.insertRow(
-      session,
-      HouseholdMember(
-        householdId: created.id.toString(),
-        name: 'Owner',
-        email: '',
-        role: 'owner',
-        joinedAt: DateTime.now(),
-      ),
-    );
-    return created;
+    return HouseholdService.getOrCreateFor(session, ownerId);
   }
 
   /// Returns all members of the authenticated user's household.
@@ -89,12 +69,7 @@ class HouseholdEndpoint extends Endpoint {
     Session session,
     String ownerId,
   ) async {
-    final households = await Household.db.find(
-      session,
-      where: (h) => h.ownerId.equals(ownerId),
-      limit: 1,
-    );
-    return households.isEmpty ? null : households.first;
+    return HouseholdService.findByOwner(session, ownerId);
   }
 
   /// Returns the authenticated user's household, throwing if none exists.

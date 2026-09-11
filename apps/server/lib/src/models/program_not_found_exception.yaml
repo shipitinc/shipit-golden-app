@@ -1,0 +1,7 @@
+### Serialized to the app client as a 400 so `joinProgram` rejects an unknown
+### program id with a typed validation failure instead of a generic 500.
+### Serverpod serializes any `SerializableException` thrown from an endpoint as
+### an HTTP 400 response (see serverpod `_reportException`), and the generated
+### client rethrows this type.
+exception: ProgramNotFoundException
+fields: {}

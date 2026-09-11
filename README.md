@@ -193,7 +193,8 @@ fvm dart --version      # 3.12.2
 
 ## Current DESIGN_PENDING Areas
 
-- Program detail screen
+- Program detail screen + membership CTA (behavior implemented with approved
+  shipit_ui components; layout/CTA copy await an approved design revision)
 - Program creation flow
 - Household settings screen
 - Member invitation flow

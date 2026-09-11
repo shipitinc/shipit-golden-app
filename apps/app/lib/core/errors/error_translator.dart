@@ -40,6 +40,9 @@ AppFailure mapAppFailure(
     api.InvalidMemberIdException() => AppFailure.validation(
       message: 'Invalid member. Please refresh the member list and try again.',
     ),
+    api.ProgramNotFoundException() => AppFailure.validation(
+      message: 'This program is no longer available.',
+    ),
     EmailAccountLoginException() => AppFailure.auth(
       message: loginFailureMessage(error),
       code: 'login_${error.reason.name}',

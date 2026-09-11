@@ -1,0 +1,10 @@
+class: ProgramMember
+table: program_members
+fields:
+  programId: int
+  householdId: String
+  joinedAt: DateTime
+indexes:
+  programMembersProgramHouseholdIndex:
+    fields: programId, householdId
+    unique: true
