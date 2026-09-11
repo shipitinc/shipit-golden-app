@@ -151,10 +151,15 @@ context.isDesktopOrLarger // width >= 1024 (token-index comparison, desktop+)
 - GoRouter for declarative routing
 - Routes defined in `AppRouter`
 - Authentication redirects in router redirect
-- DESIGN_PENDING: no shell/navigation between `/household` and `/programs`
-  (`/programs` is reachable by URL only). Any nav shell (tab/rail/drawer)
-  requires an approved Penpot revision — see `README.md` → Current
-  DESIGN_PENDING Areas.
+- Authenticated destinations (`/household`, `/programs`) live under a
+  `StatefulShellRoute.indexedStack` wrapped by `app/shell/app_shell.dart`
+  (`AppShell`). Each branch keeps its own Navigator in an IndexedStack, so
+  switching tabs preserves BLoC + scroll state.
+- The shell chrome is the shipit_ui `AppNavigationRail` (approved Penpot
+  navigation component) with Household / Programs destinations. It extends
+  with text labels at/above the desktop breakpoint and collapses to icon-only
+  (tooltips) on tablet/compact widths, so one component serves every layout.
+  See `AppShell.destinations` for the destination catalogue.
 
 ## Session Persistence (ServerpodClientProvider)
 

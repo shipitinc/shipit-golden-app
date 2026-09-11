@@ -165,6 +165,9 @@ fvm dart --version      # 3.12.2
 - Feature-oriented structure (`features/{auth,household,programs}`)
 - shipit_ui for all UI components
 - Serverpod generated client for API communication
+- Authenticated screens share an app shell (`app/shell/app_shell.dart`) —
+  GoRouter `StatefulShellRoute` + shipit_ui `AppNavigationRail` (Household /
+  Programs; extends at desktop, collapses with tooltips below)
 
 ### Backend (apps/server)
 - Serverpod with PostgreSQL
@@ -190,8 +193,6 @@ fvm dart --version      # 3.12.2
 
 ## Current DESIGN_PENDING Areas
 
-- App shell / navigation between household and programs (no tab/rail/drawer
-  approved; programs reachable by URL only)
 - Program detail screen
 - Program creation flow
 - Household settings screen

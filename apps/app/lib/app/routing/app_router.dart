@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:shipit_golden_app/app/shell/app_shell.dart';
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_bloc.dart';
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_state.dart';
 import 'package:shipit_golden_app/features/authentication/presentation/screens/login_screen.dart';
@@ -13,10 +14,11 @@ class AppRouter {
   static GoRouter create(AuthenticationBloc authBloc) {
     return GoRouter(
       initialLocation: _loginLocation,
-      // DESIGN_PENDING: No app shell / navigation between /household and
-      // /programs (no approved tab/rail/drawer in Penpot). /programs is
-      // reachable by URL only; a shell is the recommended Phase-2 golden-path
-      // task resolved against an approved Penpot revision (see README).
+      // Authenticated destinations live under a `StatefulShellRoute` whose
+      // branches (household, programs) share one `AppShell` chrome. Each tab
+      // keeps its own Navigator in an IndexedStack, so switching tabs
+      // preserves BLoC + scroll state. The shell uses the approved shipit_ui
+      // `AppNavigationRail` (auto-collapses below the desktop breakpoint).
       routes: [
         GoRoute(
           path: '/login',
@@ -31,15 +33,29 @@ class AppRouter {
             initialMode: AuthScreenMode.register,
           ),
         ),
-        GoRoute(
-          path: '/household',
-          name: 'household',
-          builder: (context, state) => const HouseholdScreen(),
-        ),
-        GoRoute(
-          path: '/programs',
-          name: 'programs',
-          builder: (context, state) => const ProgramsScreen(),
+        StatefulShellRoute.indexedStack(
+          builder: (context, state, navigationShell) =>
+              AppShell(navigationShell: navigationShell),
+          branches: [
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: '/household',
+                  name: 'household',
+                  builder: (context, state) => const HouseholdScreen(),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: '/programs',
+                  name: 'programs',
+                  builder: (context, state) => const ProgramsScreen(),
+                ),
+              ],
+            ),
+          ],
         ),
       ],
       redirect: (context, state) {

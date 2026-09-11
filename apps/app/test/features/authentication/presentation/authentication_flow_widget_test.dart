@@ -140,7 +140,8 @@ void main() {
     await tester.tap(find.text('Sign In'));
     await tester.pumpAndSettle();
 
-    // Navigated away from /login; no login-level failure alert is shown.
+    // Navigated away from /login into the app shell (household branch active).
+    expect(find.byType(AppNavigationRail), findsOneWidget);
     expect(find.text('Household'), findsOneWidget);
     expect(find.text('Sign In Failed'), findsNothing);
   });
@@ -162,7 +163,9 @@ void main() {
     bloc.add(const AuthenticationEvent.started());
     await tester.pumpAndSettle();
 
-    // An authenticated session lands on the household screen with a sign-out.
+    // An authenticated session lands on the household screen inside the app
+    // shell, with a sign-out action in the household app bar.
+    expect(find.byType(AppNavigationRail), findsOneWidget);
     expect(find.text('Household'), findsOneWidget);
     expect(find.byTooltip('Sign out'), findsOneWidget);
 
