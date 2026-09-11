@@ -45,6 +45,8 @@ test/
 │   └── programs/
 │       ├── bloc/programs_bloc_test.dart
 │       └── data/program_converters_test.dart
+├── navigation/
+│   └── app_shell_widget_test.dart   # authenticated shell: rail landing, switching, desktop
 ├── goldens/
 │   ├── golden_policy_test.dart      # approved-baseline pixel comparisons (@Tags(['golden']), Linux-CI gated)
 │   ├── golden_registry_test.dart    # registry conformance (runs on any host)
@@ -127,6 +129,10 @@ integration tests and the real live failure-injection checks.
   exception text — semantic error handling via `ErrorTranslator` +
   `AppFailure.userMessage`)
 - successful login navigates away from `/login`
+- the authenticated app shell (`test/features/navigation/app_shell_widget_test.dart`)
+  covers landing on the Household branch, switching Household ↔ Programs,
+  rail extension with labels at desktop width, and re-selecting the active
+  destination (stays on the branch)
 
 ## Golden Policy
 
