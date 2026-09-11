@@ -2,22 +2,31 @@
 
 Tracking components needed by Golden App that don't exist in shipit_ui.
 
-> **Status of this document:** reviewed against shipit_ui revision `18d1a5d6`
-> (2026-09-09, the revision pinned in `apps/app/pubspec.yaml`). GAP-001 through
+> **Status of this document:** reviewed against shipit_ui revision `526926d`
+> (2026-09-10, the revision pinned in `apps/app/pubspec.yaml`). GAP-001 through
 > GAP-008 shipped upstream and the Golden App now consumes the components (see
 > **Resolved Gaps** below). GAP-009 (Inter font bundling), GAP-010 (AppTextField
-> validation text), GAP-011 (dark mode) and GAP-012 (AppTextButton /
-> AppIconButton) all shipped upstream — GAP-009 as
+> validation text), GAP-011 (dark mode), GAP-012 (AppTextButton /
+> AppIconButton) and the three token-level gaps (GAP-013 `icon.size.sm`,
+> GAP-014 `text.weight.semibold`, GAP-015 `layout.maxWidth.form`) all shipped
+> upstream — GAP-009 as
 > [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8),
 > GAP-010 as
 > [shipitinc/shipit-ui#9](https://github.com/shipitinc/shipit-ui/issues/9),
 > GAP-011 as
-> [shipitinc/shipit-ui#10](https://github.com/shipitinc/shipit-ui/issues/10) and
+> [shipitinc/shipit-ui#10](https://github.com/shipitinc/shipit-ui/issues/10),
 > GAP-012 as
-> [shipitinc/shipit-ui#11](https://github.com/shipitinc/shipit-ui/issues/11) —
+> [shipitinc/shipit-ui#11](https://github.com/shipitinc/shipit-ui/issues/11),
+> GAP-013 as
+> [shipitinc/shipit-ui#12](https://github.com/shipitinc/shipit-ui/issues/12),
+> GAP-014 as
+> [shipitinc/shipit-ui#13](https://github.com/shipitinc/shipit-ui/issues/13) and
+> GAP-015 as
+> [shipitinc/shipit-ui#14](https://github.com/shipitinc/shipit-ui/issues/14) —
 > and the Golden App consumes all of them (real Inter in tests + regenerated
 > baselines; form-field validation showcase; dark mode regression test;
-> auth/household/programs buttons). See below.
+> auth/household/programs buttons; token-backed icon size, font weight and
+> form max-width). See below.
 
 ## Revision History
 
@@ -31,9 +40,18 @@ Tracking components needed by Golden App that don't exist in shipit_ui.
 - `2026-09-09` — bumped to `18d1a5d6` (GAP-012 resolved: `AppTextButton` and
   `AppIconButton` shipped in
   [shipitinc/shipit-ui#11](https://github.com/shipitinc/shipit-ui/issues/11),
-  closing the last open gap). The Golden App swapped the login-screen
+  closing the last open component gap). The Golden App swapped the login-screen
   `TextButton`/`IconButton` workarounds and the household/programs app-bar
   `IconButton`s for the upstream components.
+- `2026-09-10` — bumped to `526926d` (token-level gaps closed: `icon.size.sm`
+  (#12), `text.weight.semibold` (#13) and `layout.maxWidth.form` (#14) shipped
+  in `b6b7a16`/`526926d`). The Golden App replaced `kSmallIconSize` →
+  `context.icon.size.sm`, `_labelWeight` → `context.font.weight.semibold` and
+  `_authCardMaxWidth` → `context.layout.maxWidth.form`, and deleted the
+  app-level constants (`ui_constants.dart` removed). All three token values are
+  identical to the constants they replace (16 / w600 / 440, no raw literals
+  introduced either way), so the rendered output — including the APPROVED login
+  baselines — is unchanged.
 
 ## Resolved Gaps
 
@@ -185,6 +203,45 @@ within the revision range `2a916a5..1207004`.
   golden baselines were regenerated and re-approved against
   `shipit_ui@18d1a5d6` via `goldens-update.yml` (recorded in
   `goldens_registry.md`; pending-actions.md #6 completed 2026-09-10).
+
+### UPSTREAM_UI_GAP-013: icon-size token (`icon.size.sm`)
+- **Desired Component**: small inline icons (calendar-today beside caption text)
+  read their 16 px size from a token, not an app-level constant
+- **Reason**: Golden App kept `kSmallIconSize` (16) as a named app constant
+  because shipit_ui exposed no icon-size token
+- **Recommended Owner**: shipit-ui
+- **shipit_ui**: shipped in `b6b7a16`/`526926d` (`AppIconTokens.size.sm` = 16,
+  `context.icon.size.sm`)
+- **Issue**: [shipitinc/shipit-ui#12](https://github.com/shipitinc/shipit-ui/issues/12) — closed
+- **Status**: resolved 2026-09-10
+- **Workaround**: removed — `program_card.dart` and `household_header.dart` read
+  `context.icon.size.sm`; `kSmallIconSize` and `ui_constants.dart` were deleted
+
+### UPSTREAM_UI_GAP-014: font-weight token (`text.weight.semibold`)
+- **Desired Component**: semibold emphasis (`w600`) read from a shipit_ui
+  token instead of the `FontWeight.w600` constant on the status chip
+- **Reason**: Golden App kept `_labelWeight` (`w600`) because no text token
+  carried the emphasis (`context.text.label.*` resolves `w500`)
+- **Recommended Owner**: shipit-ui
+- **shipit_ui**: shipped in `526926d` (`AppFontWeightTokens.semibold` = `w600`,
+  `context.font.weight.semibold`)
+- **Issue**: [shipitinc/shipit-ui#13](https://github.com/shipitinc/shipit-ui/issues/13) — closed
+- **Status**: resolved 2026-09-10
+- **Workaround**: removed — `program_card.dart` `_StatusChip` reads
+  `context.font.weight.semibold`; `_labelWeight` deleted
+
+### UPSTREAM_UI_GAP-015: form max-width token (`layout.maxWidth.form`)
+- **Desired Component**: the 440 px centered auth-card constraint read from a
+  token instead of the app-level `_authCardMaxWidth`
+- **Reason**: Golden App kept `_authCardMaxWidth` (440) because
+  `pageWidth`/1200 and the breakpoints do not fit a form
+- **Recommended Owner**: shipit-ui
+- **shipit_ui**: shipped in `b6b7a16`/`526926d`
+  (`AppLayoutMaxWidthTokens.form` = 440, `context.layout.maxWidth.form`)
+- **Issue**: [shipitinc/shipit-ui#14](https://github.com/shipitinc/shipit-ui/issues/14) — closed
+- **Status**: resolved 2026-09-10
+- **Workaround**: removed — `login_screen.dart` reads
+  `context.layout.maxWidth.form`; `_authCardMaxWidth` deleted
 
 ## Reporting Process
 

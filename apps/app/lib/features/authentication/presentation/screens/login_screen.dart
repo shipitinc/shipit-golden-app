@@ -38,10 +38,6 @@ class _AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<_AuthScreen> {
-  // Comfortable max width for the centered auth card; no shipit_ui token
-  // exists for it yet (pageWidth/1200 and breakpoints do not fit a form).
-  static const double _authCardMaxWidth = 440;
-
   late AuthScreenMode _mode;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -128,7 +124,9 @@ class _AuthScreenState extends State<_AuthScreen> {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: context.space.s4),
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: _authCardMaxWidth),
+                constraints: BoxConstraints(
+                  maxWidth: context.layout.maxWidth.form,
+                ),
                 child: AppCard(
                   padding: EdgeInsets.all(context.space.s5),
                   child: Form(

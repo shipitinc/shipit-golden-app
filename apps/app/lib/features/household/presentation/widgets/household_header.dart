@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shipit_ui/shipit_ui.dart';
-import 'package:shipit_golden_app/core/core.dart';
 import 'package:shipit_golden_app/features/household/domain/household.dart';
 
 class HouseholdHeader extends StatelessWidget {
@@ -43,7 +42,7 @@ class HouseholdHeader extends StatelessWidget {
             children: [
               Icon(
                 Icons.calendar_today,
-                size: kSmallIconSize,
+                size: context.icon.size.sm,
                 color: context.color.fg.secondary,
               ),
               SizedBox(width: context.space.s2),
