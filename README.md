@@ -190,6 +190,8 @@ fvm dart --version      # 3.12.2
 
 ## Current DESIGN_PENDING Areas
 
+- App shell / navigation between household and programs (no tab/rail/drawer
+  approved; programs reachable by URL only)
 - Program detail screen
 - Program creation flow
 - Household settings screen

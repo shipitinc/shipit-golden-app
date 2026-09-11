@@ -151,6 +151,10 @@ context.isDesktopOrLarger // width >= 1024 (token-index comparison, desktop+)
 - GoRouter for declarative routing
 - Routes defined in `AppRouter`
 - Authentication redirects in router redirect
+- DESIGN_PENDING: no shell/navigation between `/household` and `/programs`
+  (`/programs` is reachable by URL only). Any nav shell (tab/rail/drawer)
+  requires an approved Penpot revision — see `README.md` → Current
+  DESIGN_PENDING Areas.
 
 ## Session Persistence (ServerpodClientProvider)
 

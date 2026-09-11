@@ -13,6 +13,10 @@ class AppRouter {
   static GoRouter create(AuthenticationBloc authBloc) {
     return GoRouter(
       initialLocation: _loginLocation,
+      // DESIGN_PENDING: No app shell / navigation between /household and
+      // /programs (no approved tab/rail/drawer in Penpot). /programs is
+      // reachable by URL only; a shell is the recommended Phase-2 golden-path
+      // task resolved against an approved Penpot revision (see README).
       routes: [
         GoRoute(
           path: '/login',
