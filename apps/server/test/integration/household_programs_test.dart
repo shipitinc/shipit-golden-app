@@ -85,6 +85,18 @@ void main() {
             isNot(contains('remove@example.com')),
           );
         });
+
+        test(
+          'then removeMember rejects a non-numeric member id with a 400',
+          () async {
+            await endpoints.household.getCurrent(authed);
+
+            expect(
+              () => endpoints.household.removeMember(authed, 'not-a-number'),
+              throwsA(isA<InvalidMemberIdException>()),
+            );
+          },
+        );
       },
       configOverride: useEphemeralApiPort(),
     );

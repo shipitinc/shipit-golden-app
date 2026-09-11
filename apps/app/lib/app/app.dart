@@ -46,7 +46,7 @@ class _AppViewState extends State<_AppView> {
     // A mid-session 401 (expired/invalidated JWT) surfaces as a
     // `session_expired` failure in whichever feature screen made the call.
     // End the session so the router redirect lands the user back on login.
-    SessionExpiredNotifier.add(_onSessionExpired);
+    SessionExpiredNotifier.shared.add(_onSessionExpired);
   }
 
   void _onSessionExpired() {
@@ -55,7 +55,7 @@ class _AppViewState extends State<_AppView> {
 
   @override
   void dispose() {
-    SessionExpiredNotifier.remove(_onSessionExpired);
+    SessionExpiredNotifier.shared.remove(_onSessionExpired);
     _router.dispose();
     super.dispose();
   }

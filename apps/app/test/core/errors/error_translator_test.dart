@@ -18,6 +18,13 @@ void main() {
       },
     );
 
+    test('surfaces a non-numeric member id as a validation error', () {
+      final failure = mapAppFailure(api.InvalidMemberIdException());
+      expect(failure, isA<ValidationFailure>());
+      expect(failure.message, contains('Invalid member'));
+      expect(failure.message, isNot(contains('Exception')));
+    });
+
     test(
       'surfaces an expired verification code with an actionable message',
       () {
@@ -110,8 +117,8 @@ void main() {
     test('announces listeners when a session-expired failure is mapped', () {
       var announced = false;
       void listener() => announced = true;
-      SessionExpiredNotifier.add(listener);
-      addTearDown(() => SessionExpiredNotifier.remove(listener));
+      SessionExpiredNotifier.shared.add(listener);
+      addTearDown(() => SessionExpiredNotifier.shared.remove(listener));
 
       mapAppFailure(ServerpodClientUnauthorized());
 
@@ -127,12 +134,35 @@ void main() {
     test('does not announce non-expiry failures', () {
       var announced = false;
       void listener() => announced = true;
-      SessionExpiredNotifier.add(listener);
-      addTearDown(() => SessionExpiredNotifier.remove(listener));
+      SessionExpiredNotifier.shared.add(listener);
+      addTearDown(() => SessionExpiredNotifier.shared.remove(listener));
 
       mapAppFailure(api.EmailAlreadyRegisteredException());
 
       expect(announced, isFalse);
+    });
+
+    test('can be passed a dedicated notifier instance (DI)', () {
+      var injectedAnnounced = false;
+      var sharedAnnounced = false;
+      final injected = SessionExpiredNotifier();
+      injected.add(() => injectedAnnounced = true);
+      void sharedListener() => sharedAnnounced = true;
+      SessionExpiredNotifier.shared.add(sharedListener);
+      addTearDown(() => SessionExpiredNotifier.shared.remove(sharedListener));
+
+      mapAppFailure(ServerpodClientUnauthorized(), notifier: injected);
+
+      expect(
+        injectedAnnounced,
+        isTrue,
+        reason: 'an injected notifier must receive the announce.',
+      );
+      expect(
+        sharedAnnounced,
+        isFalse,
+        reason: 'an injected notifier keeps the announce off the shared one.',
+      );
     });
   });
 

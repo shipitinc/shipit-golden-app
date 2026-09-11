@@ -67,9 +67,15 @@ class HouseholdEndpoint extends Endpoint {
   }
 
   /// Removes a member from the authenticated user's household by member ID.
+  ///
+  /// Rejects non-numeric [memberId] with a 400
+  /// ([InvalidMemberIdException]) rather than a 500 from `int.parse`.
   Future<void> removeMember(Session session, String memberId) async {
     final household = await _requireHousehold(session);
-    final memberIdInt = int.parse(memberId);
+    final memberIdInt = int.tryParse(memberId);
+    if (memberIdInt == null) {
+      throw InvalidMemberIdException();
+    }
     await HouseholdMember.db.deleteWhere(
       session,
       where: (m) =>

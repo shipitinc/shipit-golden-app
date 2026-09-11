@@ -19,9 +19,14 @@ import 'package:shipit_golden_app/core/networking/session_expired_notifier.dart'
 /// detail.
 ///
 /// Side effect: a `session_expired` result is announced through
-/// [SessionExpiredNotifier] so the app shell can end the session and return
+/// [SessionExpiredNotifier] (default [SessionExpiredNotifier.shared], or the
+/// injected [notifier]) so the app shell can end the session and return
 /// the user to the login screen (see [SessionExpiredNotifier]).
-AppFailure mapAppFailure(Object error, {String? operation}) {
+AppFailure mapAppFailure(
+  Object error, {
+  String? operation,
+  SessionExpiredNotifier? notifier,
+}) {
   final failure = switch (error) {
     // Duplicate email: Serverpod's built-in email IDP silently swallows this
     // on the login path (anti account-enumeration; see
@@ -31,6 +36,9 @@ AppFailure mapAppFailure(Object error, {String? operation}) {
       message:
           'An account already exists for this email address. '
           'Try signing in instead.',
+    ),
+    api.InvalidMemberIdException() => AppFailure.validation(
+      message: 'Invalid member. Please refresh the member list and try again.',
     ),
     EmailAccountLoginException() => AppFailure.auth(
       message: loginFailureMessage(error),
@@ -80,7 +88,7 @@ AppFailure mapAppFailure(Object error, {String? operation}) {
     ),
     _ => _unknownFailure(error, operation),
   };
-  SessionExpiredNotifier.announceIfExpired(failure);
+  (notifier ?? SessionExpiredNotifier.shared).announceIfExpired(failure);
   return failure;
 }
 
