@@ -1,7 +1,7 @@
 class: HouseholdMember
 table: household_members
 fields:
-  householdId: String
+  householdId: int
   name: String
   email: String
   role: HouseholdMemberRole

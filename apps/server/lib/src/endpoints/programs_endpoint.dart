@@ -39,7 +39,7 @@ class ProgramsEndpoint extends Endpoint {
       session,
       ProgramMember(
         programId: programId,
-        householdId: household.id.toString(),
+        householdId: household.id!,
         joinedAt: DateTime.now(),
       ),
     );
@@ -61,8 +61,7 @@ class ProgramsEndpoint extends Endpoint {
     await ProgramMember.db.deleteWhere(
       session,
       where: (m) =>
-          m.programId.equals(programId) &
-          m.householdId.equals(household.id.toString()),
+          m.programId.equals(programId) & m.householdId.equals(household.id),
     );
   }
 
@@ -74,8 +73,7 @@ class ProgramsEndpoint extends Endpoint {
     final memberships = await ProgramMember.db.find(
       session,
       where: (m) =>
-          m.programId.equals(programId) &
-          m.householdId.equals(household.id.toString()),
+          m.programId.equals(programId) & m.householdId.equals(household.id),
       limit: 1,
     );
     return memberships.isEmpty ? null : memberships.first;

@@ -56,14 +56,14 @@ Future<void> seedHousehold(Session session) async {
 
   await HouseholdMember.db.insert(session, [
     HouseholdMember(
-      householdId: household.id.toString(),
+      householdId: household.id!,
       name: 'John Doe',
       email: 'john@example.com',
       role: HouseholdMemberRole.owner,
       joinedAt: DateTime.now(),
     ),
     HouseholdMember(
-      householdId: household.id.toString(),
+      householdId: household.id!,
       name: 'Jane Smith',
       email: 'jane@example.com',
       role: HouseholdMemberRole.member,

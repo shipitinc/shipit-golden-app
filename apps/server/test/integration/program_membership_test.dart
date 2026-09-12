@@ -104,7 +104,7 @@ void main() {
 
             expect(second.id, first.id);
             expect(second.householdId, first.householdId);
-            expect(first.householdId, isNotEmpty);
+            expect(first.householdId, greaterThan(0));
 
             final session = authed.build();
             try {

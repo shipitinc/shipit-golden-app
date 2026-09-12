@@ -23,7 +23,7 @@ void main() {
     test('HouseholdMember round-trips through Protocol serialization', () {
       final original = HouseholdMember(
         id: 7,
-        householdId: 'household_1',
+        householdId: 1,
         name: 'Jane Smith',
         email: 'jane@example.com',
         role: HouseholdMemberRole.member,
@@ -34,7 +34,7 @@ void main() {
       final restored = Protocol().deserialize<HouseholdMember>(json);
 
       expect(restored.id, 7);
-      expect(restored.householdId, 'household_1');
+      expect(restored.householdId, 1);
       expect(restored.name, 'Jane Smith');
       expect(restored.role, HouseholdMemberRole.member);
       expect(restored.joinedAt, DateTime.utc(2026, 2, 1));

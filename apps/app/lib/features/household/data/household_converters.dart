@@ -18,7 +18,7 @@ Household householdFromProtocol(api.Household household) {
 HouseholdMember householdMemberFromProtocol(api.HouseholdMember member) {
   return HouseholdMember(
     id: member.id?.toString() ?? '',
-    householdId: member.householdId,
+    householdId: member.householdId.toString(),
     name: member.name,
     email: member.email,
     role: member.role.name,

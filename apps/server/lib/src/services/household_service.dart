@@ -65,7 +65,7 @@ class HouseholdService {
       await HouseholdMember.db.insertRow(
         session,
         HouseholdMember(
-          householdId: created.first.id.toString(),
+          householdId: created.first.id!,
           name: 'Owner',
           email: '',
           role: HouseholdMemberRole.owner,

@@ -50,7 +50,7 @@ void main() {
             final owner = members.first;
             expect(owner.name, 'Owner');
             expect(owner.role, HouseholdMemberRole.owner);
-            expect(owner.householdId, household.id.toString());
+            expect(owner.householdId, household.id);
           },
         );
 

@@ -38,7 +38,7 @@ void main() {
       final member = householdMemberFromProtocol(
         api.HouseholdMember(
           id: 7,
-          householdId: 'h_1',
+          householdId: 1,
           name: 'Jane Smith',
           email: 'jane@example.com',
           role: api.HouseholdMemberRole.member,
@@ -47,7 +47,7 @@ void main() {
       );
 
       expect(member.id, '7');
-      expect(member.householdId, 'h_1');
+      expect(member.householdId, '1');
       expect(member.name, 'Jane Smith');
       expect(member.email, 'jane@example.com');
       expect(member.role, 'member');

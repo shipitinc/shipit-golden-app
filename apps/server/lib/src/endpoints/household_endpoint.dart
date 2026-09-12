@@ -23,7 +23,7 @@ class HouseholdEndpoint extends Endpoint {
     final household = await _requireHousehold(session);
     return HouseholdMember.db.find(
       session,
-      where: (m) => m.householdId.equals(household.id.toString()),
+      where: (m) => m.householdId.equals(household.id),
     );
   }
 
@@ -37,7 +37,7 @@ class HouseholdEndpoint extends Endpoint {
     return HouseholdMember.db.insertRow(
       session,
       HouseholdMember(
-        householdId: household.id.toString(),
+        householdId: household.id!,
         name: name,
         email: email,
         role: HouseholdMemberRole.member,
@@ -59,8 +59,7 @@ class HouseholdEndpoint extends Endpoint {
     await HouseholdMember.db.deleteWhere(
       session,
       where: (m) =>
-          m.id.equals(memberIdInt) &
-          m.householdId.equals(household.id.toString()),
+          m.id.equals(memberIdInt) & m.householdId.equals(household.id),
     );
   }
 

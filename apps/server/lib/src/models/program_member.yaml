@@ -2,7 +2,7 @@ class: ProgramMember
 table: program_members
 fields:
   programId: int
-  householdId: String
+  householdId: int
   joinedAt: DateTime
 indexes:
   programMembersProgramHouseholdIndex:
