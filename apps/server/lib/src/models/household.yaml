@@ -4,3 +4,7 @@ fields:
   name: String
   ownerId: String
   createdAt: DateTime
+indexes:
+  householdsOwnerUniqueIndex:
+    fields: ownerId
+    unique: true

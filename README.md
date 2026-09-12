@@ -54,7 +54,7 @@ This repository demonstrates:
 - **FVM** (Flutter Version Management) — `dart pub global activate fvm`
 - **Melos** — `dart pub global activate melos`
 - **Docker & Docker Compose** — for PostgreSQL
-- **Serverpod CLI** — `dart pub global activate serverpod_cli`
+- **Serverpod CLI** — `dart pub global activate serverpod_cli 3.4.13`
 
 ## Quick Start
 

@@ -74,10 +74,14 @@ jobs:
           fi
           melos exec --scope="shipit_golden_app" -- \
             fvm flutter test test/goldens --update-goldens
-      - name: Record the re-approval in the registry and pending actions
+      - name: Record the re-approval in the registry
         shell: bash
         run: |
           set -euo pipefail
+          # Generalizes to ANY baseline row in goldens_registry.md — not just
+          # `goldens/login_*`: a future baseline (e.g. a program-detail
+          # DESIGN_PENDING golden) must land in the registry with its design
+          # revision and approval marker like every other row.
           python3 - "${{ inputs.design_revision }}" "${{ inputs.reviewer }}" <<'PY'
           import datetime
           import pathlib
@@ -92,11 +96,13 @@ jobs:
           marker = f"[re-approved {today} for {design_revision} by {reviewer} via goldens-update.yml]"
           changed_registry = False
           for i, line in enumerate(lines):
-              if not line.startswith("| `goldens/login_"):
+              if not line.startswith("| `goldens/"):
                   continue
               cells = line.rstrip("\n").split("|")
               # cells: ['', ' `goldens/x.png` ', ' Screen ', ' APPROVED ',
               #         ' design revision ', ' notes ']
+              if len(cells) < 6:
+                  continue
               if cells[4].strip() != design_revision:
                   cells[4] = f" {design_revision} "
                   changed_registry = True
@@ -106,19 +112,6 @@ jobs:
               lines[i] = "|".join(cells) + "\n"
           if changed_registry:
               registry_path.write_text("".join(lines))
-
-          pending_path = pathlib.Path("docs/qa/pending-actions.md")
-          pending_lines = pending_path.read_text().splitlines(keepends=True)
-          changed_pending = False
-          for i, line in enumerate(pending_lines):
-              if "UPSTREAM_UI_GAP-012" in line and "| pending " in line:
-                  pending_lines[i] = line.replace(
-                      line.split("|")[-2].strip(),
-                      f"completed {today}",
-                  )
-                  changed_pending = True
-          if changed_pending:
-              pending_path.write_text("".join(pending_lines))
           PY
           git diff --stat
       - name: Commit and push regenerated baselines + approval record

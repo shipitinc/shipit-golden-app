@@ -22,7 +22,7 @@
   "apps/server/lib/src/generated/program_member.dart": "79088c008901289ba49517e0926190b7291e9fb633f24d66cb3ddb1d6a3c86f3",
   "apps/server/lib/src/generated/program_not_found_exception.dart": "6fde5f4aa54e196b3698c3d5a6ab20e94c31ea6e6fd2dfca51988cc23640a822",
   "apps/server/lib/src/generated/program_status.dart": "2ff9e55dd6f50b15417d5080545969e5c5f06f2f2975cf8f9b808f1b11465e5a",
-  "apps/server/lib/src/generated/protocol.dart": "aea2eb4da6f4f67cd595526ec87440fc88e42f02c3c27a384c9f0f6121337335",
+  "apps/server/lib/src/generated/protocol.dart": "7be652f2751668b6376b590c9906f9b64c474f5ccbc0f196dbef5699fb75d8fd",
   "apps/server/lib/src/generated/protocol.yaml": "53a22ce8c8ef39c24c5dd27a2a36cdd74023f633ba68c86cdfe03b962f11f79b",
   "apps/server/test/integration/test_tools/serverpod_test_tools.dart": "9ace624993e1a6d0defc60ff90c0a20626dae63ddbf736ac623de44d2fc374a3",
   "packages/app_client/lib/src/protocol/client.dart": "7c641856a625f3677ba3f8b6f2ac751ad5621b987dec71891879801660609168",
