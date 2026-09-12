@@ -67,11 +67,13 @@ class ProgramDetailsView extends StatelessWidget {
               :final program,
               :final isJoined,
               :final isMutating,
+              :final mutationError,
             ) =>
               _ProgramDetailsBody(
                 program: program,
                 isJoined: isJoined,
                 isMutating: isMutating,
+                mutationError: mutationError,
               ),
             _ => const SizedBox.shrink(),
           };
@@ -85,18 +87,33 @@ class _ProgramDetailsBody extends StatelessWidget {
   final Program program;
   final bool isJoined;
   final bool isMutating;
+  final AppFailure? mutationError;
 
   const _ProgramDetailsBody({
     required this.program,
     required this.isJoined,
     required this.isMutating,
+    required this.mutationError,
   });
 
   @override
   Widget build(BuildContext context) {
+    final errorMessage = mutationError?.userMessage;
     return ListView(
       padding: EdgeInsets.all(context.space.s4),
       children: [
+        if (mutationError != null) ...[
+          AppInlineAlert.error(
+            title: 'Error',
+            message: errorMessage,
+            onDismiss: () {
+              context.read<ProgramDetailsBloc>().add(
+                const ProgramDetailsMutationErrorDismissed(),
+              );
+            },
+          ),
+          SizedBox(height: context.space.s4),
+        ],
         AppCard(
           padding: EdgeInsets.all(context.space.s4),
           child: Column(

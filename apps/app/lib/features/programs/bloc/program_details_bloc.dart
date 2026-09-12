@@ -10,8 +10,9 @@ import 'package:shipit_golden_app/features/programs/domain/program.dart';
 ///
 /// Mutation state follows the household pattern: the loaded state carries
 /// [ProgramDetailsLoaded.isMutating] so the CTA button shows its loading
-/// indicator while a join/cancel is in flight, and a failed mutation surfaces
-/// as a [ProgramDetailsFailure].
+/// indicator while a join/cancel is in flight, and a failed mutation stays on
+/// the loaded state with [ProgramDetailsLoaded.mutationError] so the screen
+/// renders an inline alert instead of blanking the loaded content.
 class ProgramDetailsBloc
     extends Bloc<ProgramDetailsEvent, ProgramDetailsState> {
   final String programId;
@@ -24,6 +25,7 @@ class ProgramDetailsBloc
     on<ProgramDetailsRefreshRequested>(_onRefreshRequested);
     on<ProgramDetailsJoinRequested>(_onJoinRequested);
     on<ProgramDetailsCancelRequested>(_onCancelRequested);
+    on<ProgramDetailsMutationErrorDismissed>(_onMutationErrorDismissed);
   }
 
   Future<void> _onStarted(
@@ -86,7 +88,13 @@ class ProgramDetailsBloc
           );
         },
         failure: (failure) {
-          emit(ProgramDetailsState.failure(failure: failure));
+          emit(
+            ProgramDetailsState.loaded(
+              program: currentState.program,
+              isJoined: currentState.isJoined,
+              mutationError: failure,
+            ),
+          );
         },
       );
     }
@@ -116,8 +124,29 @@ class ProgramDetailsBloc
           );
         },
         failure: (failure) {
-          emit(ProgramDetailsState.failure(failure: failure));
+          emit(
+            ProgramDetailsState.loaded(
+              program: currentState.program,
+              isJoined: currentState.isJoined,
+              mutationError: failure,
+            ),
+          );
         },
+      );
+    }
+  }
+
+  Future<void> _onMutationErrorDismissed(
+    ProgramDetailsMutationErrorDismissed event,
+    Emitter<ProgramDetailsState> emit,
+  ) async {
+    if (state is ProgramDetailsLoaded) {
+      final currentState = state as ProgramDetailsLoaded;
+      emit(
+        ProgramDetailsState.loaded(
+          program: currentState.program,
+          isJoined: currentState.isJoined,
+        ),
       );
     }
   }

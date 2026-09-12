@@ -216,5 +216,181 @@ void main() {
         ),
       ],
     );
+
+    blocTest<HouseholdBloc, HouseholdState>(
+      'add-member failure stays loaded and surfaces an inline mutation error',
+      build: () {
+        when(() => repository.addMember('Bob', 'bob@example.com')).thenAnswer(
+          (_) async => Result.failure(AppFailure.network(message: 'offline')),
+        );
+        return bloc;
+      },
+      seed: () => HouseholdState.loaded(
+        household: Household(
+          id: '1',
+          name: 'My Household',
+          ownerId: 'u1',
+          createdAt: DateTime(2026, 1, 1),
+        ),
+        members: [],
+      ),
+      act: (bloc) => bloc.add(
+        const HouseholdEvent.memberAdded(name: 'Bob', email: 'bob@example.com'),
+      ),
+      expect: () => [
+        HouseholdState.loaded(
+          household: Household(
+            id: '1',
+            name: 'My Household',
+            ownerId: 'u1',
+            createdAt: DateTime(2026, 1, 1),
+          ),
+          members: <HouseholdMember>[],
+          isMembersMutating: true,
+        ),
+        HouseholdState.loaded(
+          household: Household(
+            id: '1',
+            name: 'My Household',
+            ownerId: 'u1',
+            createdAt: DateTime(2026, 1, 1),
+          ),
+          members: <HouseholdMember>[],
+          mutationError: AppFailure.network(message: 'offline'),
+        ),
+      ],
+    );
+
+    blocTest<HouseholdBloc, HouseholdState>(
+      'remove-member failure stays loaded and surfaces an inline mutation error',
+      build: () {
+        when(() => repository.removeMember('m1')).thenAnswer(
+          (_) async => Result.failure(AppFailure.network(message: 'offline')),
+        );
+        return bloc;
+      },
+      seed: () => HouseholdState.loaded(
+        household: Household(
+          id: '1',
+          name: 'My Household',
+          ownerId: 'u1',
+          createdAt: DateTime(2026, 1, 1),
+        ),
+        members: [
+          HouseholdMember(
+            id: 'm1',
+            householdId: '1',
+            name: 'Jane',
+            email: 'jane@example.com',
+            role: 'member',
+            joinedAt: DateTime(2026, 1, 2),
+          ),
+        ],
+      ),
+      act: (bloc) =>
+          bloc.add(const HouseholdEvent.memberRemoved(memberId: 'm1')),
+      expect: () => [
+        HouseholdState.loaded(
+          household: Household(
+            id: '1',
+            name: 'My Household',
+            ownerId: 'u1',
+            createdAt: DateTime(2026, 1, 1),
+          ),
+          members: [
+            HouseholdMember(
+              id: 'm1',
+              householdId: '1',
+              name: 'Jane',
+              email: 'jane@example.com',
+              role: 'member',
+              joinedAt: DateTime(2026, 1, 2),
+            ),
+          ],
+          isMembersMutating: true,
+        ),
+        HouseholdState.loaded(
+          household: Household(
+            id: '1',
+            name: 'My Household',
+            ownerId: 'u1',
+            createdAt: DateTime(2026, 1, 1),
+          ),
+          members: [
+            HouseholdMember(
+              id: 'm1',
+              householdId: '1',
+              name: 'Jane',
+              email: 'jane@example.com',
+              role: 'member',
+              joinedAt: DateTime(2026, 1, 2),
+            ),
+          ],
+          mutationError: AppFailure.network(message: 'offline'),
+        ),
+      ],
+    );
+
+    blocTest<HouseholdBloc, HouseholdState>(
+      'dismissing the mutation error clears it and keeps the loaded state',
+      build: () {
+        when(() => repository.addMember('Bob', 'bob@example.com')).thenAnswer(
+          (_) async => Result.failure(AppFailure.network(message: 'offline')),
+        );
+        return bloc;
+      },
+      seed: () => HouseholdState.loaded(
+        household: Household(
+          id: '1',
+          name: 'My Household',
+          ownerId: 'u1',
+          createdAt: DateTime(2026, 1, 1),
+        ),
+        members: [],
+      ),
+      act: (bloc) async {
+        bloc.add(
+          const HouseholdEvent.memberAdded(
+            name: 'Bob',
+            email: 'bob@example.com',
+          ),
+        );
+        await bloc.stream.firstWhere(
+          (s) => s is HouseholdLoaded && s.mutationError != null,
+        );
+        bloc.add(const HouseholdEvent.mutationErrorDismissed());
+      },
+      expect: () => [
+        HouseholdState.loaded(
+          household: Household(
+            id: '1',
+            name: 'My Household',
+            ownerId: 'u1',
+            createdAt: DateTime(2026, 1, 1),
+          ),
+          members: <HouseholdMember>[],
+          isMembersMutating: true,
+        ),
+        HouseholdState.loaded(
+          household: Household(
+            id: '1',
+            name: 'My Household',
+            ownerId: 'u1',
+            createdAt: DateTime(2026, 1, 1),
+          ),
+          members: <HouseholdMember>[],
+          mutationError: AppFailure.network(message: 'offline'),
+        ),
+        HouseholdState.loaded(
+          household: Household(
+            id: '1',
+            name: 'My Household',
+            ownerId: 'u1',
+            createdAt: DateTime(2026, 1, 1),
+          ),
+          members: <HouseholdMember>[],
+        ),
+      ],
+    );
   });
 }

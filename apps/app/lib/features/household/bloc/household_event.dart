@@ -12,4 +12,6 @@ sealed class HouseholdEvent with _$HouseholdEvent {
   }) = HouseholdMemberAdded;
   const factory HouseholdEvent.memberRemoved({required String memberId}) =
       HouseholdMemberRemoved;
+  const factory HouseholdEvent.mutationErrorDismissed() =
+      HouseholdMutationErrorDismissed;
 }

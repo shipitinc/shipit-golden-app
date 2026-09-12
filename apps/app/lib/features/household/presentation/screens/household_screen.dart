@@ -79,7 +79,11 @@ class HouseholdView extends StatelessWidget {
                 AppSkeleton.card(autoplay: false),
               ],
             ),
-            HouseholdLoaded(:final household, :final members) =>
+            HouseholdLoaded(
+              :final household,
+              :final members,
+              :final mutationError,
+            ) =>
               RefreshIndicator(
                 onRefresh: () async {
                   context.read<HouseholdBloc>().add(
@@ -89,6 +93,18 @@ class HouseholdView extends StatelessWidget {
                 child: ListView(
                   padding: EdgeInsets.all(context.space.s4),
                   children: [
+                    if (mutationError != null) ...[
+                      AppInlineAlert.error(
+                        title: 'Error',
+                        message: mutationError.userMessage,
+                        onDismiss: () {
+                          context.read<HouseholdBloc>().add(
+                            const HouseholdMutationErrorDismissed(),
+                          );
+                        },
+                      ),
+                      SizedBox(height: context.space.s4),
+                    ],
                     HouseholdHeader(household: household),
                     SizedBox(height: context.space.s6),
                     MemberList(

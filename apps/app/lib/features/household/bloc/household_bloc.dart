@@ -16,6 +16,7 @@ class HouseholdBloc extends Bloc<HouseholdEvent, HouseholdState> {
     on<HouseholdRefreshRequested>(_onRefreshRequested);
     on<HouseholdMemberAdded>(_onMemberAdded);
     on<HouseholdMemberRemoved>(_onMemberRemoved);
+    on<HouseholdMutationErrorDismissed>(_onMutationErrorDismissed);
   }
 
   Future<void> _onStarted(
@@ -79,7 +80,13 @@ class HouseholdBloc extends Bloc<HouseholdEvent, HouseholdState> {
           );
         },
         failure: (failure) {
-          emit(HouseholdState.failure(failure: failure));
+          emit(
+            HouseholdState.loaded(
+              household: currentState.household,
+              members: currentState.members,
+              mutationError: failure,
+            ),
+          );
         },
       );
     }
@@ -111,8 +118,30 @@ class HouseholdBloc extends Bloc<HouseholdEvent, HouseholdState> {
           );
         },
         failure: (failure) {
-          emit(HouseholdState.failure(failure: failure));
+          emit(
+            HouseholdState.loaded(
+              household: currentState.household,
+              members: currentState.members,
+              mutationError: failure,
+            ),
+          );
         },
+      );
+    }
+  }
+
+  Future<void> _onMutationErrorDismissed(
+    HouseholdMutationErrorDismissed event,
+    Emitter<HouseholdState> emit,
+  ) async {
+    if (state is HouseholdLoaded) {
+      final currentState = state as HouseholdLoaded;
+      emit(
+        HouseholdState.loaded(
+          household: currentState.household,
+          members: currentState.members,
+          isMembersMutating: currentState.isMembersMutating,
+        ),
       );
     }
   }

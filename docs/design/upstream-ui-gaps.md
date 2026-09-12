@@ -27,6 +27,12 @@ Tracking components needed by Golden App that don't exist in shipit_ui.
 > baselines; form-field validation showcase; dark mode regression test;
 > auth/household/programs buttons; token-backed icon size, font weight and
 > form max-width). See below.
+>
+> GAP-016 (mobile bottom navigation) is the single open gap and was reported
+> upstream as
+> [shipitinc/shipit-ui#15](https://github.com/shipitinc/shipit-ui/issues/15)
+> (2026-09-12). The Golden App deliberately does not fall back to the Material
+> `NavigationBar` — see the GAP-016 entry below.
 
 ## Revision History
 
@@ -242,6 +248,26 @@ within the revision range `2a916a5..1207004`.
 - **Status**: resolved 2026-09-10
 - **Workaround**: removed — `login_screen.dart` reads
   `context.layout.maxWidth.form`; `_authCardMaxWidth` deleted
+
+## Open Gaps
+
+### UPSTREAM_UI_GAP-016: Mobile bottom navigation
+- **Desired Component**: a shipit-token-styled bottom navigation bar for
+  mobile/narrow screens (e.g. `AppBottomNavigationBar`)
+- **Reason**: the Golden App shares authenticated screens through
+  `app/shell/app_shell.dart` via GoRouter `StatefulShellRoute.indexedStack`
+  with `AppNavigationRail`. At narrow widths (`< context.breakpoint.narrow`)
+  the rail collapses below with tooltips but remains a rail — there is no
+  compact bottom bar, so mobile navigation of Household / Programs is
+  degenerate. Approved Penpot design defines the rail; the narrow collapse
+  was the approved interim for the shell
+- **Recommended Owner**: shipit-ui
+- **Status**: reported — [shipitinc/shipit-ui#15](https://github.com/shipitinc/shipit-ui/issues/15) (2026-09-12)
+- **Workaround**: `AppNavigationRail` collapses below `context.breakpoint.narrow`
+  and shows tooltips; the Golden App deliberately does NOT fall back to the
+  Material `NavigationBar`/`NavigationBarTheme` (would diverge from shipit
+  tokens and violate the no-invented-Material rule)
+- **Priority**: medium — Phase-2 mobile polish; shell verified on desktop/tablet
 
 ## Reporting Process
 

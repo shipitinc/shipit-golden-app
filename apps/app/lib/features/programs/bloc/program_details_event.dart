@@ -11,4 +11,6 @@ sealed class ProgramDetailsEvent with _$ProgramDetailsEvent {
       ProgramDetailsJoinRequested;
   const factory ProgramDetailsEvent.cancelRequested() =
       ProgramDetailsCancelRequested;
+  const factory ProgramDetailsEvent.mutationErrorDismissed() =
+      ProgramDetailsMutationErrorDismissed;
 }

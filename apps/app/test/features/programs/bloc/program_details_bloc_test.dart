@@ -137,7 +137,7 @@ void main() {
     );
 
     blocTest<ProgramDetailsBloc, ProgramDetailsState>(
-      'join failure surfaces a failure state',
+      'join failure stays loaded and surfaces an inline mutation error',
       build: () {
         when(
           () => repository.getProgramById('1'),
@@ -160,9 +160,80 @@ void main() {
         const ProgramDetailsState.loading(),
         loaded(),
         loaded(isMutating: true),
-        ProgramDetailsState.failure(
-          failure: const AppFailure.network(message: 'offline'),
+        ProgramDetailsState.loaded(
+          program: _sampleProgram(),
+          isJoined: false,
+          mutationError: const AppFailure.network(message: 'offline'),
         ),
+      ],
+    );
+
+    blocTest<ProgramDetailsBloc, ProgramDetailsState>(
+      'cancel failure stays loaded and surfaces an inline mutation error',
+      build: () {
+        when(
+          () => repository.getProgramById('1'),
+        ).thenAnswer((_) async => Result.success(_sampleProgram()));
+        when(
+          () => repository.isJoined('1'),
+        ).thenAnswer((_) async => Result.success(true));
+        when(() => repository.cancelMembership('1')).thenAnswer(
+          (_) async =>
+              Result.failure(const AppFailure.network(message: 'offline')),
+        );
+        return bloc;
+      },
+      act: (bloc) async {
+        bloc.add(const ProgramDetailsStarted());
+        await bloc.stream.firstWhere((s) => s is ProgramDetailsLoaded);
+        bloc.add(const ProgramDetailsCancelRequested());
+      },
+      expect: () => [
+        const ProgramDetailsState.loading(),
+        loaded(isJoined: true),
+        loaded(isJoined: true, isMutating: true),
+        ProgramDetailsState.loaded(
+          program: _sampleProgram(),
+          isJoined: true,
+          mutationError: const AppFailure.network(message: 'offline'),
+        ),
+      ],
+    );
+
+    blocTest<ProgramDetailsBloc, ProgramDetailsState>(
+      'dismissing the mutation error clears it and keeps the loaded state',
+      build: () {
+        when(
+          () => repository.getProgramById('1'),
+        ).thenAnswer((_) async => Result.success(_sampleProgram()));
+        when(
+          () => repository.isJoined('1'),
+        ).thenAnswer((_) async => Result.success(false));
+        when(() => repository.joinProgram('1')).thenAnswer(
+          (_) async =>
+              Result.failure(const AppFailure.network(message: 'offline')),
+        );
+        return bloc;
+      },
+      act: (bloc) async {
+        bloc.add(const ProgramDetailsStarted());
+        await bloc.stream.firstWhere((s) => s is ProgramDetailsLoaded);
+        bloc.add(const ProgramDetailsJoinRequested());
+        await bloc.stream.firstWhere(
+          (s) => s is ProgramDetailsLoaded && (s).mutationError != null,
+        );
+        bloc.add(const ProgramDetailsMutationErrorDismissed());
+      },
+      expect: () => [
+        const ProgramDetailsState.loading(),
+        loaded(),
+        loaded(isMutating: true),
+        ProgramDetailsState.loaded(
+          program: _sampleProgram(),
+          isJoined: false,
+          mutationError: const AppFailure.network(message: 'offline'),
+        ),
+        loaded(isJoined: false),
       ],
     );
   });

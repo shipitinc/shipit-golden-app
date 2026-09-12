@@ -131,6 +131,47 @@ void main() {
     expect(find.text('Retry'), findsOneWidget);
   });
 
+  testWidgets(
+    'a failed join keeps the loaded content and shows an inline alert',
+    (tester) async {
+      stubLoad(isJoined: false);
+      when(() => repository.joinProgram('1')).thenAnswer(
+        (_) async =>
+            Result.failure(const AppFailure.network(message: 'offline')),
+      );
+
+      await tester.pumpWidget(wrap(screen(programId: '1')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Join Program'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Summer Camp'), findsOneWidget);
+      expect(find.byType(AppInlineAlert), findsOneWidget);
+      expect(find.text('Join Program'), findsOneWidget);
+    },
+  );
+
+  testWidgets('the inline mutation alert is dismissible', (tester) async {
+    stubLoad(isJoined: false);
+    when(() => repository.joinProgram('1')).thenAnswer(
+      (_) async => Result.failure(const AppFailure.network(message: 'offline')),
+    );
+
+    await tester.pumpWidget(wrap(screen(programId: '1')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Join Program'));
+    await tester.pumpAndSettle();
+    expect(find.byType(AppInlineAlert), findsOneWidget);
+
+    await tester.tap(find.byKey(AppInlineAlert.dismissKey));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AppInlineAlert), findsNothing);
+    expect(find.text('Summer Camp'), findsOneWidget);
+  });
+
   testWidgets('renders loading skeletons before the details resolve', (
     tester,
   ) async {

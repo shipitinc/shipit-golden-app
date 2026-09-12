@@ -12,6 +12,7 @@ sealed class ProgramDetailsState with _$ProgramDetailsState {
     required Program program,
     required bool isJoined,
     @Default(false) bool isMutating,
+    AppFailure? mutationError,
   }) = ProgramDetailsLoaded;
   const factory ProgramDetailsState.failure({required AppFailure failure}) =
       ProgramDetailsFailure;
