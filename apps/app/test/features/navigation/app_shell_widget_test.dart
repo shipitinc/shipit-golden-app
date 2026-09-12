@@ -5,6 +5,7 @@ import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart';
 import 'package:shipit_ui/shipit_ui.dart';
 import 'package:shipit_golden_app/app/app.dart';
 import 'package:shipit_golden_app/app/shell/app_shell.dart';
+import 'package:shipit_golden_app/core/core.dart';
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_bloc.dart';
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_event.dart';
 import 'package:shipit_golden_app/features/authentication/data/auth_repository.dart';
@@ -92,4 +93,79 @@ void main() {
     expect(find.text('Household'), findsNWidgets(2));
     expect(find.text('Programs'), findsOneWidget);
   });
+
+  testWidgets('a compact/mobile width swaps the rail for the bottom bar', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await _startAuthenticated(tester);
+
+    // No rail on narrow screens; the AppBottomNavigationBar hosts navigation.
+    expect(find.byType(AppNavigationRail), findsNothing);
+    expect(find.byType(AppBottomNavigationBar), findsOneWidget);
+    // Household branch is active (its app-bar title is on stage); Programs is
+    // not built yet and only its bottom-bar label is rendered.
+    expect(
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text('Household'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text('Programs')),
+      findsNothing,
+    );
+
+    // Switch to Programs through the bottom bar, then back to Household.
+    await tester.tap(find.byKey(const Key('nav-programs')));
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text('Programs')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text('Household'),
+      ),
+      findsNothing,
+    );
+
+    await tester.tap(find.byKey(const Key('nav-household')));
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text('Household'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byType(AppBottomNavigationBar), findsOneWidget);
+  });
+
+  testWidgets(
+    'a mid-session auth-expiry announced through the notifier returns to login',
+    (tester) async {
+      await _startAuthenticated(tester);
+
+      // The router hook (AppRouter owns the subscription, not a widget) must
+      // end the session when `session_expired` is announced — this is the
+      // production path when Serverpod rejects an expired JWT.
+      SessionExpiredNotifier.shared.announceIfExpired(
+        AppFailure.auth(
+          message: 'Your session has expired. Please sign in again.',
+          code: 'session_expired',
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // The shell is gone and the redirect guard landed on the login screen.
+      expect(find.byType(AppShell), findsNothing);
+      expect(find.text('Sign In'), findsOneWidget);
+    },
+  );
 }

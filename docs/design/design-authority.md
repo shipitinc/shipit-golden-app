@@ -183,12 +183,14 @@ dark canvases (UPSTREAM_UI_GAP-011 resolved in `shipit_ui@d6abf9a`).
   `AppTextButton` / `AppIconButton` migration) via the `goldens-update.yml`
   workflow with design/human approval, recorded in
   `docs/qa/pending-actions.md`. **Current revision:** the app pins
-  `shipit_ui@526926d` (commit `c6dafc5`); the baselines were re-approved
-  2026-09-11 under that pin with no regeneration — the pin bump consumed
-  GAP-012/013/014 tokens at identical values (16 / w600 / 440), so `@526926d`
-  renders the login screens pixel-identically and the visual contract stands
-  under the active pin (see the 526926d re-approval note in
-  `apps/app/test/goldens/goldens_registry.md`).
+  `shipit_ui@c310a961aa` (2026-09-12 shell bump); the baselines were
+  re-approved 2026-09-11 under the previous `shipit_ui@526926d` pin with no
+  regeneration — the pin bump consumed GAP-012/013/014 tokens at identical
+  values (16 / w600 / 440), so `@526926d` renders the login screens
+  pixel-identically — and the `c310a961aa` bump (2026-09-12) consumed only the
+  additive `AppBottomNavigationBar` component, which the login screens do not
+  use, so the visual contract continues to stand under the active pin (see the
+  pin notes in `apps/app/test/goldens/goldens_registry.md`).
 - Approved goldens = visual contract; `flutter test --update-goldens` is NOT a
   fix. Promoting to `APPROVED` (and any subsequent regeneration) requires:
   1. Design authority approval
@@ -203,8 +205,8 @@ test/goldens/
 ├── goldens_registry.md      # status list (APPROVED / DESIGN_PENDING) + pin / re-approval notes
 ├── golden_policy_test.dart  # registry conformance + approved baselines
 └── goldens/
-    ├── login_sign_in.png    # APPROVED (current pin shipit_ui@526926d; re-approved 2026-09-11, no regen)
-    └── login_register.png   # APPROVED (current pin shipit_ui@526926d; re-approved 2026-09-11, no regen)
+    ├── login_sign_in.png    # APPROVED (current pin shipit_ui@c310a961aa; re-approved 2026-09-11, no regen)
+    └── login_register.png   # APPROVED (current pin shipit_ui@c310a961aa; re-approved 2026-09-11, no regen)
 ```
 
 ## Upstream Gaps

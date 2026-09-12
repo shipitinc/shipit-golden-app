@@ -2,14 +2,14 @@
 
 Tracking components needed by Golden App that don't exist in shipit_ui.
 
-> **Status of this document:** reviewed against shipit_ui revision `526926d`
-> (2026-09-10, the revision pinned in `apps/app/pubspec.yaml`). GAP-001 through
+> **Status of this document:** reviewed against shipit_ui revision `c310a961aa`
+> (2026-09-12, the revision pinned in `apps/app/pubspec.yaml`). GAP-001 through
 > GAP-008 shipped upstream and the Golden App now consumes the components (see
 > **Resolved Gaps** below). GAP-009 (Inter font bundling), GAP-010 (AppTextField
 > validation text), GAP-011 (dark mode), GAP-012 (AppTextButton /
-> AppIconButton) and the three token-level gaps (GAP-013 `icon.size.sm`,
-> GAP-014 `text.weight.semibold`, GAP-015 `layout.maxWidth.form`) all shipped
-> upstream — GAP-009 as
+> AppIconButton), the three token-level gaps (GAP-013 `icon.size.sm`,
+> GAP-014 `text.weight.semibold`, GAP-015 `layout.maxWidth.form`) and
+> GAP-016 (mobile bottom navigation) all shipped upstream — GAP-009 as
 > [shipitinc/shipit-ui#8](https://github.com/shipitinc/shipit-ui/issues/8),
 > GAP-010 as
 > [shipitinc/shipit-ui#9](https://github.com/shipitinc/shipit-ui/issues/9),
@@ -20,19 +20,17 @@ Tracking components needed by Golden App that don't exist in shipit_ui.
 > GAP-013 as
 > [shipitinc/shipit-ui#12](https://github.com/shipitinc/shipit-ui/issues/12),
 > GAP-014 as
-> [shipitinc/shipit-ui#13](https://github.com/shipitinc/shipit-ui/issues/13) and
+> [shipitinc/shipit-ui#13](https://github.com/shipitinc/shipit-ui/issues/13),
 > GAP-015 as
-> [shipitinc/shipit-ui#14](https://github.com/shipitinc/shipit-ui/issues/14) —
+> [shipitinc/shipit-ui#14](https://github.com/shipitinc/shipit-ui/issues/14) and
+> GAP-016 as
+> [shipitinc/shipit-ui#15](https://github.com/shipitinc/shipit-ui/issues/15) —
 > and the Golden App consumes all of them (real Inter in tests + regenerated
 > baselines; form-field validation showcase; dark mode regression test;
 > auth/household/programs buttons; token-backed icon size, font weight and
-> form max-width). See below.
+> form max-width; mobile bottom navigation in the app shell). See below.
 >
-> GAP-016 (mobile bottom navigation) is the single open gap and was reported
-> upstream as
-> [shipitinc/shipit-ui#15](https://github.com/shipitinc/shipit-ui/issues/15)
-> (2026-09-12). The Golden App deliberately does not fall back to the Material
-> `NavigationBar` — see the GAP-016 entry below.
+> There are **no open upstream UI gaps**.
 
 ## Revision History
 
@@ -58,6 +56,17 @@ Tracking components needed by Golden App that don't exist in shipit_ui.
   identical to the constants they replace (16 / w600 / 440, no raw literals
   introduced either way), so the rendered output — including the APPROVED login
   baselines — is unchanged.
+- `2026-09-12` — bumped to `c310a961aa` (GAP-016 resolved:
+  `AppBottomNavigationBar` shipped in
+  [shipitinc/shipit-ui#15](https://github.com/shipitinc/shipit-ui/issues/15),
+  closing the last open gap). The Golden App replaced the narrow-collapse shell
+  fallback: `app/shell/app_shell.dart` now uses the rail for tablet/desktop
+  widths and the new `AppBottomNavigationBar` in `Scaffold.bottomNavigationBar`
+  for compact/mobile widths (no Material `NavigationBar`, no invented tab
+  primitives). Covered by `test/features/navigation/app_shell_widget_test.dart`
+  (mobile swap + bottom-bar branch switching). Pure additive component — no
+  token changes, no re-renders, so the APPROVED login baselines are untouched
+  under the new pin.
 
 ## Resolved Gaps
 
@@ -256,18 +265,22 @@ within the revision range `2a916a5..1207004`.
   mobile/narrow screens (e.g. `AppBottomNavigationBar`)
 - **Reason**: the Golden App shares authenticated screens through
   `app/shell/app_shell.dart` via GoRouter `StatefulShellRoute.indexedStack`
-  with `AppNavigationRail`. At narrow widths (`< context.breakpoint.narrow`)
-  the rail collapses below with tooltips but remains a rail — there is no
-  compact bottom bar, so mobile navigation of Household / Programs is
-  degenerate. Approved Penpot design defines the rail; the narrow collapse
-  was the approved interim for the shell
+  with `AppNavigationRail`. At narrow widths (`< context.breakpoint.tablet`)
+  the rail collapsed below with tooltips but remained a rail — there was no
+  compact bottom bar, so mobile navigation of Household / Programs was
+  degenerate
 - **Recommended Owner**: shipit-ui
-- **Status**: reported — [shipitinc/shipit-ui#15](https://github.com/shipitinc/shipit-ui/issues/15) (2026-09-12)
-- **Workaround**: `AppNavigationRail` collapses below `context.breakpoint.narrow`
-  and shows tooltips; the Golden App deliberately does NOT fall back to the
-  Material `NavigationBar`/`NavigationBarTheme` (would diverge from shipit
-  tokens and violate the no-invented-Material rule)
-- **Priority**: medium — Phase-2 mobile polish; shell verified on desktop/tablet
+- **shipit_ui**: shipped in `c310a961aa` (`AppBottomNavigationBar` — same
+  pill indicator, selected/unselected colors, `semibold` active label and
+  44 px+ tap targets as the rail; consumes `context.*` tokens)
+- **Issue**: [shipitinc/shipit-ui#15](https://github.com/shipitinc/shipit-ui/issues/15) — closed
+- **Status**: resolved 2026-09-12
+- **Golden App**: `app/shell/app_shell.dart` uses the rail for tablet/desktop
+  layouts and `AppBottomNavigationBar` in `Scaffold.bottomNavigationBar` for
+  compact/mobile widths (both primitives use the same `nav-household` /
+  `nav-programs` semantics keys). Covered by
+  `test/features/navigation/app_shell_widget_test.dart` (mobile swap, no rail,
+  bottom-bar branch switching). The Material `NavigationBar` is never used.
 
 ## Reporting Process
 

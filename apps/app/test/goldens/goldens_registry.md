@@ -35,6 +35,16 @@ run remain byte-identical and are the design authority under the current pin.
 The `APPROVED` table rows above record this 526926d re-approval line so the
 audit trail matches the pinned revision in `apps/app/pubspec.yaml`.
 
+### c310a961aa re-approval (additive component, no regen)
+
+The pin advanced to `shipit_ui@c310a961aa` (2026-09-12) to adopt the
+`AppBottomNavigationBar` (GAP-016 / shipitinc/shipit-ui#15). That commit is
+purely additive — a new component + export + its own goldens; it touches no
+token value and no component used by the login screens. The APPROVED login
+baselines therefore render pixel-identically under `@c310a961aa` and no
+regeneration was performed; the design authority remains the re-approval line
+recorded above.
+
 ## Policy (enforced by `test/goldens/golden_policy_test.dart`)
 
 1. Baselines exist for each listed screen and preserve current rendered output,

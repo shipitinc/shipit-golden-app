@@ -125,8 +125,9 @@ integration tests and the real live failure-injection checks.
 - successful login navigates away from `/login`
 - the authenticated app shell (`test/features/navigation/app_shell_widget_test.dart`)
   covers landing on the Household branch, switching Household ↔ Programs,
-  rail extension with labels at desktop width, and re-selecting the active
-  destination (stays on the branch)
+  rail extension with labels at desktop width, re-selecting the active
+  destination (stays on the branch), and the compact/mobile swap to
+  `AppBottomNavigationBar` (no rail, bottom-bar branch switching)
 
 ## Golden Policy
 

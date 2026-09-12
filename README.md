@@ -212,8 +212,8 @@ QA is orchestrated through Melos scripts (unit, server, Flutter, integration) in
 - **Golden baselines** — `test/goldens/` with a policy-enforced registry
   (see `docs/qa/strategy.md`); the login baselines are `APPROVED` against
   `shipit_ui@18d1a5d6` (re-approved 2026-09-10) and remain valid under the
-  current `shipit_ui@526926d` pin (additive gap tokens consumed at identical
-  values; PNGs untouched — see the registry's pin note), the rest are
+  current `shipit_ui@c310a961aa` pin (additive components consumed without
+  re-rendering the auth screens — see the registry's pin note), the rest are
   `DESIGN_PENDING`
 - **Accessibility semantics** — `test/accessibility/`
 - **Integration / E2E** — real-server journey in `apps/app/integration_test/`;
