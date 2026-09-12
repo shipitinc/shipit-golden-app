@@ -273,7 +273,7 @@ within the revision range `2a916a5..1207004`.
 - **shipit_ui**: shipped in `c310a961aa` (`AppBottomNavigationBar` — same
   pill indicator, selected/unselected colors, `semibold` active label and
   44 px+ tap targets as the rail; consumes `context.*` tokens)
-- **Issue**: [shipitinc/shipit-ui#15](https://github.com/shipitinc/shipit-ui/issues/15) — closed
+- **Issue**: [shipitinc/shipit-ui#15](https://github.com/shipitinc/shipit-ui/issues/15) — closed 2026-09-12
 - **Status**: resolved 2026-09-12
 - **Golden App**: `app/shell/app_shell.dart` uses the rail for tablet/desktop
   layouts and `AppBottomNavigationBar` in `Scaffold.bottomNavigationBar` for

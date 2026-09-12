@@ -45,8 +45,9 @@ test/
 │   └── programs/
 │       ├── bloc/programs_bloc_test.dart
 │       └── data/program_converters_test.dart
-├── navigation/
-│   └── app_shell_widget_test.dart   # authenticated shell: rail landing, switching, desktop
+├── features/
+│   └── navigation/
+│       └── app_shell_widget_test.dart   # authenticated shell: rail landing, switching, desktop
 ├── goldens/
 │   ├── golden_policy_test.dart      # approved-baseline pixel comparisons (@Tags(['golden']), Linux-CI gated)
 │   ├── golden_registry_test.dart    # registry conformance (runs on any host)

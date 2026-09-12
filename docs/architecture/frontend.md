@@ -155,11 +155,16 @@ context.isDesktopOrLarger // width >= 1024 (token-index comparison, desktop+)
   `StatefulShellRoute.indexedStack` wrapped by `app/shell/app_shell.dart`
   (`AppShell`). Each branch keeps its own Navigator in an IndexedStack, so
   switching tabs preserves BLoC + scroll state.
-- The shell chrome is the shipit_ui `AppNavigationRail` (approved Penpot
-  navigation component) with Household / Programs destinations. It extends
-  with text labels at/above the desktop breakpoint and collapses to icon-only
-  (tooltips) on tablet/compact widths, so one component serves every layout.
-  See `AppShell.destinations` for the destination catalogue.
+- The shell chrome is two approved shipit_ui primitives sharing the same
+  destination catalogue (keys `nav-household` / `nav-programs`):
+  - `AppNavigationRail` (approved Penpot navigation component) on
+    tablet/desktop widths — extends with text labels at/above the desktop
+    breakpoint and collapses to icon-only (tooltips) on tablet widths;
+  - `AppBottomNavigationBar` (GAP-016 / shipitinc/shipit-ui#15, shipped in
+    `shipit_ui@c310a961aa`) in `Scaffold.bottomNavigationBar` on compact/mobile
+    widths, so narrow navigation has a real tap target instead of a degenerate
+    collapsed rail. The Material `NavigationBar` is never used.
+  See `app/shell/app_shell.dart` and `docs/design/upstream-ui-gaps.md`.
 
 ## Session Persistence (ServerpodClientProvider)
 

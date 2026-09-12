@@ -84,10 +84,10 @@ Screens/components without approved design:
 
 ```dart
 // In code comments
-// DESIGN_PENDING: Program detail screen - awaiting design revision #42
+// DESIGN_PENDING: Program creation flow - awaiting design revision
 
 // In UI (development only)
-Text('DESIGN_PENDING: Program detail screen')
+Text('DESIGN_PENDING: Program creation flow')
 ```
 
 ## Responsive Design
