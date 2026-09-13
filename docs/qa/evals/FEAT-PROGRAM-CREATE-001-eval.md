@@ -33,8 +33,8 @@ generated contract → review → QA evidence → human approval.
 | Q5 Human QA session | `d9f57dc` |
 | Q6 verdict v1 (HUMAN_DECISION_REQUIRED) | `8486381` |
 | Q5 accepted — Q6 READY_FOR_MERGE | `c787d25` |
-| E2E journey addition (READY_NOT_EXECUTED) | `89fd5cf` |
-| Phase 2 eval/learning records | `5a10e8b` + `61d2e0d` (pushed) |
+| E2E journey addition + execution (PASS) | `89fd5cf` → executed via live-interaction, see `qa-session-e2e-live.md` |
+| Phase 2 eval/learning records | `5a10e8b` + `61d2e0d` + upstream-issue doc updates (AEF#1/#2 resolved; shipit-ui#16 pending) |
 | Current candidate HEAD | `61d2e0d` (pushed to origin/main) |
 
 ## Requirement ↔ Human decisions
@@ -90,7 +90,7 @@ generated contract → review → QA evidence → human approval.
 | Q3 Automated | PASS | `docs/qa/results/qa-result-q3-automated.yaml` — analyze clean; generate:check clean; test:server 33/33 (incl. PC-010 5-way concurrency + rollback); test:unit 2/2; test:flutter 121/121; registry conformance PASS |
 | Q4 Visual (local) | PASS (local) | `qa-result-q4-visual-local.yaml` — registry conformance PASS; pixel gate Linux-CI pending |
 | Q5 Human QA | ACCEPTED — PARTIAL | `qa-result-q5-human.yaml` + `qa-session-q5-human.md` (live session 10:56–11:33 UTC) — C4 PASS; C1/C2/C3 evidence-gap partials; F1 INFORMATIONAL ENVIRONMENT_DEFECT only |
-| E2E (App→Server) | READY_NOT_EXECUTED | `app_journey_test.dart` journey added (`89fd5cf`); device-gated, NOT_IN_DEFAULT_PIPELINE, not silently asserted |
+| E2E (App→Server) | **PASS** (live-interaction) | `qa-session-e2e-live.md` + `evidence-e2e/` — full journey vs real Serverpod+PostgreSQL with pinned dev verification code (`SERVERPOD_DEV_VERIFICATION_CODE`, dev-only); automated `flutter test integration_test` runner device-gated in this env (iOS sim loading hang; web unsupported) — framework U-03/AEF#2, resolved upstream with `NOT_EXECUTED` vs `SKIPPED` semantics |
 | Q6 Verdict | READY_FOR_MERGE | `qa-verdict-q6.yaml` (rev 3, `47645A7A-…`); Linux-CI pixel gate + promotion CI-enforced on merge |
 
 ## Findings from this run

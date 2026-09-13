@@ -18,6 +18,7 @@ changes were made in this run** — candidates are reported here for the framewo
   frozen contract or going OOS.
 - **Owner**: shipitagentic / framework. **Filed 2026-09-13 as
   [agentic-engineering-framework#1](https://github.com/shipitinc/agentic-engineering-framework/issues/1)**.
+- **Resolved** upstream. No change consumed in this app.
 
 ### U-02 — shipit_ui gap: `AppDatePicker` clear-target too small (~20px)
 - **Category**: `SHIPIT_UI_GAP` (upstream). Small clear icon in date pickers,
@@ -38,7 +39,7 @@ changes were made in this run** — candidates are reported here for the framewo
   real contract line.
 - **Owner**: shipitagentic / golden app. **Filed 2026-09-13 as
   [agentic-engineering-framework#2](https://github.com/shipitinc/agentic-engineering-framework/issues/2)**.
-  No change this run.
+- **Resolved** upstream. No change consumed in this app.
 
 ## Golden App / product-specific classifications
 
@@ -97,6 +98,21 @@ changes were made in this run** — candidates are reported here for the framewo
 ## Decision: no pushes to upstream made
 
 Per AEF authority ladder and AGENTS.md, no upstream commits (AEF/shipit_ui/
-partnerhub) were made during this run. U-01..U-03 are reported here and in
-`docs/qa/pending-actions.md`; they become separate tasks if/when maintainers
-pick them up.
+partnerhub) were made during this run. U-01..U-03 were reported here and in
+`docs/qa/pending-actions.md`.
+
+**Status update (2026-09-13, confirmed by engineering):** both
+agentic-engineering-framework issues are **resolved upstream** — AEF#1
+(contract `E_*` evidence rows) and AEF#2 (unrunnable E2E gates) landed in the
+framework, which now mandates that any permanently-unrunnable REQUIRED gate be
+made runnable, formally declared `SKIPPED` (reasons + authority_ref), or
+revised, and distinguishes `NOT_EXECUTED` from `SKIPPED` in `gate_results`.
+The Golden App consumes that resolution for the app→server E2E: the journey
+(`app_journey_test.dart`) is executed as the product's live-interaction
+equivalent against a real Serverpod+PostgreSQL stack (see
+`qa-session-e2e-live.md`), with deterministic registration via a dev-only
+`SERVERPOD_DEV_VERIFICATION_CODE` pin, instead of being left permanently
+READY_NOT_EXECUTED by an unavailable device lane. **shipit-inc/shipit-ui#16
+(U-02, AppDatePicker clear target) remains open/pending** upstream — no change
+consumed in this app; the gap stays tracked as `UPSTREAM_UI_GAP-003` without
+in-app reimplementation.
