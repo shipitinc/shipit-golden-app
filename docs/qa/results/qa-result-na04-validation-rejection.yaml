@@ -1,0 +1,57 @@
+# NA-04 — C3 Live Validation-Rejection Origin (FEAT-PROGRAM-CREATE-001)
+
+Follow-up to `qa-result-q5-human.yaml` NA-04 (LOW, gate C3):
+> "C3 live validation-rejection origin — trigger a 400 server-side validation
+> (e.g. duplicate name if required, or malformed input) and capture inline
+> alert live". Rationale was "Server-unreachable fully exercised live;
+> validation-rejection origin covered by Q3 automated evidence only".
+
+## Execution (2026-09-13, ~18:53–18:57 UTC)
+
+Live interaction against the real stack (Flutter web [Dev] app on `localhost:8096`
+→ Serverpod + PostgreSQL on `localhost:8097`), authenticated E2E session.
+
+The app's client-side validation is **full parity with the server**
+(`create_program_screen.dart` guards vs `programs_endpoint.dart`
+`validateProgramInputs`): blank name, missing start/end, equal dates, and
+out-of-order dates are all rejected client-side first, so the sanitized UI path
+can never reach the server's 400. To exercise the *live* validation-rejection
+origin, the create request was intercepted at the network layer and its
+`endDate` rewritten to `2026-09-15` (end-before-start) before it reached the
+real server. The client form itself was valid (start 2026-09-20, end
+2026-09-25); only the wire payload was mutated.
+
+## Evidence
+
+- `docs/qa/results/evidence-na04-400-inline-alert/na04-server-400-inline-alert.png`
+- Request (index 4) `POST http://localhost:8097/programs`:
+  `{"name":"NA04 Wire Reject","description":"","startDate":"2026-09-20T04:00:00.000Z","endDate":"2026-09-15T00:00:00.000Z","method":"createProgram"}`
+- Response: **HTTP 400**, body `End date must be after the start date.`
+  (the exact `validateProgramInputs` message)
+- Server log `/tmp/golden-e2e-server.log:95`:
+  `Endpoint dispatch error: End date must be after the start date.`
+  with stack frame `ProgramsEndpoint.createProgram …/programs_endpoint.dart:49:5`
+- Inline alert rendered above the form (a11y snapshot):
+  `button "error. Could not create program. Validation error: The request was
+  not valid. Please check your input. Dismiss"`
+- After Dismiss: alert gone; Start date 2026-09-20 + End date 2026-09-25 Clear
+  groups intact; Create Program re-enabled — form values preserved.
+
+## Mapping chain confirmed live
+
+HTTP 400 (real Serverpod `InvalidParametersException`) →
+`ServerpodClientBadRequest` (`serverpod_client_shared_private.dart:46-53`) →
+`AppFailure.validation` (`apps/app/lib/core/errors/error_translator.dart:73`) →
+`AppInlineAlert` above the form with Dismiss + value preservation
+(`create_program_screen.dart` failure state).
+
+## Result
+
+**NA-04 CLOSED — PASS.** C3 validation-rejection origin exercised live: the
+real server returned 400 with the real validation message and the app surfaced
+it as the inline alert with Dismiss + form preservation. Note: this required a
+network-layer rewrite because the product's client validation is full-parity
+with the server — through the sanctioned UI this origin is intentionally
+unreachable (both sides reject identical inputs). Covered by Q3 automated
+contract evidence for the deterministic path; this closes the live-interaction
+gap. Also recorded on `qa-result-q5-human.yaml` (NA-04 section).

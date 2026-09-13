@@ -1,0 +1,43 @@
+# NA-03 — C2 Live Date-Field Per-Field Error Recovery (FEAT-PROGRAM-CREATE-001)
+
+Follow-up to `qa-result-q5-human.yaml` NA-03 (LOW, gate C2):
+> "C2 live date-field per-field error recovery — submit with equal dates or
+> end-before-start on-field to capture validation text live". Rationale was
+> "Name-field error captured live; date-field errors covered by automated
+> widget tests only".
+
+## Execution (2026-09-13, ~18:38–18:50 UTC)
+
+Live interaction against the real stack (Flutter web [Dev] app on `localhost:8096`
+→ Serverpod + PostgreSQL on `localhost:8097`), created via the a11y tree and the
+real date-picker dialogs. Same authenticated E2E session
+(`e2e_live_20260913_1815@lets.shipit.app`).
+
+Evidence: `docs/qa/results/evidence-na03-date-errors/`.
+
+## Cases captured live
+
+| Case | Result | Capture |
+|---|---|---|
+| Equal dates (start == end: 2026-09-14 / 2026-09-14) | Per-field "End date must be after the start date." attached to the End date field on selection (fires on value change, before submit) | `na03-equal-dates-per-field-error.png` |
+| Missing end date (start set, end cleared) | Per-field "Select an end date." on the End date field immediately after the Clear action | `na03-missing-end-date-per-field-error.png` |
+| Reversed dates (start 2026-09-20, end 2026-09-15) | Per-field "End date must be after the start date." on the End date field | `na03-reversed-dates-per-field-error.png` |
+
+## Observations
+
+- PC-002 per-field error routing confirmed live: date errors attach to the End
+  date field only, never to Start date (attribution not form-level).
+- Errors render on field change (reactive), not only on submit — consistent
+  with the `_recomputeEndError()` on-change path
+  (`create_program_screen.dart:73-80`).
+- The exact strings match the automated widget-test expectations
+  (`create_program_screen_test.dart:156-204`) and the server-side
+  `validateProgramInputs` messages (`programs_endpoint.dart:166-183`) — full
+  client/server parity.
+
+## Result
+
+**NA-03 CLOSED — PASS.** C2 date-field per-field error recovery evidence gap
+filled: equal-date, missing-end, and reversed-date error text all captured live,
+attributed per-field on the End date field, matching automated and server-side
+expectations. Also recorded on `qa-result-q5-human.yaml` (NA-03 section).

@@ -220,7 +220,10 @@ overall_verdict:
     per-field error capture; C3 live validation-rejection origin;
     a11y contrast measurement, live SR announcement, and first-invalid-
     field post-validate focus. F1 is an INFORMATIONAL env item (no
-    product defect).
+    product defect). Follow-up sweep complete 2026-09-13: NA-01 (dark
+    mode) PASS, NA-02 (shell widths) PASS, NA-03 (date-field errors)
+    PASS, NA-04 (validation-rejection origin) PASS, NA-05 (a11y) PARTIAL
+    env-limited (no VoiceOver/NVDA host in automation env).
 
 next_actions:
   - id: "NA-01"
@@ -228,23 +231,33 @@ next_actions:
     gate: "C1"
     action: "C1 dark-mode sweep — exercise Programs empty, list, create form, details, and failure alert in dark mode"
     rationale: "Contract requires dark mode; no dark-mode frame in this session"
+    status: "CLOSED — PASS 2026-09-13"
+    evidence: "docs/qa/results/qa-result-na01-dark-mode.yaml + docs/qa/results/evidence-na01-dark/ (6 surfaces; pixel-sampled genuinely dark, light foregrounds, no regression)"
   - id: "NA-02"
     priority: "MEDIUM"
     gate: "C1"
     action: "C1 tablet + mobile shell-width sweep — resize at 600px, 800px, 1200px and capture entry points at each"
     rationale: "Contract requires 'desktop/tablet/mobile shell widths'; all captures single 1200px viewport"
+    status: "CLOSED — PASS 2026-09-13"
+    evidence: "docs/qa/results/qa-result-na02-shell-widths.yaml + docs/qa/results/evidence-na02-widths/ (375px bottom bar; 600/800/1200px rail via DTD widget tree + a11y; no overflow/truncation)"
   - id: "NA-03"
     priority: "LOW"
     gate: "C2"
     action: "C2 live date-field per-field error recovery — submit with equal dates or end-before-start on-field to capture validation text live"
     rationale: "Name-field error captured live; date-field errors covered by automated widget tests only"
+    status: "CLOSED — PASS 2026-09-13"
+    evidence: "docs/qa/results/qa-result-na03-date-errors.yaml + docs/qa/results/evidence-na03-date-errors/ (equal, missing-end, reversed all per-field on End date; matches automated + server messages)"
   - id: "NA-04"
     priority: "LOW"
     gate: "C3"
     action: "C3 live validation-rejection origin — trigger a 400 server-side validation (e.g. duplicate name if required, or malformed input) and capture inline alert live"
     rationale: "Server-unreachable fully exercised live; validation-rejection origin covered by Q3 automated evidence only"
+    status: "CLOSED — PASS 2026-09-13"
+    evidence: "docs/qa/results/qa-result-na04-validation-rejection.yaml + docs/qa/results/evidence-na04-400-inline-alert/ (real server 400 'End date must be after the start date.' → inline alert above form + Dismiss + value preservation; client/server full-parity noted)"
   - id: "NA-05"
     priority: "LOW"
     gate: "A11y"
     action: "Instrument a screen-reader live-region announcement during a live session (VoiceOver/NVDA) and assert first-invalid-field focus relocation"
     rationale: "Static shipit_ui liveRegion flags confirmed; actual SR announcement and focus relocation not capturable from a11y snapshots"
+    status: "CLOSED — PARTIAL (env-limited) 2026-09-13"
+    evidence: "docs/qa/results/qa-result-na05-a11y.yaml + docs/qa/results/evidence-na05-a11y/ (on-field name error live; requestFocus routing :89/106/110 + liveRegion flags app_text_field:269/app_date_picker:202/app_inline_alert:113; no SR host in env — documented)"

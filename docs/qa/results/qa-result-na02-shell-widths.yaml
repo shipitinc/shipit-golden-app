@@ -1,0 +1,50 @@
+# NA-02 — C1 Tablet + Mobile Shell-Width Sweep (FEAT-PROGRAM-CREATE-001)
+
+Follow-up to `qa-result-q5-human.yaml` NA-02 (MEDIUM, gate C1):
+> "C1 tablet + mobile shell-width sweep — resize at 600px, 800px, 1200px and
+> capture entry points at each". Rationale was "Contract requires
+> 'desktop/tablet/mobile shell widths'; all captures single 1200px viewport".
+
+## Execution (2026-09-13, ~18:35–18:50 UTC)
+
+Live interaction against the real stack (Flutter web [Dev] app on `localhost:8096`
+→ Serverpod + PostgreSQL on `localhost:8097`), driven through the Flutter a11y
+tree via Playwright page snapshots + DTD `get_widget_tree`. Same E2E session
+(authenticated as `e2e_live_20260913_1815@lets.shipit.app`). Resized via
+`page.setViewportSize` at each width.
+
+Evidence: `docs/qa/results/evidence-na02-widths/` (macOS session screenshots,
+NOT pixel goldens).
+
+## Shell-width breakpoints (shipit_ui)
+
+Confirmed from `app/lib/app/shell/app_shell.dart`:
+- `context.isTabletOrLarger` → `AppNavigationRail` (collapsed tablet, extended desktop)
+- else → `AppBottomNavigationBar`
+- shipit_ui `AppThemeTokens` breakpoints (`app_theme_tokens.dart:158-159`):
+  - compact: <600 (bottom bar)
+  - tablet: >=600 (collapsed rail)
+  - desktop: >=1024 (extended rail)
+
+## Results
+
+| Width | Shell component | Evidence | Status |
+|-------|----------------|----------|--------|
+| 375px (mobile) | AppBottomNavigationBar (2×) | `na02-width375-programs-mobile-bottom-nav.png` | PASS |
+| 600px (tablet min) | AppNavigationRail (6×, collapsed) | `na02-width600-household.png`, `na02-width600-programs.png`, `na02-width600-create-form.png` | PASS |
+| 800px (tablet mid) | AppNavigationRail (6×, collapsed) | `na02-width800-programs.png`, `na02-width800-create-form.png` | PASS |
+| 1200px (desktop) | AppNavigationRail (6×, extended) | `na02-width1200-programs.png`, `na02-width1200-create-form.png` | PASS |
+
+- At 375px: a11y snapshot shows bottom-nav buttons "Household"/"Programs" in
+  `group "Navigation"` — responsive shell adaptation confirmed.
+- At 600/800/1200px: DTD `get_widget_tree` grep matches `AppNavigationRail` (6×
+  each) — rail component confirmed via both a11y snapshot and widget tree.
+- No overflow, no horizontal scroll, no truncation at any width.
+- All interactive targets reachable; form fields usable at every width.
+
+## Result
+
+**NA-02 CLOSED — PASS.** C1 shell-width evidence gap filled: responsive shell
+scaffolding (bottom navigation bar vs navigation rail) confirmed at three
+breakpoint regions. No overflow, layout breakage, or interactive target
+regression. Also recorded on `qa-result-q5-human.yaml` (NA-02 section).

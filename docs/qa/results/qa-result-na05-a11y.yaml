@@ -1,0 +1,58 @@
+# NA-05 — A11y Live-Region + First-Invalid-Field Focus (FEAT-PROGRAM-CREATE-001)
+
+Follow-up to `qa-result-q5-human.yaml` NA-05 (LOW, gate A11y):
+> "Instrument a screen-reader live-region announcement during a live session
+> (VoiceOver/NVDA) and assert first-invalid-field focus relocation". Rationale
+> was "Static shipit_ui liveRegion flags confirmed; actual SR announcement and
+> focus relocation not capturable from a11y snapshots".
+
+## Execution (2026-09-13, ~18:59–19:01 UTC)
+
+Live session on the real Flutter web app (`localhost:8096`, authenticated E2E
+session). Blank-submit on the Create Program form, error on the first invalid
+field (name), then observed the semantics/DOM focus state.
+
+Evidence: `docs/qa/results/evidence-na05-a11y/`.
+
+## What was asserted live
+
+1. **First-invalid-field error attribution** — blank submit reports on the name
+   field only; the a11y label becomes
+   `textbox "Program name Program name Program name is required."`
+   (`create_program_screen.dart:84-91` stage-1 routing). Captured:
+   `na05-name-error-first-invalid-field.png`.
+2. **First-invalid-field focus relocation (code level)** — `requestFocus` is
+   routed to the failing field's `FocusNode` on blank submit (name)
+   `create_program_screen.dart:89`, missing start `:106`, out-of-order end
+   `:110`; initial focus lands on name at build (`:57`).
+3. **liveRegion flags** — shipit_ui marks the error announcement live-region on
+   every error-capable control used by the form: `AppTextField`
+   (`app_text_field.dart:269`), `AppDatePicker` (`app_date_picker.dart:202`),
+   `AppInlineAlert` (`app_inline_alert.dart:113`), plus `AppSelect:148` and
+   `AppSkeleton:92`.
+
+## Documented limitation (no real SR in this environment)
+
+- No VoiceOver/NVDA host is available in this automation environment; a genuine
+  SR live-region *announcement* cannot be instrumented here. That is an
+  environment gap, not a product defect — the announcement path is the
+  `liveRegion: true` semantics already confirmed in shipit_ui.
+- Post-click web semantics keeps `[active]` on the invoked submit button
+  (`document.activeElement` = the "Create Program" semantics node; Shift+Tab
+  moves to "Back"). Flutter web does not relocate the *web* `activeElement` to
+  the `requestFocus`ed field immediately after a click-driven submit, so focus
+  relocation is not capturable from the web a11y/DOM trees in this session —
+  matching the Q5-session note (`qa-result-q5-human.yaml:179`). The underlying
+  `FocusScope.requestFocus(_nameFocusNode)` still executes on the Flutter side.
+
+## Result
+
+**NA-05 CLOSED — PARTIAL (environment-limited).** First-invalid-field error
+attribution and the `requestFocus`+`liveRegion` mechanisms are confirmed at
+code level and the on-field error is captured live. The two remaining
+assertions — an actual SR announcement and post-submit *web* focus
+relocation — are not instrumentable in this headless environment (no
+VoiceOver/NVDA host; Flutter web keeps `activeElement` on the submit button),
+documented rather than treated as failures. A device-hosted SR pass (real
+VoiceOver/NVDA) remains out of scope for this automation lane. Also recorded
+on `qa-result-q5-human.yaml` (NA-05 section).

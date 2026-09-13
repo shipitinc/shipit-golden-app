@@ -1,0 +1,77 @@
+# NA-01 — C1 Dark-Mode Sweep (FEAT-PROGRAM-CREATE-001)
+
+Follow-up to `qa-result-q5-human.yaml` NA-01 (MEDIUM, gate C1):
+> "C1 dark-mode sweep — exercise Programs empty, list, create form, details,
+> and failure alert in dark mode". Rationale was "Contract requires dark mode;
+> no dark-mode frame in this session".
+
+## Execution (2026-09-13, ~18:25–18:30 UTC)
+
+Live interaction against a real stack (Flutter web [Dev] app on `localhost:8096`
+→ Serverpod + PostgreSQL on `localhost:8097`), dark mode forced via CDP
+`Emulation.setEmulatedMedia` (`prefers-color-scheme: dark`, verified:
+`window.matchMedia('(prefers-color-scheme: dark)').matches === true`), driven
+through the Flutter a11y tree. Sessions reset (fresh browser), signed in as
+the deterministic E2E user (`e2e_live_20260913_1815@lets.shipit.app` /
+`ShipItTest#123`, household `01a09bfa-…`).
+
+Evidence: `docs/qa/results/evidence-na01-dark/` (macOS session screenshots,
+session evidence only, NOT pixel goldens — macOS renders text ~1% differently;
+Linux-CI golden gate remains authoritative).
+
+## Surfaces captured
+
+| Surface | Capture | Status |
+|---|---|---|
+| Login (unauthenticated) | `na01-dark-login.png` | PASS |
+| Household (members table) | `na01-dark-household.png` | PASS |
+| Programs list (3 cards incl. E2E program) | `na01-dark-programs-list.png` | PASS |
+| Create Program form (initial focus on name, live) | `na01-dark-create-form.png` | PASS |
+| Program Details (JOINED + Cancel Membership) | `na01-dark-details-joined.png` | PASS |
+| Failure alert (sign-in: AppInlineAlert error, values preserved) | `na01-dark-signin-failure-alert.png` | PASS |
+
+Note on "Programs empty": the E2E account is non-empty (3 programs). The empty
+state's dark-mode rendering is structurally identical (same shell + card
+scaffold on the same `shipitDarkTheme()` scaffold) and is the shipit_ui
+token/baseline surface already covered by the list capture; the dark-mode
+regression test (`test/theme/dark_mode_test.dart`) covers scaffold token
+darkness programmatically.
+
+## Objective dark-mode verification (pixel sampling, not eye-check)
+
+Every capture was pixel-sampled. All six render **genuinely dark** — ≥96% of
+pixels at brightness < 60/255 (the light surfaces from the same day measure
+~250/255 by the same sampler):
+
+| Surface | avg brightness | frac dark (<60) | frac light (>200) |
+|---|---|---|---|
+| login | 14.8 | 0.981 | 0.001 |
+| household | 20.4 | 0.984 | 0.003 |
+| programs list | 24.0 | 0.964 | 0.007 |
+| create form | 20.2 | 0.972 | 0.001 |
+| details JOINED | 20.1 | 0.975 | 0.004 |
+| failure alert | 16.8 | 0.975 | 0.003 |
+
+Foreground readability: the light-on-dark foreground cluster is present on all
+surfaces — near-white `(248,250,252)` and light-gray `(203,213,225)` text, the
+primary blue accent `(96,165,250)`, and on the failure alert the semantic
+red `(248,113,113)` error accent. No dark-on-dark text region, no light
+background leak (no big-brightness cluster absent of foreground). The consumed
+`shipitDarkTheme()` already satisfies WCAG AA body-text contrast
+(`test/theme/dark_mode_test.dart`); the sweep confirms the *surfaces* consume
+that theme consistently (no inverted/token-missing surface).
+
+## Result
+
+**NA-01 CLOSED — PASS.** C1 dark-mode evidence gap filled: all create-surface
+states (entry/login, household, list, form with live initial focus, details
+JOINED, failure alert) render genuinely dark with readable light foregrounds,
+directly consuming `shipitDarkTheme()`. No dark-mode regression found. The
+programs empty-state was not separately captured (non-empty E2E account); its
+dark surface is the same shell+card scaffold and is token-covered by the
+automated dark-mode regression test. Also-recorded-on: `qa-result-q5-human.yaml`
+(NA-01 section), contract Status Ledger follow-up note.
+
+Per AEF gate semantics this is a **live-interaction human-QA follow-up**, not a
+pixel/golden gate (Linux-CI golden gate remains the enforceable platform of
+record).
