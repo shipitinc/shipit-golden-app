@@ -1,0 +1,89 @@
+# Human Decision — FEA82795-EC9E-4A87-BF57-8EEB69C4680D
+
+decision_id: "FEA82795-EC9E-4A87-BF57-8EEB69C4680D"
+type: "QA"
+status: "RESOLVED"
+question: "Promote the 3 DESIGN_PENDING golden baselines (program_create.png, programs_empty.png, program_details_joined.png) to APPROVED now? Promotion requires design/human approval to dispatch .github/workflows/goldens-update.yml on the Linux CI host (inputs: design_revision + reviewer)."
+
+context:
+  summary: >-
+    Feature FEAT-PROGRAM-CREATE-001, QA lane. Q5 Human QA accepted (PARTIAL) and
+    Q6 verdict READY_FOR_MERGE at c787d25. Main CI (qa.yml) is red on exactly
+    the 3 DESIGN_PENDING golden baselines: program_create.png (1.14%, 5490px),
+    programs_empty.png (0.91%, 4373px), program_details_joined.png (1.58%,
+    7589px) — the known macOS-vs-Linux ~1% rasterizer diff on candidates
+    bootstrapped on a dev host (registry conformance passed; pixel gate is
+    Linux-CI-authoritative). Per AGENTS.md + contracts F-002, regeneration is
+    Linux-CI-only via goldens-update.yml, requires design/human approval
+    (design_revision 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3 +
+    shipit_ui@c310a961aa, reviewer = human), and the QA Architect records the
+    DESIGN_PENDING -> APPROVED transition in the promotion commit. E2E journey
+    added (READY_NOT_EXECUTED) and Phase 2 eval/learning records committed at
+    61d2e0d (pushed to origin/main).
+  blocking_work_item:
+    item_type: "QA_VERDICT"
+    item_id: "A9108212-3417-4E14-B3BA-7BBED3EC2B54"
+    item_ref: "FEAT-PROGRAM-CREATE-001 golden baseline promotion (Gate)"
+  evidence:
+    documents:
+      - type: "QA_CONTRACT"
+        id: "c0b70155-b400-424e-b52b-00b09254c082"
+        url: "docs/qa/contracts/FEAT-PROGRAM-CREATE-001-qa-contract.md"
+      - type: "QA_VERDICT"
+        id: "47645A7A-93E9-44D3-8AD2-21422245CAAD"
+        url: "docs/qa/results/qa-verdict-q6.yaml"
+      - type: "GOLDEN_REGISTRY"
+        id: "goldens_registry.md"
+        url: "apps/app/test/goldens/goldens_registry.md"
+      - type: "WORKFLOW"
+        id: "goldens-update.yml"
+        url: ".github/workflows/goldens-update.yml"
+    quantitative_data:
+      - metric: "program_create.png CI diff"
+        value: "1.14%, 5490px (Linux CI)"
+        source: "github run 34757198586 (qa workflow on push c787d25)"
+      - metric: "programs_empty.png CI diff"
+        value: "0.91%, 4373px (Linux CI)"
+        source: "github run 34757198586 (qa workflow on push c787d25)"
+      - metric: "program_details_joined.png CI diff"
+        value: "1.58%, 7589px (Linux CI)"
+        source: "github run 34757198586 (qa workflow on push c787d25)"
+      - metric: "Approved baselines on same push"
+        value: "PASS (program_details not-joined + login screens)"
+        source: "github run 34757198586 (qa workflow on push c787d25)"
+  recommendation:
+    recommended_option: "OPTION_A"
+    rationale: >-
+      All feature gates green (Q3/Q4/Q5-accepted/Q6 READY_FOR_MERGE); the 3
+      baselines are deterministic contract-registered candidates re-affirming
+      design revision #1 §D-8. Approval closes the only red CI lane and makes
+      main merge-clean with zero unresolved findings.
+    confidence: "HIGH"
+
+options:
+  - option_id: "OPTION_A"
+    label: "Approve promotion now"
+    description: "Grant design/human approval to dispatch goldens-update.yml (design_revision 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3, reviewer=human); QA Architect records DESIGN_PENDING -> APPROVED in the promotion commit; qa.yml then goes green on main."
+    implications: "3 baselines regenerated on Linux CI, re-approved marker appended, registry updated in same commit; main merge-clean with zero unresolved findings."
+    estimated_effort: "workflow dispatch + CI, small"
+    risk_level: "LOW"
+  - option_id: "OPTION_B"
+    label: "Defer promotion"
+    description: "Keep the 3 baselines DESIGN_PENDING; do not dispatch goldens-update.yml now."
+    implications: "Main CI remains red on exactly the 3 golden pixel tests (0.9-1.6% macOS-vs-Linux rasterizer diffs); READY_FOR_MERGE verdict stands but main is not merge-clean until promotion."
+    estimated_effort: "0"
+    risk_level: "LOW"
+
+resolution:
+  selected_option: "OPTION_B"
+  decided_by: "Human (product/design lead) via structured question UI"
+  decided_at: "2026-09-13T00:00:00Z"
+  rationale: "Selected OPTION_B - Defer golden baseline promotion."
+  follow_up_actions:
+    - action: "Re-run the promotion gate (goldens-update.yml dispatch with design_revision + reviewer) when ready to turn main green"
+      owner: "engineering-manager"
+      due_date: ""
+
+created_by: "engineering-manager"
+created_at: "2026-09-13T00:00:00Z"
+updated_at: "2026-09-13T00:00:00Z"

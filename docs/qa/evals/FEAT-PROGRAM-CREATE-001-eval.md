@@ -34,7 +34,8 @@ generated contract → review → QA evidence → human approval.
 | Q6 verdict v1 (HUMAN_DECISION_REQUIRED) | `8486381` |
 | Q5 accepted — Q6 READY_FOR_MERGE | `c787d25` |
 | E2E journey addition (READY_NOT_EXECUTED) | `89fd5cf` |
-| Current candidate HEAD | `89fd5cf` (pushed to origin/main) |
+| Phase 2 eval/learning records | `5a10e8b` + `61d2e0d` (pushed) |
+| Current candidate HEAD | `61d2e0d` (pushed to origin/main) |
 
 ## Requirement ↔ Human decisions
 
@@ -106,6 +107,10 @@ generated contract → review → QA evidence → human approval.
 - 8 structured human decisions (3 product + 5 gate); 1 gate deferral then
   re-initiation; Q5 followed up with a live human-QA session after an initial
   defer; PARTIAL Q5 accepted as-is.
+- **Golden-baseline promotion DEFERRED** by human (decision
+  `FEA82795-EC9E-4A87-BF57-8EEB69C4680D`, OPTION_B): the 3 DESIGN_PENDING
+  baselines stay status DESIGN_PENDING; goldens-update.yml NOT dispatched; main
+  CI remains red on exactly the 3 pixel tests until promotion.
 
 ## Follow-ups (non-blocking)
 
@@ -114,7 +119,9 @@ generated contract → review → QA evidence → human approval.
   NA-04 C3 live validation-rejection origin (LOW); NA-05 a11y SR announcement +
   first-invalid-field focus verify (LOW).
 - Linux-CI pixel gate + 3 DESIGN_PENDING → APPROVED promotions (CI-enforced
-  on merge via `goldens-update.yml`).
+  on merge via `goldens-update.yml`). **Promotion DEFERRED 2026-09-13**
+  (human decision `FEA82795-EC9E-4A87-BF57-8EEB69C4680D`); baselines remain
+  DESIGN_PENDING, main stays red on exactly the 3 pixel tests until re-gated.
 
 ## Learning capture
 
