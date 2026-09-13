@@ -1,0 +1,79 @@
+# Human Decision — 39E90886-3D53-4792-89CD-8F24ED855C2B
+
+decision_id: "39E90886-3D53-4792-89CD-8F24ED855C2B"
+type: "DESIGN"
+status: "RESOLVED"
+question: "Approve Design Revision #1 (77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3) for the Program Creation surface (risk level 2), enabling Design Contract freeze (Gate D4)?"
+
+context:
+  summary: >-
+    FEAT-PROGRAM-CREATE-001 D4 gate. Design Revision #1 specifies the Programs
+    create surface: app-bar + empty-state entry points, /programs/create route,
+    shipit_ui form anatomy (AppTextField/AppDatePicker/AppButton), loading &
+    settled-failure contract, accessibility plan, and golden registrations
+    (incl. program-details joined state closing P2 gap #1). Passed Independent
+    Design Review (Gate D3, APPROVED) after closure of 4 verified findings
+    (exception pattern, transaction threading, false test claim, upstream tap
+    target gap). HEAD f2c0760, risk level 2 confirmed.
+  blocking_work_item:
+    item_type: "FEATURE"
+    item_id: "A9108212-3417-4E14-B3BA-7BBED3EC2B54"
+    item_ref: "Program Creation (FEAT-PROGRAM-CREATE-001) - Design Revision #1 approval (Gate D4, Level 2)"
+  evidence:
+    documents:
+      - type: "DESIGN_REVISION"
+        id: "77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3"
+        url: "docs/design/revisions/FEAT-PROGRAM-CREATE-001/design-revision-001.md"
+      - type: "DESIGN_BRIEF"
+        id: "AE02F243-F283-4A9A-8D50-5597B8CAE9BE"
+        url: "docs/design/briefs/FEAT-PROGRAM-CREATE-001-design-brief.md"
+      - type: "OTHER"
+        id: "00000000-0000-0000-0000-000000000000"
+        url: "docs/features/FEAT-PROGRAM-CREATE-001-requirements.md"
+    quantitative_data:
+      - metric: "Gate D3 verdict"
+        value: "APPROVED (findings F1-F4 closed)"
+        source: "Independent Design Reviewer 2026-09-13"
+      - metric: "Risk level"
+        value: "2 (Feature UX Change)"
+        source: "Independent Design Reviewer"
+      - metric: "HEAD"
+        value: "f2c0760"
+        source: "git rev-parse (worktree HEAD at review)"
+    qualitative_tradeoffs:
+      - dimension: "Scope"
+        option_a: "Approve revision -> freeze Design Contract (Gate D5)"
+        option_b: "Request further changes -> design agent revises"
+        assessment: "Revision is buildable, traceable (PC-001..PC-010 + AC-11), and independent-review approved"
+  recommendation:
+    recommended_option: "OPTION_A"
+    rationale: "Gate D3 APPROVED with all findings closed and no traceability gaps; revision is implementation-feasible at the pinned shipit_ui."
+    confidence: "HIGH"
+
+options:
+  - option_id: "OPTION_A"
+    label: "Approve revision (D4)"
+    description: "Approve Design Revision #1 as the design for the Create Program surface. Manager freezes it as the Design Contract (Gate D5)."
+    implications: "Freezes /programs/create flow design; triggers Design Contract freeze + implementation + QA Contract; no feature code until approved."
+    estimated_effort: "n/a"
+    risk_level: "LOW"
+  - option_id: "OPTION_B"
+    label: "Request changes"
+    description: "Send the revision back to the Design Agent with change requirements before approval."
+    implications: "design lane parked; Gate D3 re-review required on the next submission."
+    estimated_effort: "0.5 day"
+    risk_level: "MEDIUM"
+
+resolution:
+  selected_option: "OPTION_A"
+  decided_by: "Human (product/design lead) via structured question UI"
+  decided_at: "2026-09-13T00:27:00Z"
+  rationale: "Selected OPTION_A - Approve revision (D4) (Recommended)."
+  follow_up_actions:
+    - action: "Freeze Design Revision #1 as the Design Contract (Gate D5); proceed with QA Contract + implementation per the frozen contract"
+      owner: "engineering-manager"
+      due_date: ""
+
+created_by: "engineering-manager"
+created_at: "2026-09-13T00:25:00Z"
+updated_at: "2026-09-13T00:27:00Z"

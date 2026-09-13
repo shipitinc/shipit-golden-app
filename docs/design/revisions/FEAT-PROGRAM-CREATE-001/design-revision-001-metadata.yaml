@@ -8,7 +8,7 @@
 revision_id: "77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3"
 brief_id: "AE02F243-F283-4A9A-8D50-5597B8CAE9BE"
 revision_number: 1
-status: "UNDER_REVIEW"  # DRAFT | UNDER_REVIEW | APPROVED | REJECTED | SUPERSEDED
+status: "APPROVED"  # DRAFT | UNDER_REVIEW | APPROVED | REJECTED | SUPERSEDED
 risk_level: 2  # 0 | 1 | 2 | 3
 risk_rationale: >-
   Level 2 (Feature UX Change) per the approved brief and DESIGN_GOVERNANCE.md:
@@ -47,10 +47,10 @@ ux_accessibility_score: "PASS"    # PASS | PARTIAL | FAIL | UNKNOWN
 implementation_feasibility: "HIGH" # HIGH | MEDIUM | LOW | UNKNOWN
 created_by: "design-agent-fcp-scaffold"
 created_at: "2026-09-13T00:15:44Z"
-reviewed_by: "independent-design-reviewer-dytajy"  # Gate D3 reviewer (CHANGES_REQUIRED: F1-F4)
-reviewed_at: "2026-09-13T02:06:41Z"  # Gate D3 review returned findings F1-F4; addressed in this re-submission
-approved_by: ""  # Human ID (Gate D4, required for Level 2)
-approved_at: ""  # ISO8601 (filled after Gate D4)
+real_reviewed_by: "gate-d3"  # Gate D3 review returned CHANGES_REQUIRED (F1-F4); independently re-verified APPROVED 2026-09-13
+reviewed_at: "2026-09-13T00:22:00Z"  # Gate D3 final APPROVED
+approved_by: "Human (product/design lead) - Human Decision 39E90886-3D53-4792-89CD-8F24ED855C2B (Gate D4)"  # Human ID (Gate D4, required for Level 2)
+approved_at: "2026-09-13T00:27:00Z"  # ISO8601 (filled after Gate D4)
 artifact_paths:
   - "docs/design/revisions/FEAT-PROGRAM-CREATE-001/design-revision-001-metadata.yaml"
   - "docs/design/revisions/FEAT-PROGRAM-CREATE-001/design-revision-001.md"

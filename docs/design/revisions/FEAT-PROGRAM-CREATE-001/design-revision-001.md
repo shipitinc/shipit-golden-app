@@ -3,7 +3,7 @@
 - **Revision ID:** `77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3`
 - **Brief ID:** `AE02F243-F283-4A9A-8D50-5597B8CAE9BE` (v1.0.1, APPROVED, Gate D2)
 - **Revision Number:** 1
-- **Status:** UNDER_REVIEW (Gate D3 returned CHANGES_REQUIRED on findings F1-F4; all addressed — see §11 — and re-submitted for Independent Design Review)
+- **Status:** APPROVED (Gate D4 / Human Decision `39E90886-3D53-4792-89CD-8F24ED855C2B`; frozen as Design Contract `8D9E1F3C-77CC-45C1-9F2B-47987EC9B8BD`)
 - **Risk Level:** 2 (Feature UX Change)
 - **Requirements:** `docs/features/FEAT-PROGRAM-CREATE-001-requirements.md` (PC-001..PC-010)
 - **Base/Head SHA:** `ba27df9` (HEAD of `main` at authoring time; no commits by this revision)
@@ -504,6 +504,8 @@ and wrote to `docs/design/revisions/` only.
     UPSTREAM_UI_GAP/DCR, not fixed in-app; risk level unchanged.
   - Corrected app-bar action citations to `programs_screen.dart:32-51`.
   - Status → UNDER_REVIEW for Gate D3 re-review by
-    `independent-design-reviewer-dytajy`.
+    `independent-design-reviewer-dytajy` (Gate D3 re-review APPROVED 2026-09-13;
+    Gate D4 human approval via decision `39E90886-3D53-4792-89CD-8F24ED855C2B`;
+    frozen as Design Contract `8D9E1F3C-77CC-45C1-9F2B-47987EC9B8BD`).
 - Rev 1 (initial): complete first design revision, DRAFT, submitted for Gate
   D3.
