@@ -1,0 +1,70 @@
+# Human Decision — 2F7C47E4-CF66-4D2C-B384-27105D75C6E0
+
+decision_id: "2F7C47E4-CF66-4D2C-B384-27105D75C6E0"
+type: "QA"
+status: "RESOLVED"
+question: "Initiate Gate Q5 Human QA execution (WCAG AA audit + exploratory charters C1-C4) for FEAT-PROGRAM-CREATE-001?"
+
+context:
+  summary: >-
+    Feature FEAT-PROGRAM-CREATE-001, QA lane. Following the earlier deferral
+    (3BDFEA41-2C41-41C5-965E-41CB9ECE8FED, OPTION_B), the human operator
+    instructed "run human qa". Q3 (automated) and Q4 (local visual) gates are
+    green at 1824dae. This decision initiates the Q5 Human QA session: WCAG AA
+    audit (token-only contrast, >=44px targets, semantics labels + live-region
+    error announcement, initial focus name, first-invalid-field focus, upstream
+    AppDatePicker clear-tap gap verification) and exploratory charters C1-C4
+    (entry points, full journey incl. date-picker + per-field error recovery,
+    failure path, post-create joined state). The QA Executor coordinates and
+    documents the session and classifies findings.
+  blocking_work_item:
+    item_type: "QA_VERDICT"
+    item_id: "A9108212-3417-4E14-B3BA-7BBED3EC2B54"
+    item_ref: "FEAT-PROGRAM-CREATE-001 Gate Q5 Human QA execution"
+  evidence:
+    documents:
+      - type: "QA_CONTRACT"
+        id: "c0b70155-b400-424e-b52b-00b09254c082"
+        url: "docs/qa/contracts/FEAT-PROGRAM-CREATE-001-qa-contract.md"
+      - type: "HUMAN_DECISION"
+        id: "3BDFEA41-2C41-41C5-965E-41CB9ECE8FED"
+        url: ".decisions/human-decision-3BDFEA41-2C41-41C5-965E-41CB9ECE8FED.yaml"
+    quantitative_data:
+      - metric: "Q3 automated gate"
+        value: "all green at 1824dae"
+        source: "qa-result-q3-automated.yaml"
+      - metric: "Q4 local visual gate"
+        value: "registry conformance PASS"
+        source: "qa-result-q4-visual-local.yaml"
+  recommendation:
+    recommended_option: "OPTION_A"
+    rationale: "Human operator explicitly requested execution; contract marks Human QA REQUIRED before READY_FOR_MERGE."
+    confidence: "HIGH"
+
+options:
+  - option_id: "OPTION_A"
+    label: "Run Human QA now"
+    description: "Execute the Q5 session: WCAG AA audit + exploratory charters C1-C4, coordinated/documented by the QA Executor."
+    implications: "Human QA session runs; findings classified exactly once and routed; enables Q6 READY_FOR_MERGE once clean."
+    estimated_effort: "0.5 day"
+    risk_level: "LOW"
+  - option_id: "OPTION_B"
+    label: "Keep deferred"
+    description: "Do not run the session now; Q6 stays HUMAN_DECISION_REQUIRED."
+    implications: "Feature cannot claim READY_FOR_MERGE."
+    estimated_effort: "0"
+    risk_level: "LOW"
+
+resolution:
+  selected_option: "OPTION_A"
+  decided_by: "Human (product/design lead) via conversation instruction 'run human qa'"
+  decided_at: "2026-09-13T03:30:00Z"
+  rationale: "Selected OPTION_A - Run Human QA now as explicitly requested."
+  follow_up_actions:
+    - action: "QA Executor executes Q5 Human QA (WCAG AA + C1-C4); findings classified exactly once; Q6 re-verdict toward READY_FOR_MERGE"
+      owner: "qa-executor-feat-program-create-001"
+      due_date: ""
+
+created_by: "engineering-manager"
+created_at: "2026-09-13T03:30:00Z"
+updated_at: "2026-09-13T03:30:00Z"

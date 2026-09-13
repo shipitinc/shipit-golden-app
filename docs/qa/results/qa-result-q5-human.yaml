@@ -1,0 +1,250 @@
+# QA Result — 9ef1bdf9-67f6-47bf-9311-3894c7f140c1
+
+# Gate Q5 — Human QA Execution (FEAT-PROGRAM-CREATE-001)
+# Executed by QA Executor per frozen QA Contract c0b70155-b400-424e-b52b-00b09254c082.
+
+result_id: "9ef1bdf9-67f6-47bf-9311-3894c7f140c1"
+contract_id: "c0b70155-b400-424e-b52b-00b09254c082"
+execution_type: "LIVE_INTERACTION"
+target_revision: "1824dae"
+target_environment: "QA"
+status: "PARTIAL"
+executed_by: "qa-executor-feat-program-create-001"
+executed_at: "2026-09-13T10:56:00Z"
+duration_seconds: 1440                       # ~24 minutes wall clock (session 10:56–11:33 UTC)
+
+revision_pinning:
+  branch: "main"
+  base_sha: "2fb3bf1"                        # QA contract freeze commit (Gate Q1/Q2)
+  head_sha: "1824dae"
+  full_head: "1824daedecea263e2caa08ad8ee188e16f53b0f5"
+  session_head: "8486381"                    # docs(qa): Gate Q6 verdict; HEAD at session start
+  working_tree_clean_at_execution: false     # untracked .playwright-mcp/ evidence + q5-*.png present at HEAD
+
+summary:
+  charters_attempted: 4                      # C1 + C2 + C3 + C4
+  charters_pass: 1                           # C4
+  charters_partial: 3                        # C1, C2, C3
+  usability_tasks_attempted: 4
+  usability_tasks_pass: 2                    # correct validation error, dismiss + resubmit
+  usability_tasks_partial: 2                 # both entry points (attribution), back-arrow cancel (gesture)
+  findings_total: 1                          # F1 (ENVIRONMENT_DEFECT only)
+  findings_severity_low_or_above: 0
+  gate_results_human: "PARTIAL"
+
+evidence:
+  a11y_snapshots:
+    dir: ".playwright-mcp/"
+    count: 50
+    key_frames:
+      - timestamp: "2026-09-13T11-20:28Z"
+        description: "Programs screen (empty account); buttons Create program / Refresh / Sign out"
+      - timestamp: "2026-09-13T11-21:01Z"
+        description: "Create Program form; name field [active] (initial focus)"
+      - timestamp: "2026-09-13T11-21:41Z"
+        description: "Calendar dialog (September 2026 grid); date entry exercised"
+      - timestamp: "2026-09-13T11-22:14Z"
+        description: "Create form: Start date 2026-09-15 + Clear group; End date unset"
+      - timestamp: "2026-09-13T11-22:44Z"
+        description: "Create form: Start 2026-09-15 + End 2026-09-20 both with Clear groups"
+      - timestamp: "2026-09-13T11-23:05Z"
+        description: "Programs list: first card 'Q5 Human Camp UPCOMING …' + View Details"
+      - timestamp: "2026-09-13T11-23:58Z"
+        description: "Per-field validation error: name label 'Program name is required.' (blank submit)"
+      - timestamp: "2026-09-13T11-25:32Z"
+        description: "Program Details: 'Joined · Q5 Human Camp JOINED' + Cancel Membership"
+      - timestamp: "2026-09-13T11-26:03Z"
+        description: "Cancel Membership confirmation dialog"
+      - timestamp: "2026-09-13T11-26:19Z"
+        description: "After cancel: 'Not joined yet EXPLORE' + Join Program"
+      - timestamp: "2026-09-13T11-26:34Z"
+        description: "After re-join: 'Joined · Q5 Human Camp JOINED' + Cancel Membership"
+      - timestamp: "2026-09-13T11-29:58Z"
+        description: "Failure alert above form (C3): 'error. Could not create program. Network error…' + form preserved"
+      - timestamp: "2026-09-13T11-32:32Z"
+        description: "After Dismiss: alert gone; form populated; Create Program active"
+      - timestamp: "2026-09-13T11-32:40Z"
+        description: "Programs list: BOTH cards (Q5 Human Camp + Server-Down Program) — resubmit succeeded"
+  console_logs:
+    - "docs/qa/results/evidence-q5-human-generate-check.log"
+    - ".playwright-mcp/console-2026-09-13T11-25-07-960Z.log"
+    - ".playwright-mcp/console-2026-09-13T11-15-53-084Z.log"
+    - ".playwright-mcp/console-2026-09-13T10-56-21-328Z.log"
+  automated_evidence:
+    generate_check:
+      file: "docs/qa/results/evidence-q5-human-generate-check.log"
+      result: "SUCCESS"
+      output: "Generated output matches .generated_manifest.json."
+    test_flutter:
+      file: "docs/qa/results/evidence-q5-human-test-flutter.log"
+      result: "PASS"
+      output: "00:31 +121: All tests passed!"
+      note: "Includes accessibility_semantics_test + key_widget_semantics_test (program card labels, ProgramCreateView form fields + submit, members table)"
+  screenshots:
+    - "docs/qa/results/evidence-q5-human/q5-empty-state.png"
+    - "docs/qa/results/evidence-q5-human/q5-program-card.png"
+    - "docs/qa/results/evidence-q5-human/q5-details-joined.png"
+
+charters:
+  c1_entry_points:
+    status: "PARTIAL"
+    description: "Desktop-width entry verified; tablet/mobile widths + dark mode NOT captured; empty-state CTA vs app-bar attribution ambiguous"
+    evidence:
+      pass:
+        - "11-20-28Z: Programs screen reachable; 'Create program' button"
+        - "11-23-05Z: first create success; q5-empty-state.png confirms empty state captured"
+        - "11-32-40Z: second create success from populated list"
+      evidence_gap:
+        - "Tablet/mobile shell widths: all captures single ~1200px desktop viewport; no resize sweep"
+        - "Dark mode: no dark-mode frame or theme toggle in any capture"
+        - "Empty-state CTA attribution: 'Create program' in a11y tree at 11-20-28 is ambiguous between AppEmptyState action and AppBar icon button (same label)"
+
+  c2_full_journey:
+    status: "PARTIAL"
+    description: "Full journeys ×2 PASS incl. calendar entry; per-field error recovery PARTIAL (name OK, date errors not live)"
+    evidence:
+      pass:
+        - "11-21-41Z/11-21-58Z: calendar grid exercised, day 15 selected for start"
+        - "11-22-44Z: first create filled (start 15/9, end 20/9)"
+        - "11-27-59Z/11-28-14Z/11-29-19Z: calendar grid exercised for start 14/9, end 16/9"
+        - "11-29-27Z: second create filled"
+        - "11-23-58Z/11-24-04Z: name-field error 'Program name is required.' shown on first invalid field; flow recovered (11-24-52 onward)"
+        - "11-32-40Z: second create succeeded post-failure"
+      evidence_gap:
+        - "Date-field per-field errors (equal dates, end before start): not live-captured; covered only by automated widget tests (create_program_screen_test.dart:156-204 in the 121-test log)"
+
+  c3_failure_path:
+    status: "PARTIAL"
+    description: "Server-unreachable failure mode PASS (all 4 required behaviors); validation-rejection failure origin not live-exercised"
+    evidence:
+      pass:
+        - "11-25-07Z console: ERR_CONNECTION_REFUSED on localhost:8099/jwtTokens + /programs"
+        - "11-29-58Z: inline alert above form: 'error. Could not create program. Network error… Dismiss'"
+        - "11-29-58Z/11-30-11Z: form kept — Start 2026-09-14 + End 2026-09-16 Clear groups intact"
+        - "11-32-32Z: Dismiss succeeded; alert gone; form preserved; Create Program re-enabled"
+        - "11-32-40Z: resubmit created 'Server-Down Program' — both cards present"
+      evidence_gap:
+        - "Server-side validation rejection (HTTP 400 → ServerpodClientBadRequest → AppFailure.validation → inline alert): not live-exercised; covered by Q3 automated contract evidence"
+
+  c4_post_create_joined:
+    status: "PASS"
+    description: "Joined state + Cancel Membership + re-join all evidenced live"
+    evidence:
+      pass:
+        - "11-25-32Z/11-25-40Z: Program Details — Membership 'Joined · Q5 Human Camp JOINED' + Cancel Membership"
+        - "11-26-03Z/11-26-11Z: Cancel Membership confirmation dialog"
+        - "11-26-19Z/11-26-23Z: after cancel — 'Not joined yet EXPLORE' + Join Program"
+        - "11-26-34Z/11-26-40Z: after re-join — 'Joined · Q5 Human Camp JOINED' + Cancel Membership"
+
+usability_tasks:
+  both_entry_points:
+    status: "PARTIAL"
+    evidence:
+      - "Two end-to-end create journeys from Programs screen (empty list at 11-20-28; populated at 11-23-06)"
+      - "Strict empty-state-CTA vs app-bar button attribution not capturable from a11y tree (both labeled 'Create program')"
+  correct_validation_on_field:
+    status: "PASS"
+    evidence:
+      - "11-23-58Z/11-24-04Z: blank submit → 'Program name is required.' on-field; error cleared by correcting input; flow continued"
+  dismiss_and_resubmit:
+    status: "PASS"
+    evidence:
+      - "11-29-58Z alert → 11-32-32Z dismiss → 11-32-40Z resubmit success"
+  cancel_via_back_arrow:
+    status: "PARTIAL"
+    evidence:
+      - "Back affordance present on every create-form frame (e.g. 11-21-01Z, 11-22-14Z, 11-23-30Z, 11-27-35Z)"
+      - "Second create attempt (11-23-30Z) terminated without creating; Programs list at 11-25-22Z still shows only Q5 Human Camp"
+      - "Lone 'Back' captured during navigation (11-22-57Z)"
+      - "Tap gesture not visible in a11y snapshots — mechanism inferred from affordance + outcome"
+
+accessibility_audit:
+  token_only_contrast:
+    status: "EVIDENCE_GAP"
+    basis: "Not measurable from a11y snapshots; shipit_ui tokens consumed per authority; no contrast regression observed but no live measurement exists"
+  interactive_targets_44px:
+    status: "PARTIAL"
+    basis: "Standard shipit_ui controls used; no live pixel measurement; known upstream exception (AppDatePicker ~20px clear — verified not regressed below)"
+  semantics_labels:
+    status: "PASS"
+    basis: "Every interactive element labeled in frames; reinforced by automated key_widget_semantics_test ('ProgramCreateView form fields and submit button expose labels', 'program card exposes the program name and target label')"
+  live_region_error:
+    status: "PARTIAL"
+    basis: "shipit_ui source confirmed: AppTextField error liveRegion:true (app_text_field.dart:266-275), AppDatePicker date_picker_error liveRegion:true (app_date_picker.dart:201-205), AppInlineAlert liveRegion:true (app_inline_alert.dart:111-117); error shown on first invalid field (11-23-58); actual SR announcement not instrumented in this session"
+  initial_focus_name:
+    status: "PASS"
+    basis: "11-21-01Z and 11-23-30Z: name textbox [active] (focused); code: addPostFrameCallback requestFocus (create_program_screen.dart:54-58); automated test 'initial focus lands on the name field' green"
+  first_invalid_focus:
+    status: "PARTIAL"
+    basis: "Error attributed to first invalid field (11-23-58Z); focus relocation not capturable in a11y tree (post-click snapshot shows button [active]); code routes FocusScope.requestFocus to failing-field FocusNode (create_program_screen.dart:88/106/110)"
+  upstream_gap_verified:
+    status: "YES"
+    basis_reported:
+      - "Contract §Human QA Accessibility (c0b70155… :432-435)"
+      - "design-revision-001.md F4 (:460-464, :502)"
+      - "upstream-ui-gaps.md UPSTREAM_UI_GAP-003"
+    basis_not_regressed:
+      - "AppDatePicker consumed directly (create_program_screen.dart:192-224)"
+      - "Clear affordance ~20px still present; no in-app masking"
+      - "Frames 11-22-14, 11-22-44, 11-29-27 show 'Clear 2026-09-XX' groups unchanged"
+
+findings:
+  - id: "F1"
+    classification: "ENVIRONMENT_DEFECT"
+    severity: "INFORMATIONAL"
+    lane: "INFRA_REMEDIATION"
+    title: "DWDS webdev injected-client _JsonMap cast error during dev-server hot reload"
+    description: >-
+      console-2026-09-13T11-15-53-084Z.log: TypeError
+      "Instance of '_JsonMap': type '_JsonMap' is not a subtype of type
+      'List<Object?>'" originates entirely in
+      dwds/src/injected/client.js (webdev tooling). The app loaded and
+      passed every interaction; dev-reload websocket drops also recorded
+      at 10:56Z/11:04Z. Console guidance directs filing at
+      https://github.com/dart-lang/webdev.
+    classification_exactly_once: true
+    effect_on_product_code: "NONE"
+    remediation_action: "No code change required; optionally file upstream dwds/webdev issue"
+
+gate_results:
+  human: "PARTIAL"
+
+overall_verdict:
+  verdict: "PARTIAL"
+  note: >-
+    Gate Q5 assessed with LIVE_INTERACTION (automated a11y snapshots +
+    console logs) and deterministic test evidence at the frozen revision.
+    The main exploratory surface (C2 full journeys, C3 failure mode,
+    C4 joined state) passed live. PARTIAL reflects EVIDENCE_GAPS, not
+    failures: C1 dark-mode/shell-width sweep; C2 live date-field
+    per-field error capture; C3 live validation-rejection origin;
+    a11y contrast measurement, live SR announcement, and first-invalid-
+    field post-validate focus. F1 is an INFORMATIONAL env item (no
+    product defect).
+
+next_actions:
+  - id: "NA-01"
+    priority: "MEDIUM"
+    gate: "C1"
+    action: "C1 dark-mode sweep — exercise Programs empty, list, create form, details, and failure alert in dark mode"
+    rationale: "Contract requires dark mode; no dark-mode frame in this session"
+  - id: "NA-02"
+    priority: "MEDIUM"
+    gate: "C1"
+    action: "C1 tablet + mobile shell-width sweep — resize at 600px, 800px, 1200px and capture entry points at each"
+    rationale: "Contract requires 'desktop/tablet/mobile shell widths'; all captures single 1200px viewport"
+  - id: "NA-03"
+    priority: "LOW"
+    gate: "C2"
+    action: "C2 live date-field per-field error recovery — submit with equal dates or end-before-start on-field to capture validation text live"
+    rationale: "Name-field error captured live; date-field errors covered by automated widget tests only"
+  - id: "NA-04"
+    priority: "LOW"
+    gate: "C3"
+    action: "C3 live validation-rejection origin — trigger a 400 server-side validation (e.g. duplicate name if required, or malformed input) and capture inline alert live"
+    rationale: "Server-unreachable fully exercised live; validation-rejection origin covered by Q3 automated evidence only"
+  - id: "NA-05"
+    priority: "LOW"
+    gate: "A11y"
+    action: "Instrument a screen-reader live-region announcement during a live session (VoiceOver/NVDA) and assert first-invalid-field focus relocation"
+    rationale: "Static shipit_ui liveRegion flags confirmed; actual SR announcement and focus relocation not capturable from a11y snapshots"

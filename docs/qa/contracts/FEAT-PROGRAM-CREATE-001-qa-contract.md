@@ -604,6 +604,24 @@ For the subsequent execution gates of this feature (Gates Q3-Q6):
 
 ---
 
+## Status Ledger — Gate Execution (Q3–Q6)
+
+| Gate | Status | Evidence basis |
+|------|--------|----------------|
+| Q3 Automated | **PASS** | `docs/qa/results/qa-result-q3-automated.yaml` (result `D26E7F90-CC03-4AA4-944B-70C66BCB4273`, 2026-09-13). Analyze clean; `generate:check` clean; test:server **33/33** (incl. PC-010 concurrency + rollback atomicity); test:unit 2/2; test:flutter **121/121**; registry conformance PASS. E2E marked **NOT_IN_DEFAULT_PIPELINE** — opt-in/device-gated, flagged, never silently asserted. |
+| Q4 Visual (local) | **PASS (local)** | `docs/qa/results/qa-result-q4-visual-local.yaml` (result `DF338142-83FE-4ED2-BB45-9B79DE37E518`, at revision `1824dae`). Golden registry conformance (`golden_registry_test.dart`, host-agnostic) PASS. Linux-CI 0-pixel pixel gate **PENDING by design** (platform of record; macOS prohibited for golden regeneration). |
+| Q5 Human QA | **EXECUTED — PARTIAL** | `docs/qa/results/qa-result-q5-human.yaml` (result `9ef1bdf9-67f6-47bf-9311-3894c7f140c1`, LIVE_INTERACTION, executed 2026-09-13T10:56:00Z, ~24 min) + `docs/qa/results/qa-session-q5-human.md` (timestamped session, UTC 10:56–11:33) at session HEAD `8486381`, revision under test `1824dae`. Charters: **C4 PASS**; **C1/C2/C3 PARTIAL** (EVIDENCE_GAPS, no failures). Usability: correct-on-field error PASS, dismiss+resubmit PASS; both-entry-points + back-arrow PARTIAL. A11y: semantics labels PASS, initial-focus-on-name PASS; token-only contrast EVIDENCE_GAP, interactive-targets ≥44px PARTIAL, live-region PARTIAL (shipit_ui static `liveRegion:true` flags confirmed — app_text_field.dart:266-275, app_date_picker.dart:201-205, app_inline_alert.dart:111-117), first-invalid-focus PARTIAL. **UPSTREAM_GAP_VERIFIED: YES** — AppDatePicker ~20px `date_picker_clear` reported (`upstream-ui-gaps.md` UPSTREAM_UI_GAP-003; design-revision-001 F4) and NOT regressed. Findings: **F1 exactly-once** — INFORMATIONAL **ENVIRONMENT_DEFECT** (DWDS/webdev injected-client `_JsonMap` cast), lane INFRA_REMEDIATION, effect_on_product_code NONE → Human-gate threshold (:510, "No unresolved CRITICAL/HIGH findings at verdict") **MET**. PARTIAL reflects evidence-gaps with follow-ups NA-01/NA-02 (MEDIUM, C1 dark-mode + shell-width sweep) + NA-03/NA-04/NA-05 (LOW, C2/C3/A11y). Formal acceptance of the PARTIAL result remains a human decision. |
+| Q6 Verdict | **HUMAN_DECISION_REQUIRED** | `docs/qa/results/qa-verdict-q6.yaml` (revision 2, 2026-09-13). No product defect (unclassified 0, product_defects 0). Three outstanding decisions, all human/CI-governed — cannot resolve on this environment: (1) Q5 PARTIAL acceptance; (2) Linux-CI 0-pixel gate; (3) DESIGN_PENDING → APPROVED promotion. |
+
+Per the frozen Gate Criteria (:501-510) and overall-gate entry (:512-514): the
+Human gate is REQUIRED and its verdict-time threshold ("No unresolved CRITICAL/
+HIGH findings at verdict") is **met** — the PARTIAL status is an evidence-gap
+state (2 MEDIUM + 3 LOW follow-ups), not a failure, and BLOCKED does not apply.
+The release-relevant decisions are human/platform-authoritative: (a) whether the
+PARTIAL Q5 result is accepted as-is or closed via NA-01/NA-02 sweeps, (b) the
+Linux-CI 0-pixel result for the Visual gate, and (c) the DESIGN_PENDING →
+APPROVED baseline promotions recorded by the QA Architect.
+
 ## Review & Freeze
 
 **Gate Q1**: QA Contract Review (completeness, traceability to Design Contract
