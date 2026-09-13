@@ -25,7 +25,7 @@
   "apps/server/lib/src/generated/protocol.dart": "62d4d1715fbea3977105f17e2d865032292b83c4ba7c8c20601602c51d363e16",
   "apps/server/lib/src/generated/protocol.yaml": "0f2891cf37ed848bdbb39ed8e27d1e5c685ac2190003258f3c6ee37ef7f4b33f",
   "apps/server/test/integration/test_tools/serverpod_test_tools.dart": "2c5dd6724d16e2e19cb94007a81b7b9aca7e5b3025a102e7bb3116c3443ebeb3",
-  "packages/app_client/lib/src/protocol/client.dart": "25e26970337c7bf021dc242141f253b5b98703daec336b7fbb419987fcf20c18",
+  "packages/app_client/lib/src/protocol/client.dart": "5e1a620709fa385eec1d8772949ac0fefe7cc22d30839f575aa7b284f42a1ab0",
   "packages/app_client/lib/src/protocol/email_already_registered_exception.dart": "a18c9942ad33dc80af6247cc0a0db6b521b8297b5a6682cfa0bc4c4f3e8ecbf5",
   "packages/app_client/lib/src/protocol/household.dart": "25f2cae1f3e09f613c170e7bcad457448e6acf15974ff9b47fcd7199e9baa7b9",
   "packages/app_client/lib/src/protocol/household_member.dart": "f648b1687eccff34fc6a91499ede1abf82f08cf30ffffa01640895cfb61262bb",
