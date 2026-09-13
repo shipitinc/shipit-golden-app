@@ -39,6 +39,10 @@ coverage/
 # Logs
 *.log
 
+# QA session artifacts (raw interactive-capture dumps; committed evidence is
+# the reviewed YAML + validated screenshots under docs/qa/results/evidence-*)
+.playwright-mcp/
+
 # Local config
 *.local.yaml
 config/local.yaml
