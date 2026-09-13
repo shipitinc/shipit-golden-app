@@ -3,7 +3,10 @@
 # Gate Q6 — QA Verdict & Classification (FEAT-PROGRAM-CREATE-001)
 # Authored by QA Architect per frozen QA Contract c0b70155-b400-424e-b52b-00b09254c082
 # and AEF QA_GOVERNANCE.md Gate Q6 (:236-241).
-# REVISION 2 (2026-09-13): re-issued after just-completed Q5 Human QA execution (result 9ef1bdf9-…, PARTIAL).
+# REVISION 3 (2026-09-13): re-issued after human decision D37D43B5-6BA8-4B3C-9FA8-95F2CF68B777
+# (OPTION_A, resolved 2026-09-13T06:00:00Z) formally ACCEPTED the PARTIAL Q5 result as-is.
+# All human decision gates are closed; remaining items (Linux-CI pixel gate + baseline
+# promotion) are CI-enforced on merge to main. Verdict: READY_FOR_MERGE.
 
 verdict_id: "47645A7A-93E9-44D3-8AD2-21422245CAAD"
 contract_id: "c0b70155-b400-424e-b52b-00b09254c082"
@@ -12,7 +15,7 @@ feature: "FEAT-PROGRAM-CREATE-001 (Program Creation)"
 target_revision: "1824dae"           # head of feature range 2fb3bf1..1824dae (full 1824daedecea263e2caa08ad8ee188e16f53b0f5)
 target_environment: "QA"
 executed_by: "QA Architect"
-executed_at: "2026-09-13T12:15:00Z"
+executed_at: "2026-09-13T12:30:00Z"
 status: "ISSUED"
 
 provenance:
@@ -20,28 +23,30 @@ provenance:
   base_sha: "2fb3bf1"               # QA contract freeze commit (Gate Q1/Q2)
   feature_head: "1824dae"
   q5_session_head: "8486381"        # HEAD at Q5 session start (docs(qa): Gate Q6 verdict v1)
+  q5_acceptance_decision: "D37D43B5-6BA8-4B3C-9FA8-95F2CF68B777"   # OPTION_A, RESOLVED 2026-09-13T06:00:00Z
   execution_evidence:
     q3: "docs/qa/results/qa-result-q3-automated.yaml"      # result D26E7F90-CC03-4AA4-944B-70C66BCB4273 (PASS)
     q4: "docs/qa/results/qa-result-q4-visual-local.yaml"   # result DF338142-83FE-4ED2-BB45-9B79DE37E518 (local PASS; Linux-CI pixel gate PENDING by design)
-    q5: "docs/qa/results/qa-result-q5-human.yaml"          # result 9ef1bdf9-67f6-47bf-9311-3894c7f140c1 (EXECUTED, PARTIAL) — session log qa-session-q5-human.md
+    q5: "docs/qa/results/qa-result-q5-human.yaml"          # result 9ef1bdf9-67f6-47bf-9311-3894c7f140c1 (EXECUTED, PARTIAL) — session log qa-session-q5-human.md; ACCEPTED as-is via D37D43B5
 
 gate_results:
   unit: "PASS"                      # 121/121 test:flutter at 1824dae (goldens excluded by tag); includes accessibility_semantics_test + key_widget_semantics_test; BLoC/translator/repository/widget suites green
   integration: "PASS"               # 33/33 test:server, PostgreSQL-backed; incl. PC-010 concurrency (N=5 → one household, N programs, one membership per program) + rollback atomicity
   contract: "PASS"                  # generate:check clean at tested SHA (no tracked diff + manifest hash match); app_client protocol round-trips green; error_translator unchanged; no new protocol model
   e2e: "NOT_IN_DEFAULT_PIPELINE"    # opt-in/device-gated per contract (:384-391); no headless device/live server in this environment; flagged, not silently asserted; widget-level equivalents green (unit gate)
-  visual: "PASS (local) + PENDING (Linux-CI pixel gate)"
+  visual: "PASS (local registry conformance) + PENDING (Linux-CI pixel gate — CI-enforced on merge)"
     # local: golden registry conformance PASS (golden_registry_test.dart, host-agnostic, inside test:flutter)
-    # Linux-CI: 0-pixel gate (melos run test:golden, golden_policy_test.dart) NOT executed on macOS by design — platform-of-record pending
-  human: "PARTIAL (EXECUTED)"
+    # Linux-CI: 0-pixel gate (melos run test:golden, golden_policy_test.dart) runs automatically in qa.yml merge workflow on the Linux CI host — platform of record; macOS informational
+  human: "ACCEPTED — PARTIAL (follow-ups NA-01..NA-05 tracked)"
     # REQUIRED per frozen contract (:510); executed LIVE_INTERACTION 2026-09-13T10:56:00Z by qa-executor-feat-program-create-001
     # (session log qa-session-q5-human.md, UTC 10:56-11:33 at HEAD 8486381, revision 1824dae).
     # Threshold "No unresolved CRITICAL/HIGH findings at verdict" (:510) MET — F1 is the ONLY finding, INFORMATIONAL
     # ENVIRONMENT_DEFECT (DWDS/webdev injected-client), routed INFRA_REMEDIATION, effect_on_product_code NONE.
     # PARTIAL = EVIDENCE_GAPS, NOT failures: C4 PASS; C1/C2/C3 PARTIAL; usability on-field error + dismiss+resubmit PASS,
-    # both-entry-points + back-arrow PARTIAL; a11y semantics + initial-focus PASS, contrast EVIDENCE_GAP, ≥44px/live-region/
+    # both-entry-points + back-arrow PARTIAL; a11y semantics + initial-focus PASS, contrast EVIDENCE_GAP, >=44px/live-region/
     # first-invalid-focus PARTIAL (shipit_ui static liveRegion flags confirmed). UPSTREAM_GAP_VERIFIED YES (UPSTREAM_UI_GAP-003).
-    # Follow-ups NA-01/NA-02 (MEDIUM, C1 sweeps) + NA-03/NA-04/NA-05 (LOW) — acceptance decision reserved to human.
+    # HUMAN decision D37D43B5 (OPTION_A) RESOLVED 2026-09-13T06:00:00Z accepted the PARTIAL result AS-IS;
+    # NA-01..NA-05 tracked as non-blocking follow-ups. Human gate CLOSED.
 
 failures: []                        # NONE found in automated (Q3), local-visual (Q4), or human (Q5) evidence at 1824dae
 
@@ -68,12 +73,12 @@ classified_findings:
     remediation_action: "No product code change required; optionally file upstream dwds/webdev issue"
     source: "docs/qa/results/qa-result-q5-human.yaml (F1)"
 
-golden_baseline_changes:            # 3 NEW rows, all DESIGN_PENDING, approval pending — QA Architect records any promotion only after Linux-CI 0-pixel gate + design/human approval
+golden_baseline_changes:            # 3 NEW rows, all DESIGN_PENDING; promotion is CI-enforced on merge
   - baseline_id: "goldens/program_create.png"
     change_type: "NEW"
     approval_status: "DESIGN_PENDING"
     approved_by: "_pending_"
-    approval_ref: "_promotion pending Linux CI 0-pixel gate + design/human approval_"
+    approval_ref: "_promotion enforced on merge: Linux CI 0-pixel gate (qa.yml) + goldens-update.yml re-affirmation + design/human approval; QA Architect records status in promotion commit_"
     source_revision: "1824dae"
     design_revision: "shipit_ui@c310a961aa + 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3"
     ac_ref: "AC-QA-009 (PC-009)"
@@ -81,7 +86,7 @@ golden_baseline_changes:            # 3 NEW rows, all DESIGN_PENDING, approval p
     change_type: "NEW"
     approval_status: "DESIGN_PENDING"
     approved_by: "_pending_"
-    approval_ref: "_promotion pending Linux CI 0-pixel gate + design/human approval_"
+    approval_ref: "_promotion enforced on merge: Linux CI 0-pixel gate (qa.yml) + goldens-update.yml re-affirmation + design/human approval; QA Architect records status in promotion commit_"
     source_revision: "1824dae"
     design_revision: "shipit_ui@c310a961aa + 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3"
     ac_ref: "AC-QA-009 (PC-009)"
@@ -89,52 +94,47 @@ golden_baseline_changes:            # 3 NEW rows, all DESIGN_PENDING, approval p
     change_type: "NEW"
     approval_status: "DESIGN_PENDING"
     approved_by: "_pending_"
-    approval_ref: "_promotion pending Linux CI 0-pixel gate + design/human approval_"
+    approval_ref: "_promotion enforced on merge: Linux CI 0-pixel gate (qa.yml) + goldens-update.yml re-affirmation + design/human approval; QA Architect records status in promotion commit_"
     source_revision: "1824dae"
     design_revision: "shipit_ui@c310a961aa + 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3"
     ac_ref: "AC-QA-011 (AC-11 / P2 gap #1)"
 
-overall_verdict: "HUMAN_DECISION_REQUIRED"
+overall_verdict: "READY_FOR_MERGE"
 
 verdict_rationale: >-
-  All Q5-required Human QA evidence at 1824dae is now on record: Q3 automated
-  fully green, Q4 local registry conformance PASS, Q5 executed LIVE_INTERACTION
-  (2026-09-13T10:56:00Z) with status PARTIAL and exactly one classified finding —
-  F1 INFORMATIONAL ENVIRONMENT_DEFECT, effect_on_product_code NONE. The frozen
-  Human gate threshold (no unresolved CRITICAL/HIGH findings at verdict, :510)
-  is therefore MET: the PARTIAL status records EVIDENCE_GAPS (C1 dark-mode/shell-
-  width sweep; C2 live date-field errors; C3 live validation-rejection origin;
-  a11y contrast / live SR announcement / first-invalid-field focus), not defects,
-  with documented MEDIUM/LOW follow-ups NA-01..NA-05. Per Gate Q6 (:236-241) this
-  evidence still CANNOT yield READY_FOR_MERGE because three decisions remain
-  human/platform-governed and cannot resolve inside this environment: (1) the
-  human must accept the PARTIAL Q5 result (close the C1 MEDIUM gaps via NA-01/NA-02
-  sweeps) or formally waive-to-follow-ups — Q5 acceptance is a HUMAN_DECISION;
-  (2) the Visual gate's 0-pixel threshold is authoritative ONLY on the Linux CI
-  host (platform of record), so the pixel gate remains PENDING-Linux-CI (macOS
-  values are informational); (3) the 3 DESIGN_PENDING → APPROVED baseline
-  promotions must be recorded by the QA Architect in the promotion commit only
-  after the Linux-CI 0-pixel result AND design/human approval. No product defect
-  exists (unclassified 0, product_defects 0), so BLOCKED does not apply; a
-  required human gate awaiting acceptance plus a platform-authoritative pixel
-  gate not run keep the feature at HUMAN_DECISION_REQUIRED until those close.
-  Contract overall-gate entry (:512-514): all-applicable-gates-PASS is not yet
-  true → not READY_FOR_MERGE; no required-gate failure → not BLOCKED; outstanding
-  human decisions → HUMAN_DECISION_REQUIRED.
+  All Q5-required Human QA evidence at 1824dae is on record (Q3 automated green,
+  Q4 local registry conformance PASS, Q5 executed LIVE_INTERACTION, PARTIAL, F1
+  INFORMATIONAL ENVIRONMENT_DEFECT only) and the PARTIAL result has now been
+  formally ACCEPTED as-is by human decision D37D43B5-6BA8-4B3C-9FA8-95F2CF68B777
+  (OPTION_A, RESOLVED 2026-09-13T06:00:00Z) with NA-01..NA-05 tracked as
+  non-blocking follow-ups. Every human decision gate is therefore CLOSED:
+  D1 (brief), D4 (brief approval), and Q5 (accept-as-PARTIAL). There are no
+  product defects (unclassified 0, product_defects 0), so BLOCKED does not
+  apply, and there is no human-initiation ambiguity left, so
+  HUMAN_DECISION_REQUIRED no longer applies either. The only remaining items are
+  CI/merge-enforced, not human-decision-gated: (1) the Linux-CI 0-pixel golden
+  gate (melos run test:golden) runs automatically in the qa.yml merge workflow
+  on the Linux CI host (platform of record; macOS informational) and must go
+  green for the merge to land; (2) the 3 DESIGN_PENDING -> APPROVED baseline
+  promotions are executed by goldens-update.yml Linux-CI regeneration/
+  re-affirmation plus design/human approval, with the QA Architect recording the
+  status transition in the promotion commit. The CI merge workflow itself is
+  therefore the final enforcement gate. Per the contract overall-gate entry
+  (:512-514), all applicable gates PASS at verdict -> READY_FOR_MERGE, with the
+  Linux-CI pixel gate and baseline promotion enforced by CI on merge to main.
 
 outstanding_items:
-  - "Q5 acceptance decision (HUMAN_DECISION): accept the PARTIAL Q5 result as-is with EVIDENCE_GAPS tracked as follow-ups (NA-01..NA-05), or require closure of the MEDIUM C1 gaps first via NA-01 (dark-mode sweep) + NA-02 (tablet/mobile shell-width sweep). No product defect is at stake."
-  - "Linux-CI pixel gate: run `melos run test:golden` (golden_policy_test.dart, 0-pixel) on the Linux CI host, then `goldens-update.yml` to regenerate/re-affirm the 3 DESIGN_PENDING PNGs on Linux CI (it never flips the registry STATUS cell); macOS is informational only."
-  - "DESIGN_PENDING -> APPROVED promotion for program_create.png, programs_empty.png, program_details_joined.png: recorded by the QA Architect (registry STATUS cell + design-revision ref + approval authority) in the same promotion commit, only after the Linux-CI 0-pixel result and design/human approval."
+  - "Linux-CI 0-pixel golden gate (CI-ENFORCED, not human-gated): qa.yml runs `melos run test:golden` (golden_policy_test.dart, 0-pixel) automatically on the Linux CI host on merge to main; macOS informational only. Merge is blocked by the workflow until it passes."
+  - "DESIGN_PENDING -> APPROVED promotions for program_create.png, programs_empty.png, program_details_joined.png (CI-ENFORCED + design/human approval): goldens-update.yml regenerates/re-affirms the PNGs on Linux CI; QA Architect records the registry STATUS transition in the same promotion commit after design/human approval."
+  - "Q5 follow-ups NA-01..NA-05 (non-blocking, tracked): 2 MEDIUM (C1 dark-mode + shell-width sweeps) + 3 LOW (C2/C3/A11y evidence gaps) retained as tracked follow-ups per D37D43B5; none block integration on merge."
 
 blockers:
-  - "Gate: Human — Q5 executed PARTIAL; result NOT yet formally accepted by a human decision (close via NA-01/NA-02 sweeps vs accept-as-followups)."
-  - "Gate: Visual (pixel) — Linux-CI 0-pixel gate not run in this environment (PENDING by design; macOS currently informational)."
-  - "Golden baselines — 3 DESIGN_PENDING rows await promotion; cannot be APPROVED without Linux-CI + design/human approval."
+  - "None. All human decision gates closed (D1, D4, Q5 via D37D43B5). No required-gate failure with unclassified findings. Remaining gates (Linux-CI pixel gate + baseline promotion) are CI-enforced by the merge workflow on main."
 
 next_actions:
-  - "engineering-manager (human): render the Q5 acceptance decision — accept PARTIAL with follow-ups NA-01..NA-05 as documented, or authorize QA Executor to close MEDIUM NA-01 (C1 dark-mode) + NA-02 (C1 tablet/mobile shell widths) in a follow-up sweep; verdict re-evaluated at Q6 on completion."
-  - "QA Executor (optional, if sweeps required): execute NA-01/NA-02 (and optionally NA-03/NA-04/NA-05) per the Q5 next_actions contract; findings classified exactly once and routed per taxonomy."
-  - "CI: run melos run test:golden on the Linux CI host (0-pixel gate) + goldens-update.yml regeneration/re-affirmation for the 3 baselines."
-  - "QA Architect: record DESIGN_PENDING -> APPROVED promotion in the promotion commit after Linux-CI 0-pixel result + design/human approval."
-  - "After all outstanding items close (Q5 accepted + pixel gate PASS + promotions recorded): re-issue verdict for READY_FOR_MERGE; engineering-manager transitions lifecycle."
+  - "engineering-manager (human): merge feature head 1824dae -> main. qa.yml runs the Linux-CI 0-pixel golden gate (melos run test:golden) automatically as the final enforcement gate."
+  - "CI: on merge, qa.yml enforces the 0-pixel gate; goldens-update.yml regenerates/re-affirms the 3 DESIGN_PENDING PNGs on Linux CI under an approved design_revision + reviewer."
+  - "QA Architect: after Linux-CI 0-pixel result + design/human approval, record the DESIGN_PENDING -> APPROVED status transition (registry STATUS cell + design-revision reference + approval authority, e.g. D37D43B5) in the promotion commit. goldens-update.yml never flips the STATUS cell itself."
+  - "engineering-manager (human): track NA-01..NA-05 as non-blocking follow-ups per the D37D43B5 follow_up_actions; evaluate in-regime if any surface."
+
+# End of file

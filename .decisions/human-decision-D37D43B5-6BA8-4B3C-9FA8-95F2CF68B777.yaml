@@ -1,0 +1,82 @@
+# Human Decision — D37D43B5-6BA8-4B3C-9FA8-95F2CF68B777
+
+decision_id: "D37D43B5-6BA8-4B3C-9FA8-95F2CF68B777"
+type: "QA"
+status: "RESOLVED"
+question: "How should the PARTIAL Gate Q5 Human QA result (FEAT-PROGRAM-CREATE-001) be handled?"
+
+context:
+  summary: >-
+    Gate Q5 executed LIVE_INTERACTION (~24 min) at HEAD 8486381 vs feature
+    head 1824dae (result 9ef1bdf9-67f6-47bf-9311-3894c7f140c1). Result is
+    PARTIAL: C4 PASS; C1/C2/C3 PARTIAL evidence-gaps (no failures); usability
+    2 PASS/2 PARTIAL; a11y semantics labels + initial-focus PASS, contrast
+    EVIDENCE_GAP, targets/live-region/first-invalid-focus PARTIAL; upstream
+    AppDatePicker gap VERIFIED reported + not regressed. Single finding F1 is
+    an INFORMATIONAL ENVIRONMENT_DEFECT (DWDS/webdev injected-client cast),
+    effect on product code NONE. Zero CRITICAL/HIGH/LOW product findings.
+    Contract Human-gate threshold at verdict ("No unresolved CRITICAL/HIGH
+    findings") is met. Q6 re-verdict (rev 2) is HUMAN_DECISION_REQUIRED solely
+    pending this acceptance decision + Linux-CI pixel gate + DESIGN_PENDING
+    promotions.
+  blocking_work_item:
+    item_type: "QA_VERDICT"
+    item_id: "A9108212-3417-4E14-B3BA-7BBED3EC2B54"
+    item_ref: "FEAT-PROGRAM-CREATE-001 Gate Q5 result acceptance"
+  evidence:
+    documents:
+      - type: "QA_RESULT"
+        id: "9ef1bdf9-67f6-47bf-9311-3894c7f140c1"
+        url: "docs/qa/results/qa-result-q5-human.yaml"
+      - type: "QA_SESSION_LOG"
+        url: "docs/qa/results/qa-session-q5-human.md"
+      - type: "QA_VERDICT"
+        version: 2
+        url: "docs/qa/results/qa-verdict-q6.yaml"
+    quantitative_data:
+      - metric: "charters pass"
+        value: "1 (C4); C1/C2/C3 evidence-gap partials"
+        source: "qa-result-q5-human.yaml"
+      - metric: "product findings"
+        value: "0 (CRITICAL/HIGH/LOW); 1 INFORMATIONAL ENVIRONMENT_DEFECT F1"
+        source: "qa-result-q5-human.yaml"
+      - metric: "human-gate threshold"
+        value: "MET (no unresolved CRITICAL/HIGH at verdict)"
+        source: "qa-contract.md:510"
+
+options:
+  - option_id: "OPTION_A"
+    label: "Accept PARTIAL as-is"
+    description: "Accept Q5 with EVIDENCE_GAPS documented as follow-ups NA-01..NA-05 (2 MEDIUM + 3 LOW). No code changes. Proceed to Linux-CI pixel gate + DESIGN_PENDING promotions."
+    implications: "Human gate closes; follow-ups tracked; feature advances; fastest path."
+    estimated_effort: "0"
+    risk_level: "LOW"
+  - option_id: "OPTION_B"
+    label: "Close MEDIUM gaps first"
+    description: "Execute NA-01 (C1 dark mode) + NA-02 (C1 tablet/mobile 600/800/1200px shell widths) before accepting Q5."
+    implications: "Adds session + Q5 re-execution; no code changes expected."
+    estimated_effort: "0.25 day"
+    risk_level: "LOW"
+  - option_id: "OPTION_C"
+    label: "Close all five gaps"
+    description: "Execute NA-01..NA-05 (also live date-field errors, live validation-rejection, SR announcement + first-invalid focus)."
+    implications: "Maximum rigor; slowest; no code changes expected."
+    estimated_effort: "0.5 day"
+    risk_level: "LOW"
+
+resolution:
+  selected_option: "OPTION_A"
+  decided_by: "Human (QA lead via decision prompt) — 'Accept PARTIAL as-is (Recommended)'"
+  decided_at: "2026-09-13T06:00:00Z"
+  rationale: "PARTIAL reflects evidence gaps, not failures; no product defect; Human-gate threshold met. EVIDENCE_GAPS accepted with NA-01..NA-05 tracked as follow-ups."
+  follow_up_actions:
+    - action: "Track NA-01..NA-05 as follow-ups; evaluate in-regime if any surface"
+      owner: "engineering-manager"
+      due_date: ""
+    - action: "Proceed to Linux-CI 0-pixel gate + goldens-update.yml re-affirmation; QA Architect records DESIGN_PENDING -> APPROVED in promotion commit after Linux-CI + design/human approval"
+      owner: "ci/qa-architect"
+      due_date: ""
+
+created_by: "engineering-manager"
+created_at: "2026-09-13T06:00:00Z"
+updated_at: "2026-09-13T06:00:00Z"
