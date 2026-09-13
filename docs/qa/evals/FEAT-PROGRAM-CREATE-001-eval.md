@@ -122,9 +122,10 @@ generated contract → review → QA evidence → human approval.
   NA-04 C3 live validation-rejection origin (LOW); NA-05 a11y SR announcement +
   first-invalid-field focus verify (LOW).
 - Linux-CI pixel gate **CLOSED 2026-09-13**: the 3 DESIGN_PENDING baselines
-  were promoted to **APPROVED** via `goldens-update.yml` (run `34763110654`,
-  reviewer tariq, decision `CD86C1A3-3BF7-4148-9B85-38035C73684F`); main CI
-  re-runs qa.yml against the APPROVED baselines.
+  were promoted to **APPROVED** via `goldens-update.yml` (run `34763110654` →
+  `a5a5c15`, reviewer tariq, decision `CD86C1A3-3BF7-4148-9B85-38035C73684F`);
+  QA Architect recorded the transition at `0def076`. qa.yml re-ran on
+  `0def076` and passed all jobs (run `34763722307`) — **main merge-clean**.
 
 ## Learning capture
 
