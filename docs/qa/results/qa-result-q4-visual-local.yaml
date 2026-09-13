@@ -1,0 +1,90 @@
+# QA Result — DF338142-83FE-4ED2-BB45-9B79DE37E518
+
+# Gate Q4 — Visual QA Execution, local half (FEAT-PROGRAM-CREATE-001)
+# Executed by QA Executor per frozen QA Contract c0b70155-b400-424e-b52b-00b09254c082.
+# Local registry-conformance is host-agnostic and PASS. The Linux-CI pixel gate
+# (golden_policy_test.dart, `melos run test:golden`) is the platform-of-record
+# 0-pixel gate and is NOT executed here BY DESIGN (macOS diffs are informational,
+# not failures); it remains PENDING until the Linux CI host runs it.
+
+result_id: "DF338142-83FE-4ED2-BB45-9B79DE37E518"
+contract_id: "c0b70155-b400-424e-b52b-00b09254c082"
+execution_type: "VISUAL"
+target_revision: "1824dae"
+target_environment: "QA"
+status: "PASS"                       # registry conformance PASS; Linux-CI 0-pixel gate PENDING (not executed here by design)
+executed_by: "qa-executor-feat-program-create-001"
+executed_at: "2026-09-13T07:02:51Z"
+duration_seconds: 30
+
+revision_pinning:
+  branch: "main"
+  base_sha: "2fb3bf1"
+  head_sha: "1824dae"
+  full_head: "1824daedecea263e2caa08ad8ee188e16f53b0f5"
+
+summary:
+  total_tests: 1                     # golden_registry_test.dart registry-conformance suite (runs untagged inside test:flutter on any host)
+  passed: 1
+  failed: 0
+  skipped: 0
+  flaky: 0
+
+evidence:
+  test_reports:
+    - "docs/qa/results/evidence-q3-test-flutter.log"   # registry conformance executed inside `melos run test:flutter` (121/121 green)
+  screenshots: []
+  videos: []
+  logs:
+    - "docs/qa/results/evidence-q3-test-flutter.log"
+  traces: []
+
+registry_conformance:
+  status: "PASS"
+  source: "apps/app/test/goldens/goldens_registry.md + apps/app/test/goldens/golden_registry_test.dart (untagged, host-agnostic, part of melos run test:flutter)"
+  design_pending_rows_verified:
+    - baseline: "goldens/program_create.png"
+      file_present: true             # apps/app/test/goldens/goldens/program_create.png
+      status_cell: "DESIGN_PENDING"
+      design_revision: "shipit_ui@c310a961aa + 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3"
+      test_ref: "test/goldens/program_create_golden_test.dart (renders ProgramCreateScreen idle empty form, AC-QA-009)"
+      app_client_ref: "screen state built on ProgramCreateBloc/ProgramsRepository marshal through package:app_client protocol (program_converters.dart, programs_repository.dart)"
+    - baseline: "goldens/programs_empty.png"
+      file_present: true             # apps/app/test/goldens/goldens/programs_empty.png
+      status_cell: "DESIGN_PENDING"
+      design_revision: "shipit_ui@c310a961aa + 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3"
+      test_ref: "test/goldens/programs_empty_golden_test.dart (ProgramsView empty state, message + Create program CTA + app-bar create action, AC-QA-009)"
+      app_client_ref: "ProgramsView/ProgramsBloc backed by ProgramsRepository -> package:app_client protocol"
+    - baseline: "goldens/program_details_joined.png"
+      file_present: true             # apps/app/test/goldens/goldens/program_details_joined.png
+      status_cell: "DESIGN_PENDING"
+      design_revision: "shipit_ui@c310a961aa + 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3"
+      test_ref: "test/goldens/program_details_joined_golden_test.dart (ProgramDetailsView loaded+joined: Joined badge, Cancel Membership CTA, AC-QA-011 / P2 gap #1)"
+      app_client_ref: "ProgramDetailsBloc/Program model via ProgramsRepository -> package:app_client protocol; isJoined from membership protocol"
+  approved_regression_rows_present: ["goldens/login_sign_in.png", "goldens/login_register.png", "goldens/program_details.png"]
+  golden_registry_test_green: true   # standalone re-run: 'golden baseline registry conformance ... +1: All tests passed!'
+
+pixel_gate:
+  status: "PENDING"                  # 0-pixel Linux-CI gate NOT executed here by design
+  platform_of_record: "Linux CI host"
+  command: "melos run test:golden"   # golden_policy_test.dart (@Tags golden) — MacOS exclusions by design via --exclude-tags golden in test:flutter
+  local_note: "macOS rasterizer renders text ~1% differently (CoreText vs FreeType); local pixel diffs are informational, NOT failures, and never 'fixed' with --update-goldens. No baseline was regenerated or promoted on this host."
+
+failures: []
+
+golden_baseline_changes:
+  # NONE performed. Executor is read-only wrt golden baselines. The three
+  # DESIGN_PENDING rows remain DESIGN_PENDING; promotion (DESIGN_PENDING ->
+  # APPROVED) is a QA-Architect-recorded transition, Linux-CI-gated, after
+  # design/human approval (AC-QA-009/011 + QA_GOVERNANCE Golden Baseline
+  # Governance). - No PNG touched, no --update-goldens, goldens-update.yml not run.
+
+gate_results:
+  unit: "N/A"
+  integration: "N/A"
+  contract: "N/A"
+  e2e: "N/A"
+  visual: "PASS"                     # local = registry-conformance PASS (host-agnostic); Linux-CI pixel gate PENDING (not executed here by design — macOS informational)
+  human: "N/A"                       # REQUIRED per contract but a separate HUMAN_DECISION gate (Q5); initiation is not the executor's call
+
+overall_verdict: "PENDING_Q6"        # Executor does NOT classify/approve. Q6 QA Architect verdict after Q5 human gate.

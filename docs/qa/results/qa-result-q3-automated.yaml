@@ -1,0 +1,83 @@
+# QA Result — D26E7F90-CC03-4AA4-944B-70C66BCB4273
+
+# Gate Q3 — Automated QA Execution (FEAT-PROGRAM-CREATE-001)
+# Executed by QA Executor per frozen QA Contract c0b70155-b400-424e-b52b-00b09254c082.
+
+result_id: "D26E7F90-CC03-4AA4-944B-70C66BCB4273"
+contract_id: "c0b70155-b400-424e-b52b-00b09254c082"
+execution_type: "AUTOMATED"
+target_revision: "1824dae"           # git rev-parse --short HEAD; head of feature range 2fb3bf1..1824dae
+target_environment: "QA"
+status: "PASS"
+executed_by: "qa-executor-feat-program-create-001"
+executed_at: "2026-09-13T07:02:51Z"
+duration_seconds: 60                 # wall clock: analyze + generate:check + test:server + test:unit + test:flutter
+
+revision_pinning:
+  branch: "main"
+  base_sha: "2fb3bf1"                # QA contract freeze commit (Gate Q1/Q2)
+  head_sha: "1824dae"
+  full_head: "1824daedecea263e2caa08ad8ee188e16f53b0f5"
+  working_tree_clean_at_execution: true   # verified pre-run and post generate:check
+
+summary:
+  total_tests: 156                   # test:server 33 + test:unit 2 + test:flutter 121
+  passed: 156
+  failed: 0
+  skipped: 0                         # goldens excluded by tag by design (--exclude-tags golden); e2e NOT_IN_DEFAULT_PIPELINE (see gate_results.e2e)
+  flaky: 0
+
+evidence:
+  test_reports:
+    - "docs/qa/results/evidence-q3-test-server.log"    # melos run test:server (raw tail: '00:10 +33: All tests passed!')
+    - "docs/qa/results/evidence-q3-test-unit.log"      # melos run test:unit (raw tail: '00:00 +2: All tests passed!')
+    - "docs/qa/results/evidence-q3-test-flutter.log"   # melos run test:flutter (raw tail: '00:20 +121: All tests passed!')
+    - "docs/qa/results/evidence-q3-analyze.log"        # melos run analyze (3 packages 'No issues found!')
+    - "docs/qa/results/evidence-q3-generate-check.log" # melos run generate:check ('Generated output matches .generated_manifest.json.'; tree clean)
+  screenshots: []
+  videos: []
+  logs:
+    - "docs/qa/results/evidence-q3-test-server.log"
+    - "docs/qa/results/evidence-q3-test-flutter.log"
+  traces: []
+
+evidence_details:
+  deterministic_evidence_required: true
+  raw_melos_output_tails:
+    analyze:
+      result: "PASS — 0 issues"
+      output: "[shipit_golden_app]: No issues found! / [shipit_golden_server]: No issues found! / [app_client]: No issues found!"
+    generate_check:
+      result: "PASS"
+      output: "Generated output matches .generated_manifest.json."
+      post_condition: "git status --porcelain empty (working tree clean); git diff HEAD empty"
+    test_server:
+      result: "PASS"
+      counts: "total=33 passed=33 failed=0"
+      output: "00:10 +33: All tests passed!"
+      pc010_green:
+        - "+6 -> +7: 'then exactly five programs, one household and five memberships are persisted' (N=5 concurrent Future.wait; one household, N programs, one membership per program, all on the single household, createdBy == owner)"
+        - "+7 -> +8: 'then the whole create rolls back — no orphan program and no partial household' (atomicity; duplicate membership insert aborts the caller-owned transaction)"
+    test_unit:
+      result: "PASS"
+      counts: "total=2 passed=2 failed=0"
+      output: "00:00 +2: All tests passed!"   # app_client generated protocol round-trips, incl. Program (createdBy field)
+    test_flutter:
+      result: "PASS"
+      counts: "total=121 passed=121 failed=0"
+      output: "00:20 +121: All tests passed!"
+      note: "== EXACT expected count (121). Goldens excluded by tag by design (--exclude-tags golden); pixel comparisons did NOT run (Linux-CI-only). Registry conformance golden_registry_test.dart IS included (untagged): JSON-run attribution verified all 23 untagged suite files executed (144 testStart events = 23 'loading' pseudo-tests + 121 real tests, all success, exit 0). Compact-reporter log path attribution is unreliable under concurrent isolates; explicit full-path re-run of all untagged files independently reproduced 121/121/exit-0."
+
+failures: []
+
+golden_baseline_changes: []          # NONE performed — executor is read-only wrt goldens; no --update-goldens, no promotion, PNGs untouched.
+
+gate_results:
+  unit: "PASS"                       # 121/121 test:flutter (goldens excluded by design); BLoC/translator/repository/widget suites green
+  integration: "PASS"                # 33/33 test:server (PostgreSQL-backed), incl. PC-010 concurrency + rollback (P2 gap #2 closure)
+  contract: "PASS"                   # generate:check clean at tested SHA (no tracked diff + manifest hash match); app_client protocol round-trips green; error_translator unchanged
+  e2e: "N/A"                         # NOT_IN_DEFAULT_PIPELINE — opt-in/device-gated per contract; no headless device/live-server in this environment; flagged, never silently asserted
+  visual: "N/A"                      # local half recorded in qa-result-q4-visual-local.yaml (registry conformance PASS; Linux-CI pixel gate PENDING by design)
+  human: "N/A"                       # separate Q5 gate (HUMAN_DECISION initiation); not part of this execution
+
+overall_verdict: "PENDING_Q6"        # Executor does NOT classify/approve. Verdict (READY_FOR_MERGE | BLOCKED | HUMAN_DECISION_REQUIRED) is the QA Architect's at Gate Q6 after Q5.

@@ -1,0 +1,74 @@
+# Human Decision — 3BDFEA41-2C41-41C5-965E-41CB9ECE8FED
+
+decision_id: "3BDFEA41-2C41-41C5-965E-41CB9ECE8FED"
+type: "QA"
+status: "RESOLVED"
+question: "Initiate Gate Q5 Human QA now? (WCAG AA audit + exploratory charters C1-C4 per the frozen QA Contract — REQUIRED before a READY_FOR_MERGE verdict)"
+
+context:
+  summary: >-
+    Feature FEAT-PROGRAM-CREATE-001, QA lane. Automated (Q3) + local visual
+    (Q4) execution completed green by the QA Executor at 1824dae: analyze clean,
+    generate:check drift gate clean, 33 server tests (incl. PC-010 concurrency +
+    rollback), 2 app_client unit tests, 121 Flutter tests, golden registry
+    conformance PASS, E2E flagged opt-in/device-gated (NOT_IN_DEFAULT_PIPELINE).
+    The frozen QA Contract (c0b70155-b400-424e-b52b-00b09254c082) declares
+    Human QA REQUIRED with WCAG AA + exploratory charters C1-C4 (Q5 gate, per
+    QA_GOVERNANCE.md). Initiation is a human decision via structured UI.
+  blocking_work_item:
+    item_type: "QA_VERDICT"
+    item_id: "A9108212-3417-4E14-B3BA-7BBED3EC2B54"
+    item_ref: "FEAT-PROGRAM-CREATE-001 Gate Q5 Human QA initiation"
+  evidence:
+    documents:
+      - type: "QA_CONTRACT"
+        id: "c0b70155-b400-424e-b52b-00b09254c082"
+        url: "docs/qa/contracts/FEAT-PROGRAM-CREATE-001-qa-contract.md"
+      - type: "QA_RESULT"
+        id: "q3-automated"
+        url: "docs/qa/results/qa-result-q3-automated.yaml"
+      - type: "QA_RESULT"
+        id: "q4-visual-local"
+        url: "docs/qa/results/qa-result-q4-visual-local.yaml"
+    quantitative_data:
+      - metric: "Automated gate (Q3)"
+        value: "all green (33 server, 121 Flutter, 2 unit; analyze + generate:check clean)"
+        source: "qa-executor-feat-program-create-001 at 1824dae"
+      - metric: "Local visual gate (Q4)"
+        value: "registry conformancs PASS; pixel gate Linux-CI-authoritative"
+        source: "qa-executor-feat-program-create-001 at 1824dae"
+      - metric: "Human QA charter scope"
+        value: "WCAG AA + charters C1-C4 (entry points, full journey, failure path, joined state)"
+        source: "docs/qa/contracts/FEAT-PROGRAM-CREATE-001-qa-contract.md (Human QA section)"
+  recommendation:
+    recommended_option: "OPTION_A"
+    rationale: "Frozen contract marks Human QA REQUIRED for READY_FOR_MERGE; deferral keeps the verdict at HUMAN_DECISION_REQUIRED rather than closing the feature."
+    confidence: "HIGH"
+
+options:
+  - option_id: "OPTION_A"
+    label: "Initiate Human QA (Q5)"
+    description: "Run the WCAG AA audit + exploratory charters C1-C4 now, coordinated by the QA Executor."
+    implications: "Human QA session runs; findings classified exactly once and routed; enables READY_FOR_MERGE once clean."
+    estimated_effort: "1 - 0.5 day"
+    risk_level: "LOW"
+  - option_id: "OPTION_B"
+    label: "Defer Human QA"
+    description: "Postpone the required Human QA session; keep the automated/local-visual results as the current evidence record."
+    implications: "Overall verdict stays HUMAN_DECISION_REQUIRED; feature cannot claim READY_FOR_MERGE until the Q5 session executes."
+    estimated_effort: "0"
+    risk_level: "LOW"
+
+resolution:
+  selected_option: "OPTION_B"
+  decided_by: "Human (product/design lead) via structured question UI"
+  decided_at: "2026-09-13T03:15:00Z"
+  rationale: "Selected OPTION_B - Defer Human QA."
+  follow_up_actions:
+    - action: "Origins Q5 Human QA (WCAG AA + C1-C4) before feature-level READY_FOR_MERGE; Q6 verdict records HUMAN_DECISION_REQUIRED meanwhile"
+      owner: "engineering-manager"
+      due_date: ""
+
+created_by: "engineering-manager"
+created_at: "2026-09-13T03:15:00Z"
+updated_at: "2026-09-13T03:15:00Z"
