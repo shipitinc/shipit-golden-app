@@ -1,0 +1,106 @@
+# QA Verdict — 47645A7A-93E9-44D3-8AD2-21422245CAAD
+
+# Gate Q6 — QA Verdict & Classification (FEAT-PROGRAM-CREATE-001)
+# Authored by QA Architect per frozen QA Contract c0b70155-b400-424e-b52b-00b09254c082
+# and AEF QA_GOVERNANCE.md Gate Q6 (:236-241).
+
+verdict_id: "47645A7A-93E9-44D3-8AD2-21422245CAAD"
+contract_id: "c0b70155-b400-424e-b52b-00b09254c082"
+design_contract_ref: "8D9E1F3C-77CC-45C1-9F2B-47987EC9B8BD"
+feature: "FEAT-PROGRAM-CREATE-001 (Program Creation)"
+target_revision: "1824dae"           # head of feature range 2fb3bf1..1824dae (full 1824daedecea263e2caa08ad8ee188e16f53b0f5)
+target_environment: "QA"
+executed_by: "QA Architect"
+executed_at: "2026-09-13T10:20:41Z"
+status: "ISSUED"
+
+provenance:
+  branch: "main"
+  base_sha: "2fb3bf1"               # QA contract freeze commit (Gate Q1/Q2)
+  feature_head: "1824dae"
+  execution_evidence:
+    q3: "docs/qa/results/qa-result-q3-automated.yaml"      # result D26E7F90-CC03-4AA4-944B-70C66BCB4273 (PASS)
+    q4: "docs/qa/results/qa-result-q4-visual-local.yaml"   # result DF338142-83FE-4ED2-BB45-9B79DE37E518 (local PASS; Linux-CI pixel gate PENDING by design)
+    q5: ".decisions/human-decision-3BDFEA41-2C41-41C5-965E-41CB9ECE8FED.yaml"   # Human QA DEFERRED (OPTION_B), 2026-09-13T03:15:00Z
+
+gate_results:
+  unit: "PASS"                      # 121/121 test:flutter (goldens excluded by tag); BLoC/translator/repository/widget suites green at 1824dae
+  integration: "PASS"               # 33/33 test:server, PostgreSQL-backed; incl. PC-010 concurrency (N=5 → one household, N programs, one membership per program) + rollback atomicity
+  contract: "PASS"                  # generate:check clean at tested SHA (no tracked diff + manifest hash match); app_client protocol round-trips green; error_translator unchanged; no new protocol model
+  e2e: "NOT_IN_DEFAULT_PIPELINE"    # opt-in/device-gated per contract; no headless device/live server in this environment; flagged, not silently asserted; widget-level equivalents green (unit gate)
+  visual: "PASS (local) + PENDING (Linux-CI pixel gate)"
+    # local: golden registry conformance PASS (golden_registry_test.dart, host-agnostic, inside test:flutter)
+    # Linux-CI: 0-pixel gate (melos run test:golden, golden_policy_test.dart) NOT executed on macOS by design — platform-of-record pending
+  human: "PENDING (deferred 3BDFEA41-2C41-41C5-965E-41CB9ECE8FED)"
+    # REQUIRED per frozen contract (WCAG AA + exploratory charters C1-C4, Q5 gate); human deferred initiation 2026-09-13T03:15:00Z
+
+failures: []                        # NONE found in automated (Q3) or local-visual (Q4) evidence at 1824dae
+
+failure_classification:
+  unclassified: 0
+  classified: 0
+  note: "No failures to classify; PC-010/P2-gap regressions encoded as first-class tests and green. Regression policy not triggered."
+
+golden_baseline_changes:            # 3 NEW rows, all DESIGN_PENDING, approval pending — QA Architect records any promotion only after Linux-CI 0-pixel gate + design/human approval
+  - baseline_id: "goldens/program_create.png"
+    change_type: "NEW"
+    approval_status: "DESIGN_PENDING"
+    approved_by: "_pending_"
+    approval_ref: "_promotion pending Linux CI 0-pixel gate + design/human approval_"
+    source_revision: "1824dae"
+    design_revision: "shipit_ui@c310a961aa + 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3"
+    ac_ref: "AC-QA-009 (PC-009)"
+  - baseline_id: "goldens/programs_empty.png"
+    change_type: "NEW"
+    approval_status: "DESIGN_PENDING"
+    approved_by: "_pending_"
+    approval_ref: "_promotion pending Linux CI 0-pixel gate + design/human approval_"
+    source_revision: "1824dae"
+    design_revision: "shipit_ui@c310a961aa + 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3"
+    ac_ref: "AC-QA-009 (PC-009)"
+  - baseline_id: "goldens/program_details_joined.png"
+    change_type: "NEW"
+    approval_status: "DESIGN_PENDING"
+    approved_by: "_pending_"
+    approval_ref: "_promotion pending Linux CI 0-pixel gate + design/human approval_"
+    source_revision: "1824dae"
+    design_revision: "shipit_ui@c310a961aa + 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3"
+    ac_ref: "AC-QA-011 (AC-11 / P2 gap #1)"
+
+overall_verdict: "HUMAN_DECISION_REQUIRED"
+
+verdict_rationale: >-
+  Automated (Q3) and local-visual (Q4) evidence at 1824dae is fully green
+  (156 automated tests, generate:check drift gate clean, worker-tree clean,
+  golden registry conformance PASS, zero classified failures). This evidence
+  alone CANNOT yield READY_FOR_MERGE for two contract-governed reasons:
+  (1) the frozen QA Contract (Gate Criteria 'Human' row, :510) declares Human
+  QA REQUIRED — WCAG AA audit + exploratory charters C1-C4 via the Q5 gate —
+  and the human deferred initiation (OPTION_B, decision 3BDFEA41-…,
+  2026-09-13T03:15:00Z), so the human gate is PENDING-deferred, not passed;
+  (2) the Visual gate's 0-pixel threshold is authoritative ONLY on the Linux CI
+  host (platform of record); local macOS registry conformance passing is
+  necessary but not sufficient, so the pixel gate remains PENDING-Linux-CI.
+  Per Queue_GOVERNANCE Gate Q6 (:236-241), a required human gate not executed
+  plus a platform-authoritative pixel gate not run keeps the feature at
+  HUMAN_DECISION_REQUIRED — not BLOCKED (no failures), not READY_FOR_MERGE
+  (required gates outstanding). Contract overall-gate entry (:512-514): no
+  required-gate failure with unclassified failures → not BLOCKED; human
+  initiation outstanding → HUMAN_DECISION_REQUIRED.
+
+outstanding_items:
+  - "Q5 Human QA (WCAG AA + exploratory charters C1-C4) REQUIRED before READY_FOR_MERGE; initiation deferred by human (decision 3BDFEA41-2C41-41C5-965E-41CB9ECE8FED)."
+  - "Linux-CI pixel gate: run `melos run test:golden` (golden_policy_test.dart, 0-pixel) on the Linux CI host, then `goldens-update.yml` to regenerate/re-affirm the 3 DESIGN_PENDING PNGs (it never flips registry STATUS)."
+  - "DESIGN_PENDING -> APPROVED promotion for program_create.png, programs_empty.png, program_details_joined.png: recorded by the QA Architect (registry STATUS cell + design-revision ref + approval authority) in the same promotion commit, only after the Linux-CI 0-pixel result and design/human approval."
+
+blockers:
+  - "Gate: Human — Q5 Human QA not initiated (human deferred; PENDING)."
+  - "Gate: Visual (pixel) — Linux-CI 0-pixel gate not run in this environment (PENDING by design, macOS currently informational)."
+  - "Golden baselines — 3 DESIGN_PENDING rows await promotion; cannot be APPROVED without Linux-CI + design/human approval."
+
+next_actions:
+  - "engineering-manager: initiate/defer Q5 Human QA (WCAG AA + C1-C4) per structured human decision; verdict re-evaluated at Q6 on completion."
+  - "QA Executor: execute Q5 Human QA when initiated; classify findings exactly once and route per taxonomy (IMPLEMENTATION_DEFECT -> CORRECTION, DESIGN_DEFECT -> DCR, REQUIREMENT_GAP -> HUMAN_DECISION, ENVIRONMENT_DEFECT -> INFRA_REMEDIATION)."
+  - "CI: run melos run test:golden on the Linux CI host (0-pixel gate) + goldens-update.yml regeneration/re-affirmation for the 3 baselines."
+  - "QA Architect: record DESIGN_PENDING -> APPROVED promotion in the promotion commit after Linux-CI 0-pixel result + design/human approval."
+  - "After outstanding items close (human gate PASS + pixel gate PASS + promotions recorded): re-issue verdict for READY_FOR_MERGE; engineering-manager transitions lifecycle."
