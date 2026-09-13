@@ -37,6 +37,7 @@ void main() {
               Program(
                 name: 'Summer Camp 2026',
                 description: 'Annual summer camp for families',
+                createdBy: 'programs-member-1',
                 startDate: DateTime(2026, 6, 15),
                 endDate: DateTime(2026, 8, 15),
                 status: ProgramStatus.active,
@@ -44,6 +45,7 @@ void main() {
               Program(
                 name: 'Winter Workshop 2026',
                 description: 'Creative winter activities',
+                createdBy: 'programs-member-1',
                 startDate: DateTime(2026, 12, 1),
                 endDate: DateTime(2026, 12, 20),
                 status: ProgramStatus.upcoming,

@@ -25,6 +25,7 @@ void main() {
         id: 3,
         name: 'Summer Camp',
         description: 'Annual summer camp',
+        createdBy: 'creator-1',
         startDate: DateTime.utc(2026, 6, 15),
         endDate: DateTime.utc(2026, 8, 15),
         status: api.ProgramStatus.active,
@@ -35,6 +36,7 @@ void main() {
 
       expect(restored.id, 3);
       expect(restored.name, 'Summer Camp');
+      expect(restored.createdBy, 'creator-1');
       expect(restored.status, api.ProgramStatus.active);
     });
   });

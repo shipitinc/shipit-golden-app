@@ -81,6 +81,7 @@ Future<void> seedPrograms(Session session) async {
     Program(
       name: 'Summer Camp 2024',
       description: 'Annual summer camp for families',
+      createdBy: seedOwnerId,
       startDate: DateTime(2024, 6, 15),
       endDate: DateTime(2024, 8, 15),
       status: ProgramStatus.active,
@@ -88,6 +89,7 @@ Future<void> seedPrograms(Session session) async {
     Program(
       name: 'Winter Workshop',
       description: 'Creative winter activities',
+      createdBy: seedOwnerId,
       startDate: DateTime(2024, 12, 1),
       endDate: DateTime(2024, 12, 20),
       status: ProgramStatus.upcoming,

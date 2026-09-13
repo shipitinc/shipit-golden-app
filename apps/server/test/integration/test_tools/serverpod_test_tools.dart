@@ -669,6 +669,45 @@ class _ProgramsEndpoint {
     });
   }
 
+  _i3.Future<_i7.Program> createProgram(
+    _i1.TestSessionBuilder sessionBuilder,
+    String name,
+    String description,
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'programs',
+            method: 'createProgram',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'programs',
+          methodName: 'createProgram',
+          parameters: _i1.testObjectToJson({
+            'name': name,
+            'description': description,
+            'startDate': startDate,
+            'endDate': endDate,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i7.Program>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _i3.Future<_i8.ProgramMember> joinProgram(
     _i1.TestSessionBuilder sessionBuilder,
     int programId,

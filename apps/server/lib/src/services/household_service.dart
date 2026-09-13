@@ -33,47 +33,66 @@ class HouseholdService {
   /// concurrent first-accesses for the same owner converge on one household —
   /// a conflicting insert is silently skipped and the winning row is re-read,
   /// so a duplicate household can never be created.
+  ///
+  /// The optional [transaction] mirrors [findByOwner]: when supplied, the
+  /// find/insert/member-insert run inside the caller-owned transaction so the
+  /// auto-join can share the atomic scope of its surrounding endpoints (see
+  /// `ProgramsEndpoint.createProgram`). Nested callers must NOT pass their own
+  /// transaction — that would open a second pool connection and break
+  /// atomicity.
   static Future<Household> getOrCreateFor(
     Session session,
-    String ownerId,
-  ) async {
-    return session.db.transaction<Household>((transaction) async {
-      final existing = await findByOwner(
-        session,
-        ownerId,
-        transaction: transaction,
-      );
-      if (existing != null) return existing;
-
-      final created = await Household.db.insert(
-        session,
-        [
-          Household(
-            name: 'My Household',
-            ownerId: ownerId,
-            createdAt: DateTime.now(),
-          ),
-        ],
-        transaction: transaction,
-        ignoreConflicts: true,
-      );
-      if (created.isEmpty) {
-        // A concurrent request created the household first; return the winner.
-        return (await findByOwner(session, ownerId, transaction: transaction))!;
-      }
-
-      await HouseholdMember.db.insertRow(
-        session,
-        HouseholdMember(
-          householdId: created.first.id!,
-          name: 'Owner',
-          email: '',
-          role: HouseholdMemberRole.owner,
-          joinedAt: DateTime.now(),
-        ),
-        transaction: transaction,
-      );
-      return created.first;
+    String ownerId, {
+    Transaction? transaction,
+  }) async {
+    if (transaction != null) {
+      return _getOrCreateInTransaction(session, ownerId, transaction);
+    }
+    return session.db.transaction<Household>((transaction) {
+      return _getOrCreateInTransaction(session, ownerId, transaction);
     });
+  }
+
+  static Future<Household> _getOrCreateInTransaction(
+    Session session,
+    String ownerId,
+    Transaction transaction,
+  ) async {
+    final existing = await findByOwner(
+      session,
+      ownerId,
+      transaction: transaction,
+    );
+    if (existing != null) return existing;
+
+    final created = await Household.db.insert(
+      session,
+      [
+        Household(
+          name: 'My Household',
+          ownerId: ownerId,
+          createdAt: DateTime.now(),
+        ),
+      ],
+      transaction: transaction,
+      ignoreConflicts: true,
+    );
+    if (created.isEmpty) {
+      // A concurrent request created the household first; return the winner.
+      return (await findByOwner(session, ownerId, transaction: transaction))!;
+    }
+
+    await HouseholdMember.db.insertRow(
+      session,
+      HouseholdMember(
+        householdId: created.first.id!,
+        name: 'Owner',
+        email: '',
+        role: HouseholdMemberRole.owner,
+        joinedAt: DateTime.now(),
+      ),
+      transaction: transaction,
+    );
+    return created.first;
   }
 }

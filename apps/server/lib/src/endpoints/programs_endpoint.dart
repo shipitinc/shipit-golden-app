@@ -7,7 +7,9 @@ import '../services/household_service.dart';
 ///
 /// Programs are global (not scoped to a household) while membership is
 /// household-scoped: each household joins a program at most once, and the
-/// authenticated user's household is auto-created on first join.
+/// authenticated user's household is auto-created on first join —
+/// automatically at create time ([createProgram]) and on demand when joining
+/// an existing program ([joinProgram]).
 class ProgramsEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
@@ -21,6 +23,66 @@ class ProgramsEndpoint extends Endpoint {
   /// exist.
   Future<Program?> getById(Session session, int programId) async {
     return Program.db.findById(session, programId);
+  }
+
+  /// Creates a program owned by the authenticated caller and auto-joins the
+  /// caller's household to it in one atomic transaction.
+  ///
+  /// Validation (in order, each surfacing as a plain 400 via the Serverpod
+  /// framework [InvalidParametersException]): [name] trimmed non-blank,
+  /// [startDate] present, [endDate] present, and strictly
+  /// `endDate.isAfter(startDate)`.
+  ///
+  /// [status] is derived ([deriveProgramStatus]) from the date range vs
+  /// now; [createdBy] records the authenticated caller's
+  /// `userIdentifier`. The program insert, the creator household resolution
+  /// ([HouseholdService.getOrCreateFor]) and the creator's [ProgramMember]
+  /// insert all run inside ONE caller-owned database transaction, so a failing
+  /// membership step rolls the created program back with it.
+  Future<Program> createProgram(
+    Session session,
+    String name,
+    String description,
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    validateProgramInputs(name: name, startDate: startDate, endDate: endDate);
+
+    final createdBy = session.authenticated!.userIdentifier;
+    final normalizedName = name.trim();
+
+    return session.db.transaction<Program>((transaction) async {
+      final program = await Program.db.insertRow(
+        session,
+        Program(
+          name: normalizedName,
+          description: description,
+          createdBy: createdBy,
+          startDate: startDate,
+          endDate: endDate,
+          status: deriveProgramStatus(startDate: startDate, endDate: endDate),
+        ),
+        transaction: transaction,
+      );
+
+      final household = await HouseholdService.getOrCreateFor(
+        session,
+        createdBy,
+        transaction: transaction,
+      );
+
+      await ProgramMember.db.insertRow(
+        session,
+        ProgramMember(
+          programId: program.id!,
+          householdId: household.id!,
+          joinedAt: DateTime.now(),
+        ),
+        transaction: transaction,
+      );
+
+      return program;
+    });
   }
 
   /// Joins the authenticated user's household to [programId], auto-creating
@@ -91,4 +153,48 @@ class ProgramsEndpoint extends Endpoint {
     final ownerId = session.authenticated!.userIdentifier;
     return HouseholdService.getOrCreateFor(session, ownerId);
   }
+}
+
+/// Validates [createProgram] inputs, failing fast in order on the first
+/// violation with a user-meaningful [InvalidParametersException] message.
+///
+/// Dates are nullable so the "missing date" rejections are expressible here;
+/// through the typed endpoint connector a non-nullable [DateTime] parameter
+/// can never arrive null (the Serverpod dispatcher already rejects a missing
+/// parameter with its own [InvalidParametersException] before this is
+/// reached).
+void validateProgramInputs({
+  required String name,
+  required DateTime? startDate,
+  required DateTime? endDate,
+}) {
+  if (name.trim().isEmpty) {
+    throw InvalidParametersException('Program name is required.');
+  }
+  if (startDate == null) {
+    throw InvalidParametersException('Select a start date.');
+  }
+  if (endDate == null) {
+    throw InvalidParametersException('Select an end date.');
+  }
+  if (!endDate.isAfter(startDate)) {
+    throw InvalidParametersException('End date must be after the start date.');
+  }
+}
+
+/// Status auto-derivation for created programs (PD-2 / Design D-4): the status
+/// is never a form field — it is derived at create time from the submitted
+/// date range vs now at `Date` precision:
+///
+/// - `endDate < now` → [ProgramStatus.completed]
+/// - `startDate > now` → [ProgramStatus.upcoming]
+/// - otherwise (`startDate <= now <= endDate`) → [ProgramStatus.active]
+ProgramStatus deriveProgramStatus({
+  required DateTime startDate,
+  required DateTime endDate,
+}) {
+  final now = DateTime.now();
+  if (endDate.isBefore(now)) return ProgramStatus.completed;
+  if (startDate.isAfter(now)) return ProgramStatus.upcoming;
+  return ProgramStatus.active;
 }

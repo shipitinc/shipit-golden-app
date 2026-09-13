@@ -10,6 +10,7 @@ void main() {
           id: 3,
           name: 'Summer Camp',
           description: 'Annual summer camp for families',
+          createdBy: 'creator-1',
           startDate: DateTime(2026, 6, 15),
           endDate: DateTime(2026, 8, 15),
           status: api.ProgramStatus.active,
@@ -29,6 +30,7 @@ void main() {
         api.Program(
           name: 'Winter',
           description: 'Winter workshop',
+          createdBy: 'creator-1',
           startDate: DateTime(2026, 12, 1),
           endDate: DateTime(2026, 12, 20),
           status: api.ProgramStatus.upcoming,

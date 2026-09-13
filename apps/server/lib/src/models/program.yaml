@@ -3,6 +3,7 @@ table: programs
 fields:
   name: String
   description: String
+  createdBy: String
   startDate: DateTime
   endDate: DateTime
   status: ProgramStatus
