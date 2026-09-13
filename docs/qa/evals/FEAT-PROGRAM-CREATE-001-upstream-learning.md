@@ -16,13 +16,16 @@ changes were made in this run** — candidates are reported here for the framewo
   `E_*` evidence rows so a QA Architect can reference feature-specific artifacts
   (e.g. this feature's `E2E_VERIFICATION_CODE` journey) without hand-editing a
   frozen contract or going OOS.
-- **Owner**: shipitagentic / framework. Reported only — not changed here.
+- **Owner**: shipitagentic / framework. **Filed 2026-09-13 as
+  [agentic-engineering-framework#1](https://github.com/shipitinc/agentic-engineering-framework/issues/1)**.
 
 ### U-02 — shipit_ui gap: `AppDatePicker` clear-target too small (~20px)
 - **Category**: `SHIPIT_UI_GAP` (upstream). Small clear icon in date pickers,
   below the ≥44px interaction target guideline. Already reported to shipit_ui as
   `UPSTREAM_UI_GAP-003` (design-revision-001 F4); verified in Q5 and NOT
-  regressed in this app. Owner: shipit-ui.
+  regressed in this app. **Filed 2026-09-13 as
+  [shipitinc/shipit-ui#16](https://github.com/shipitinc/shipit-ui/issues/16)**
+  (GTD D3 F4). Owner: shipit-ui.
   - **Effect on Golden App**: none — no local reimplementation (AGENTS.md:
     product-agnostic shipit_ui, UPSTREAM_UI_GAP reporting over patching).
 
@@ -33,7 +36,9 @@ changes were made in this run** — candidates are reported here for the framewo
   device can run it — so the gate is permanently READY_NOT_EXECUTED in this
   environment. That makes E2E evidence unattainable-by-design while staying a
   real contract line.
-- **Owner**: shipitagentic / golden app. Reported. No change this run.
+- **Owner**: shipitagentic / golden app. **Filed 2026-09-13 as
+  [agentic-engineering-framework#2](https://github.com/shipitinc/agentic-engineering-framework/issues/2)**.
+  No change this run.
 
 ## Golden App / product-specific classifications
 

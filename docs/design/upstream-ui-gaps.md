@@ -32,6 +32,13 @@ Tracking components needed by Golden App that don't exist in shipit_ui.
 >
 > There are **no open upstream UI gaps**.
 
+> **Accessibility hit-target follow-up (2026-09-13):** the shipped `AppDatePicker`
+> clear affordance (`date_picker_clear`) renders a ~20px tap target, below the
+> 40dp WCAG AA interaction-target requirement (Golden App Gate D3 finding F4,
+> verified live in Q5 Human QA). Filed upstream as
+> [shipitinc/shipit-ui#16](https://github.com/shipitinc/shipit-ui/issues/16)
+> (2026-09-13). The Golden App does not mask/replace the control in-app.
+
 ## Revision History
 
 - `2026-09-08` — reviewed against `1207004` (static `AppColors` /
