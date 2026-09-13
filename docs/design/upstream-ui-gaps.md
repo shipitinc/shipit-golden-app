@@ -37,7 +37,12 @@ Tracking components needed by Golden App that don't exist in shipit_ui.
 > 40dp WCAG AA interaction-target requirement (Golden App Gate D3 finding F4,
 > verified live in Q5 Human QA). Filed upstream as
 > [shipitinc/shipit-ui#16](https://github.com/shipitinc/shipit-ui/issues/16)
-> (2026-09-13). The Golden App does not mask/replace the control in-app.
+> (2026-09-13). **Resolved upstream 2026-09-13T17:33:47Z** (issue CLOSED; fix
+> `2e4a8fe` — `AppDatePicker` clear affordance hit target 44dp in
+> `app_date_picker.dart`, 237 tests pass). The Golden App does not mask/replace
+> the control in-app; the pinned ref is still `c310a961aa`, so the fix is not
+> yet consumed (consumption is a shipit_ui pin-bump decision — see
+> `docs/qa/pending-actions.md` #17).
 
 ## Revision History
 

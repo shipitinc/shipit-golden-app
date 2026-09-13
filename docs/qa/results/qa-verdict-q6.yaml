@@ -33,7 +33,7 @@ gate_results:
   unit: "PASS"                      # 121/121 test:flutter at 1824dae (goldens excluded by tag); includes accessibility_semantics_test + key_widget_semantics_test; BLoC/translator/repository/widget suites green
   integration: "PASS"               # 33/33 test:server, PostgreSQL-backed; incl. PC-010 concurrency (N=5 → one household, N programs, one membership per program) + rollback atomicity
   contract: "PASS"                  # generate:check clean at tested SHA (no tracked diff + manifest hash match); app_client protocol round-trips green; error_translator unchanged; no new protocol model
-  e2e: "NOT_IN_DEFAULT_PIPELINE"    # opt-in/device-gated per contract (:384-391); no headless device/live server in this environment; flagged, not silently asserted; widget-level equivalents green (unit gate)
+  e2e: "PASS — live-interaction EXECUTED (post-verdict)"   # at Q6 verdict time this was NOT_IN_DEFAULT_PIPELINE / device-gated per contract (:384-391); formally determined after verdict via AEF 01e0e84 E_* model (adopted 2026-09-13, shipit-golden-app#1): E2E_JOURNEY EXECUTED (qa-session-e2e-live.md + evidence-e2e/), E2E_AUTOMATED_RUNNER SKIPPED (reasons + authority_ref = upstream AEF#2 resolution); see contract Status Ledger E2E row. Widget-level equivalents green (unit gate).
   visual: "PASS (local registry conformance) + PENDING (Linux-CI pixel gate — CI-enforced on merge)"
     # local: golden registry conformance PASS (golden_registry_test.dart, host-agnostic, inside test:flutter)
     # Linux-CI: 0-pixel gate (melos run test:golden, golden_policy_test.dart) runs automatically in qa.yml merge workflow on the Linux CI host — platform of record; macOS informational

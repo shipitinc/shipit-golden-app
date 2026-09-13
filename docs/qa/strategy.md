@@ -6,6 +6,38 @@ the workspace `pubspec.yaml` (Melos 8).
 Status fields in `product.yaml` are the source of truth; some suites (integration)
 are declared but not yet in the standard pipeline.
 
+## QA Contract Evidence Rows (`E_*`) — adopted
+
+Adopted 2026-09-13 from agentic-engineering-framework `01e0e84` (resolves
+agentic-engineering-framework#1, #2). **Every QA Contract instantiated in this
+repo now uses the `E_*` evidence-row model**, binding each contract-mandated
+evidence requirement to its feature-specific artifact at **contract time** —
+never hand-created at execution time and never left as generic prose:
+
+- Each evidence row binds `artifact_ref` (feature-specific file/URL),
+  `params` (run parameters, e.g. `--dart-define=E2E_VERIFICATION_CODE`),
+  `prerequisites` (lane/services/device required to run), and
+  `traceability_refs` at contract freeze.
+- `contract_determination` at contract time:
+  `EXPECTED_TO_EXECUTE | CONTINGENT | SKIPPED_BY_CONTRACT`
+  (`determination_reasons` mandatory unless `EXPECTED_TO_EXECUTE`).
+- At QA Result time, each row reports `evidence_determinations`:
+  `EXECUTED | READY_NOT_EXECUTED | SKIPPED`, with `reasons` (mandatory unless
+  `EXECUTED`) and `authority_ref` (required for `SKIPPED`).
+- `gate_results` in QA Results: `PASS | FAIL | N/A | NOT_EXECUTED | SKIPPED`.
+- **Never silently asserted**: no `EXECUTED` / gate `PASS` without
+  artifact-tracked evidence pinned to the exact revision under test.
+- **`READY_NOT_EXECUTED` is terminal-invalid as a resting state** for a
+  `REQUIRED` row — it must reach `EXECUTED` or a formal `SKIPPED` (a permanent
+  skip is a Human Decision). `OPTIONAL` / `NOT_IN_DEFAULT_PIPELINE` rows are
+  non-blocking and may rest at `READY_NOT_EXECUTED` without a decision.
+
+The FEAT-PROGRAM-CREATE-001 contract (frozen v1.0.1 at Gate Q2, before this
+model was adopted) is retroactively reconciled via its Status Ledger: the E2E
+Journey row is formally recorded `SKIPPED` for the automated device lane
+(reasons + `authority_ref`) and `EXECUTED` via the product's live-interaction
+lane — see `contracts/FEAT-PROGRAM-CREATE-001-qa-contract.md`.
+
 ## Test Pyramid
 
 ```

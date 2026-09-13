@@ -29,6 +29,14 @@ changes were made in this run** — candidates are reported here for the framewo
   (GTD D3 F4). Owner: shipit-ui.
   - **Effect on Golden App**: none — no local reimplementation (AGENTS.md:
     product-agnostic shipit_ui, UPSTREAM_UI_GAP reporting over patching).
+  - **Resolved upstream** 2026-09-13T17:33:47Z — shipitinc/shipit-ui#16
+    **CLOSED** by the maintainer; fix landed in `2e4a8fe` ("Fix AppDatePicker
+    clear affordance tap target to 44dp (WCAG AA)", `_targetSize = 44` in
+    `app_date_picker.dart`, icon visually 20px within a 44px hit target),
+    237 tests pass. **Not yet consumed in this app**: the pinned ref is still
+    `c310a961aa`, so UPSTREAM_UI_GAP-003 remains observable at the pinned
+    revision; consumption is a separate shipit_ui pin-bump product decision
+    (see pending-actions).
 
 ### U-03 — ShipIt platform gap: no headless-device E2E in local/CI workflow
 - **Category**: `SHIPIT_PLATFORM_GAP` (upstream). The contract orders an
@@ -101,18 +109,21 @@ Per AEF authority ladder and AGENTS.md, no upstream commits (AEF/shipit_ui/
 partnerhub) were made during this run. U-01..U-03 were reported here and in
 `docs/qa/pending-actions.md`.
 
-**Status update (2026-09-13, confirmed by engineering):** both
-agentic-engineering-framework issues are **resolved upstream** — AEF#1
-(contract `E_*` evidence rows) and AEF#2 (unrunnable E2E gates) landed in the
-framework, which now mandates that any permanently-unrunnable REQUIRED gate be
-made runnable, formally declared `SKIPPED` (reasons + authority_ref), or
-revised, and distinguishes `NOT_EXECUTED` from `SKIPPED` in `gate_results`.
-The Golden App consumes that resolution for the app→server E2E: the journey
-(`app_journey_test.dart`) is executed as the product's live-interaction
+**Status update (2026-09-13, confirmed by engineering):** all three filed
+upstream issues are now **resolved upstream** — AEF#1 (contract `E_*`
+evidence rows) and AEF#2 (unrunnable E2E gates) landed in the framework in
+commit `01e0e84`, which now mandates that any permanently-unrunnable REQUIRED
+gate be made runnable, formally declared `SKIPPED` (reasons + authority_ref),
+or revised, and distinguishes `NOT_EXECUTED` from `SKIPPED` in `gate_results`;
+and shipit-inc/shipit-ui#16 (U-02, AppDatePicker `date_picker_clear` ~20px
+target) was **closed upstream 2026-09-13T17:33:47Z** with the 44dp hit-target
+fix in `2e4a8fe` (not yet consumed — the pinned ref remains `c310a961aa`).
+The Golden App consumes the AEF resolution for the app→server E2E: the
+journey (`app_journey_test.dart`) is executed as the product's live-interaction
 equivalent against a real Serverpod+PostgreSQL stack (see
 `qa-session-e2e-live.md`), with deterministic registration via a dev-only
-`SERVERPOD_DEV_VERIFICATION_CODE` pin, instead of being left permanently
-READY_NOT_EXECUTED by an unavailable device lane. **shipit-inc/shipit-ui#16
-(U-02, AppDatePicker clear target) remains open/pending** upstream — no change
-consumed in this app; the gap stays tracked as `UPSTREAM_UI_GAP-003` without
-in-app reimplementation.
+`SERVERPOD_DEV_VERIFICATION_CODE` pin, and the row is formally determined in
+the `E_*` model via the adopted strategy (`docs/qa/strategy.md`) and contract
+Status Ledger — `E2E_JOURNEY` EXECUTED, `E2E_AUTOMATED_RUNNER` SKIPPED with
+`reasons` + `authority_ref` — instead of being left permanently
+READY_NOT_EXECUTED by an unavailable device lane (shipit-golden-app#1).
