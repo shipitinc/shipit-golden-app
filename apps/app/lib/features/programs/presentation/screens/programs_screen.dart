@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shipit_ui/shipit_ui.dart';
 import 'package:shipit_golden_app/core/core.dart';
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_bloc.dart';
@@ -24,12 +25,27 @@ class ProgramsScreen extends StatelessWidget {
 class ProgramsView extends StatelessWidget {
   const ProgramsView({super.key});
 
+  /// Pushes the create-program flow and refreshes the list when it reports a
+  /// created program (`true`).
+  Future<void> _openCreate(BuildContext context) async {
+    final created = await context.push<bool>('/programs/create');
+    if (created == true && context.mounted) {
+      context.read<ProgramsBloc>().add(const ProgramsRefreshRequested());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Programs'),
         actions: [
+          AppIconButton(
+            icon: Icons.add,
+            tooltip: 'Create program',
+            semanticLabel: const Key('programs_create_action'),
+            onPressed: () => _openCreate(context),
+          ),
           AppIconButton(
             icon: Icons.refresh,
             tooltip: 'Refresh',
@@ -87,11 +103,14 @@ class ProgramsView extends StatelessWidget {
               child: programs.isEmpty
                   ? ListView(
                       padding: EdgeInsets.all(context.space.s4),
-                      children: const [
+                      children: [
                         AppEmptyState(
                           title: 'No programs available',
-                          message: 'DESIGN_PENDING: Program creation flow',
+                          message: 'Programs you create will appear here.',
                           icon: Icons.event_outlined,
+                          actionLabel: 'Create program',
+                          semanticLabel: const Key('programs_empty_create'),
+                          onAction: () => _openCreate(context),
                         ),
                       ],
                     )

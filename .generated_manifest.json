@@ -7,6 +7,8 @@
   "apps/app/lib/features/household/bloc/household_state.freezed.dart": "c6a0ed17a94912290eaaeeb1fb6775ffbf99c59d935bf37e950fcac50bcf0e20",
   "apps/app/lib/features/household/domain/household.freezed.dart": "09fb07aba972486ab058ab42130d0a629c88ff925a1fd8661dd85748820b1056",
   "apps/app/lib/features/household/domain/household_member.freezed.dart": "752d325c8b98566fc7df87bea36d1a62a68de383f4d92261fd763e3711558b2e",
+  "apps/app/lib/features/programs/bloc/program_create_event.freezed.dart": "40674e82f0c95abb0dabc9103138bdf1ceb2bace545e7654a33bd2f8d3edb7ed",
+  "apps/app/lib/features/programs/bloc/program_create_state.freezed.dart": "bc19d6bed9a8f7dc1a37d26b2d38aec9988cca289c4d8e3e96706acda997448a",
   "apps/app/lib/features/programs/bloc/program_details_event.freezed.dart": "399bc72e2aae623b4322419bd653dc68283ea2702863912139aa77314df2c25d",
   "apps/app/lib/features/programs/bloc/program_details_state.freezed.dart": "e274019ed45a449fd2cec7aed73d9e219961c6c79a29706884e0316e0d2616d2",
   "apps/app/lib/features/programs/bloc/programs_event.freezed.dart": "444910d1911dc9981c6a1acd899218c2dfd8b95e5234eb60d2f5a706c79a3aa7",

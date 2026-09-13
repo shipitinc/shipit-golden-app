@@ -114,6 +114,15 @@ void main() {
       expect(failure.message, isNot(contains('internal_stack_traces_only')));
     });
 
+    test('maps a plain 400 to a user-correctable validation failure', () {
+      final failure = mapAppFailure(ServerpodClientBadRequest());
+      expect(failure, isA<ValidationFailure>());
+      expect(
+        (failure as ValidationFailure).userMessage,
+        contains('Please check your input'),
+      );
+    });
+
     test('announces listeners when a session-expired failure is mapped', () {
       var announced = false;
       void listener() => announced = true;

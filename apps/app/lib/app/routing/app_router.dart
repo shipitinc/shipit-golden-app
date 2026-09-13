@@ -6,6 +6,7 @@ import 'package:shipit_golden_app/features/authentication/bloc/authentication_ev
 import 'package:shipit_golden_app/features/authentication/bloc/authentication_state.dart';
 import 'package:shipit_golden_app/features/authentication/presentation/screens/login_screen.dart';
 import 'package:shipit_golden_app/features/household/presentation/screens/household_screen.dart';
+import 'package:shipit_golden_app/features/programs/presentation/screens/create_program_screen.dart';
 import 'package:shipit_golden_app/features/programs/presentation/screens/program_details_screen.dart';
 import 'package:shipit_golden_app/features/programs/presentation/screens/programs_screen.dart';
 
@@ -73,6 +74,13 @@ class AppRouter {
                   path: '/programs',
                   name: 'programs',
                   builder: (context, state) => const ProgramsScreen(),
+                ),
+                // Declared before `/programs/:id` so a literal `create`
+                // segment never matches the parameterized detail route.
+                GoRoute(
+                  path: '/programs/create',
+                  name: 'program-create',
+                  builder: (context, state) => const ProgramCreateScreen(),
                 ),
                 GoRoute(
                   path: '/programs/:id',

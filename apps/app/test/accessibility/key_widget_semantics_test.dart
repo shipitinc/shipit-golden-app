@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shipit_ui/shipit_ui.dart';
 import 'package:shipit_golden_app/features/household/domain/household.dart';
 import 'package:shipit_golden_app/features/household/domain/household_member.dart';
 import 'package:shipit_golden_app/features/household/presentation/widgets/household_header.dart';
 import 'package:shipit_golden_app/features/household/presentation/widgets/member_list.dart';
+import 'package:shipit_golden_app/features/programs/bloc/program_create_bloc.dart';
 import 'package:shipit_golden_app/features/programs/domain/program.dart';
+import 'package:shipit_golden_app/features/programs/presentation/screens/create_program_screen.dart';
 import 'package:shipit_golden_app/features/programs/presentation/widgets/program_card.dart';
 
 /// Semantics coverage for the core post-login data widgets.
@@ -92,5 +95,48 @@ void main() {
       greaterThanOrEqualTo(40),
       reason: 'tap target below the 40dp accessibility minimum (Material).',
     );
+  });
+
+  group('ProgramCreateView', () {
+    testWidgets('form fields and submit button expose labels', (tester) async {
+      final bloc = ProgramCreateBloc();
+      addTearDown(bloc.close);
+
+      await tester.pumpWidget(
+        BlocProvider<ProgramCreateBloc>.value(
+          value: bloc,
+          child: MaterialApp(
+            theme: shipitLightTheme(),
+            home: const ProgramCreateView(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final nameInput = find.byKey(const Key('program_create_name'));
+      expect(tester.getSemantics(nameInput).label, contains('Program name'));
+
+      final descriptionInput = find.byKey(
+        const Key('program_create_description'),
+      );
+      expect(
+        tester.getSemantics(descriptionInput).label,
+        contains('Description'),
+      );
+
+      expect(
+        tester
+            .getSemantics(find.byKey(const Key('program_create_start')))
+            .label,
+        contains('Start date'),
+      );
+      expect(
+        tester.getSemantics(find.byKey(const Key('program_create_end'))).label,
+        contains('End date'),
+      );
+
+      final submit = find.byKey(const Key('program_create_submit'));
+      expect(tester.getSemantics(submit).label, contains('Create Program'));
+    });
   });
 }

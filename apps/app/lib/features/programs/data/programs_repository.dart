@@ -16,6 +16,25 @@ class ProgramsRepository {
     });
   }
 
+  /// Creates a new program owned by the authenticated user's household and
+  /// returns the created [Program].
+  Future<Result<Program>> createProgram({
+    required String name,
+    required String description,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    return _runCatching(() async {
+      final program = await _clientProvider.client.programs.createProgram(
+        name,
+        description,
+        startDate,
+        endDate,
+      );
+      return programFromProtocol(program);
+    });
+  }
+
   /// Returns a single program by its (string) id, or a validation failure when
   /// the id is not a valid program id or the program no longer exists.
   Future<Result<Program>> getProgramById(String programId) async {
