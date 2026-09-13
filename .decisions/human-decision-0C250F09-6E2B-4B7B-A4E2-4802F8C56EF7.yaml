@@ -1,0 +1,71 @@
+# Human Decision — 0C250F09-6E2B-4B7B-A4E2-4802F8C56EF7
+
+decision_id: "0C250F09-6E2B-4B7B-A4E2-4802F8C56EF7"
+type: "ARCHITECTURE"
+status: "RESOLVED"
+question: "Should the Program data contract gain a creator field (createdBy = session.authenticated!.userIdentifier)?"
+
+context:
+  summary: >-
+    FEAT-PROGRAM-CREATE-001 (Program Creation). The Program model
+    (apps/server/lib/src/models/program.yaml) currently has no creator/owner
+    concept; programs are global and any authenticated user may join. Adding
+    a creator field enables provenance and future ownership-based authorization
+    without changing present behavior.
+  blocking_work_item:
+    item_type: "FEATURE"
+    item_id: "A9108212-3417-4E14-B3BA-7BBED3EC2B54"
+    item_ref: "Program Creation (FEAT-PROGRAM-CREATE-001) - Phase 2 Planning Package"
+  evidence:
+    documents:
+      - type: "OTHER"
+        id: "00000000-0000-0000-0000-000000000000"
+        url: "apps/server/lib/src/models/program.yaml"
+      - type: "OTHER"
+        id: "00000000-0000-0000-0000-000000000000"
+        url: "apps/server/lib/src/endpoints/programs_endpoint.dart"
+    quantitative_data:
+      - metric: "SAFE additive migration"
+        value: "additive column, no table recreation"
+        source: "Migration history 20260907..20260912; AGENTS.md generated-code drift gate"
+    qualitative_tradeoffs:
+      - dimension: "Provenance"
+        option_a: "createProgram records who created the program"
+        option_b: "programs are anonymous objects"
+        assessment: "createdBy enables ownership authz later and matches existing identity primitive"
+      - dimension: "Drift risk"
+        option_a: "model change requires regen + manifest re-snapshot"
+        option_b: "no schema change"
+        assessment: "regen+manifest is the standard re-manifested path (melos run generate:manifest)"
+  recommendation:
+    recommended_option: "OPTION_A"
+    rationale: "Enables creator provenance and future ownership authz; SAFE additive migration; standard re-manifest flow."
+    confidence: "HIGH"
+
+options:
+  - option_id: "OPTION_A"
+    label: "Add createdBy"
+    description: "program.yaml gains createdBy: String. Enables provenance and future ownership authz without altering present behavior."
+    implications: "SAFE schema change; one additive migration; regenerate server+client; .generated_manifest.json re-snapshot; converter update; PC-005 true."
+    estimated_effort: "0.5 day"
+    risk_level: "LOW"
+  - option_id: "OPTION_B"
+    label: "No creator field"
+    description: "Programs remain anonymous objects; creation persists today's fields only."
+    implications: "No migration; no provenance; future ownership work would need a later migration."
+    estimated_effort: "0.25 day"
+    risk_level: "LOW"
+
+resolution:
+  selected_option: "OPTION_A"
+  decided_by: "Human (product/architecture lead) via structured question UI"
+  decided_at: "2026-09-12T23:59:23Z"
+  rationale: "Selected OPTION_A - Add createdBy (Recommended)."
+  follow_up_actions:
+    - action: "Add createdBy to program.yaml; create SAFE additive migration; regenerate server+client; re-snapshot .generated_manifest.json"
+      owner: "engineer"
+      due_date: ""
+
+created_by: "engineering-manager"
+created_at: "2026-09-12T23:59:23Z"
+updated_at: "2026-09-12T23:59:23Z"

@@ -1,0 +1,66 @@
+# Human Decision — 1231D220-2CD6-42C6-BA96-79317543B616
+
+decision_id: "1231D220-2CD6-42C6-BA96-79317543B616"
+type: "PRODUCT"
+status: "RESOLVED"
+question: "Should the creator's household be auto-joined to the new program on creation, or is creation create-only?"
+
+context:
+  summary: >-
+    FEAT-PROGRAM-CREATE-001 (Program Creation). Decides whether createProgram
+    also inserts the creator's ProgramMember (exercising the race-safe
+    HouseholdService.getOrCreateFor path) or only inserts the Program, leaving
+    membership to the existing join flow.
+  blocking_work_item:
+    item_type: "FEATURE"
+    item_id: "A9108212-3417-4E14-B3BA-7BBED3EC2B54"
+    item_ref: "Program Creation (FEAT-PROGRAM-CREATE-001) - Phase 2 Planning Package"
+  evidence:
+    documents:
+      - type: "OTHER"
+        id: "00000000-0000-0000-0000-000000000000"
+        url: "apps/server/lib/src/services/household_service.dart"
+      - type: "OTHER"
+        id: "00000000-0000-0000-0000-000000000000"
+        url: "apps/server/lib/src/endpoints/programs_endpoint.dart"
+  quantitative_data:
+    - metric: "P2 gap #2"
+      value: "getOrCreate concurrency/idempotency lacks explicit regression test"
+      source: "docs/qa/pending-actions.md"
+  qualitative_tradeoffs:
+      - dimension: "Membership side effect"
+        option_a: "auto-join creator (exercises getOrCreateFor; enables P2 #2 concurrency test)"
+        option_b: "create-only; join via existing flow"
+        assessment: "auto-join closes P2 gap #2 and demonstrates full slice; create-only keeps endpoint minimal"
+  recommendation:
+    recommended_option: "OPTION_A"
+    rationale: "Auto-join demonstrates the race-safe getOrCreate path, closes P2 gap #2, and gives an immediately coherent creator experience."
+    confidence: "HIGH"
+
+options:
+  - option_id: "OPTION_A"
+    label: "Auto-join creator"
+    description: "createProgram calls getOrCreateFor and inserts the creator's ProgramMember. Immediately demonstrates the race-safe getOrCreate path."
+    implications: "PC-010 (deterministic concurrency regression test) closes P2 gap #2; extra endpoint logic; creator sees joined/Cancel state right after create."
+    estimated_effort: "0.4 day"
+    risk_level: "MEDIUM"
+  - option_id: "OPTION_B"
+    label: "Create-only"
+    description: "createProgram only inserts the Program; no membership side effect. Users join later via the existing join flow."
+    implications: "P2 gap #2 regression test stays out of scope; simpler endpoint; creator must join manually."
+    estimated_effort: "0.2 day"
+    risk_level: "LOW"
+
+resolution:
+  selected_option: "OPTION_A"
+  decided_by: "Human (product/architecture lead) via structured question UI"
+  decided_at: "2026-09-12T23:59:23Z"
+  rationale: "Selected OPTION_A - Auto-join creator (Recommended)."
+  follow_up_actions:
+    - action: "createProgram inserts Program + creator ProgramMember via race-safe getOrCreateFor; add deterministic concurrency regression test (P2 gap #2)"
+      owner: "engineer"
+      due_date: ""
+
+created_by: "engineering-manager"
+created_at: "2026-09-12T23:59:23Z"
+updated_at: "2026-09-12T23:59:23Z"

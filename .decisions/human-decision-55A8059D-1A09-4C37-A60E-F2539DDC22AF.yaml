@@ -1,0 +1,71 @@
+# Human Decision — 55A8059D-1A09-4C37-A60E-F2539DDC22AF
+
+decision_id: "55A8059D-1A09-4C37-A60E-F2539DDC22AF"
+type: "PRODUCT"
+status: "RESOLVED"
+question: "Which creation-form fields are required, and how is Program.status set on create?"
+
+context:
+  summary: >-
+    FEAT-PROGRAM-CREATE-001 (Program Creation). The creation form must decide
+    which fields are required and how Program.status (active|upcoming|completed)
+    is assigned. Program dates (startDate, endDate) already exist in the model.
+  blocking_work_item:
+    item_type: "FEATURE"
+    item_id: "A9108212-3417-4E14-B3BA-7BBED3EC2B54"
+    item_ref: "Program Creation (FEAT-PROGRAM-CREATE-001) - Phase 2 Planning Package"
+  evidence:
+    documents:
+      - type: "OTHER"
+        id: "00000000-0000-0000-0000-000000000000"
+        url: "apps/server/lib/src/models/program.yaml"
+  quantitative_data:
+    - metric: "Status enum"
+      value: "active | upcoming | completed"
+      source: "ProgramStatus (program_states)"
+    - metric: "form-validation precedent"
+      value: "AppTextField + Form validator; server returns typed validation"
+      source: "add_member_dialog.dart; error_translator.dart"
+  qualitative_tradeoffs:
+      - dimension: "Status consistency"
+        option_a: "auto-derive status from dates vs now"
+        option_b: "user picks status in form"
+        assessment: "auto-derive prevents impossible date/status combinations; least-invented UX"
+  recommendation:
+    recommended_option: "OPTION_A"
+    rationale: "Required name+dates with auto status is the least-invented, deterministic option consistent with the existing status enum."
+    confidence: "HIGH"
+
+options:
+  - option_id: "OPTION_A"
+    label: "Required name+dates, auto status"
+    description: "name, startDate, endDate required (endDate > startDate enforced server-side); description optional; status auto-derived from date range vs now."
+    implications: "Least-invented UX; deterministic status; needs derived-status helper + tests."
+    estimated_effort: "0.3 day"
+    risk_level: "LOW"
+  - option_id: "OPTION_B"
+    label: "Manual status picker"
+    description: "Form includes an explicit status control (shipit_ui AppSelect) alongside required name + dates; description optional."
+    implications: "More UI+design surface; possible status/date inconsistency; AppSelect requires Design Revision approval."
+    estimated_effort: "0.5 day"
+    risk_level: "MEDIUM"
+  - option_id: "OPTION_C"
+    label: "Minimal (name+dates only)"
+    description: "description always empty string; status auto-derived; smallest surface."
+    implications: "Thinnest vertical slice; loses description showcase."
+    estimated_effort: "0.2 day"
+    risk_level: "LOW"
+
+resolution:
+  selected_option: "OPTION_A"
+  decided_by: "Human (product/architecture lead) via structured question UI"
+  decided_at: "2026-09-12T23:59:23Z"
+  rationale: "Selected OPTION_A - Required name+dates, auto status (Recommended)."
+  follow_up_actions:
+    - action: "Creation form requires name+startDate+endDate; description optional; status derived from dates; server enforces endDate > startDate with typed 400"
+      owner: "engineer"
+      due_date: ""
+
+created_by: "engineering-manager"
+created_at: "2026-09-12T23:59:23Z"
+updated_at: "2026-09-12T23:59:23Z"
