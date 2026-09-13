@@ -1,0 +1,56 @@
+# Design Revision Metadata
+# Instantiated by Design Agent per AEF DESIGN_GOVERNANCE.md and the
+# design-revision-metadata template. One file per Design Revision, stored
+# alongside design artifacts. This revision COMPLETES the design exploration
+# authorized by the approved Design Brief AE02F243-F283-4A9A-8D50-5597B8CAE9BE
+# (Gate D2, risk level 2, Human Decision 4BBBFDCB-E43A-45C5-B676-432A00750E18).
+
+revision_id: "77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3"
+brief_id: "AE02F243-F283-4A9A-8D50-5597B8CAE9BE"
+revision_number: 1
+status: "UNDER_REVIEW"  # DRAFT | UNDER_REVIEW | APPROVED | REJECTED | SUPERSEDED
+risk_level: 2  # 0 | 1 | 2 | 3
+risk_rationale: >-
+  Level 2 (Feature UX Change) per the approved brief and DESIGN_GOVERNANCE.md:
+  a new authenticated "Create Program" user flow (new form screen, new
+  navigation path, submit mutation with loading + settled-failure handling,
+  new Programs-surface entry points) changes user behavior and requires
+  Independent Design Review (Gate D3) + human design approval (Gate D4). Not
+  Level 3: the flow nests inside the existing programs branch of the
+  authenticated StatefulShellRoute — no change to the global navigation/IA
+  (rail / bottom bar untouched). All composition uses existing shipit_ui
+  components; the entry-point controls (app-bar icon action, empty-state CTA)
+  are standard shipit_ui compositions the brief explicitly allows to be
+  flagged Level 1, but the revision as a whole stays Level 2.
+changelog:
+  - "Revision 1: initial design revision — completes the approved brief's Design Exploration. None (first revision)."
+  - "Revision 1 (re-submission): Addressed Gate D3 findings F1-F4. F1: create endpoint throws InvalidParametersException (framework class) -> plain 400 -> ServerpodClientBadRequest -> AppFailure.validation via existing translator (error_translator.dart:73-75); removed ProgramNotFoundException typed-exception instruction; zero new protocol models. F2: HouseholdService.getOrCreateFor gains {Transaction? transaction} (findByOwner mirror) so create-Program + auto-join run in ONE caller-owned transaction (§5-2, §D-7); PC-010 test verifies N concurrent creates for one owner -> exactly one household, one membership per program, N programs. F3: removed fabricated two-AppIconButton test claim (app-bar gains a third action; future action-counting tests must include it). F4: documented AppDatePicker ~20px date_picker_clear tap target as upstream shipit_ui accessibility gap -> UPSTREAM_UI_GAP/DCR, not fixed in-app; risk unchanged. Corrected app-bar line citations to programs_screen.dart:32-51. Status -> UNDER_REVIEW for Gate D3 re-review by independent-design-reviewer-dytajy."
+traceability:
+  requirements_covered:
+    - "PC-001"  # Entry point from Programs surface (app-bar + empty-state CTA)
+    - "PC-002"  # Client validation, required fields, endDate > startDate per-field error text
+    - "PC-003"  # Server round-trip; list refresh on return; new program visible
+    - "PC-004"  # InvalidParametersException -> plain 400; ServerpodClientBadRequest -> AppFailure.validation (no new protocol model)
+    - "PC-005"  # createdBy recorded (PD-1)
+    - "PC-006"  # Failed create keeps form content + dismissible inline error
+    - "PC-007"  # Unauthenticated route -> /login (router guard + requireLogin)
+    - "PC-008"  # Skeleton list on refresh; button loading on submit; no content spinners
+    - "PC-009"  # Create-flow goldens registered (DESIGN_PENDING -> APPROVED)
+    - "PC-010"  # Auto-join concurrency (PD-3) — ONE caller-owned transaction; getOrCreateFor threads Transaction? (findByOwner mirror)
+  requirements_gaps:
+    # None. PC-001..PC-010 and Brief AC-11 are all covered; the brief's
+    # AC-11 (program-details joined-state golden, P2 gap #1) has no PC
+    # counterpart by design and is covered as an explicit baseline
+    # registration in this revision.
+design_system_compliance: "PASS"  # PASS | PARTIAL | FAIL | UNKNOWN
+ux_accessibility_score: "PASS"    # PASS | PARTIAL | FAIL | UNKNOWN
+implementation_feasibility: "HIGH" # HIGH | MEDIUM | LOW | UNKNOWN
+created_by: "design-agent-fcp-scaffold"
+created_at: "2026-09-13T00:15:44Z"
+reviewed_by: "independent-design-reviewer-dytajy"  # Gate D3 reviewer (CHANGES_REQUIRED: F1-F4)
+reviewed_at: "2026-09-13T02:06:41Z"  # Gate D3 review returned findings F1-F4; addressed in this re-submission
+approved_by: ""  # Human ID (Gate D4, required for Level 2)
+approved_at: ""  # ISO8601 (filled after Gate D4)
+artifact_paths:
+  - "docs/design/revisions/FEAT-PROGRAM-CREATE-001/design-revision-001-metadata.yaml"
+  - "docs/design/revisions/FEAT-PROGRAM-CREATE-001/design-revision-001.md"
