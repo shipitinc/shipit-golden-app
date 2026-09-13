@@ -1,0 +1,86 @@
+# Human Decision — CD86C1A3-3BF7-4148-9B85-38035C73684F
+
+decision_id: "CD86C1A3-3BF7-4148-9B85-38035C73684F"
+type: "QA"
+status: "RESOLVED"
+question: "Approve golden-baseline promotion now (revoke the FEA82795 deferral)? Grant design/human approval to dispatch .github/workflows/goldens-update.yml on the Linux CI host (design_revision 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3 + shipit_ui@c310a961aa, reviewer tariq) for the 3 DESIGN_PENDING baselines."
+
+context:
+  summary: >-
+    Feature FEAT-PROGRAM-CREATE-001, QA lane. The golden-baseline promotion was
+    DEFERRED by human decision FEA82795-EC9E-4A87-BF57-8EEB69C4680D (OPTION_B);
+    main CI remained red on the 3 DESIGN_PENDING baselines. The human
+    (product/design lead) has now approved the promotion: dispatch
+    goldens-update.yml on main with reviewer tariq. All feature gates remain
+    green (Q3/Q4/Q5-accepted/Q6 READY_FOR_MERGE); the baselines are
+    deterministic contract-registered candidates re-affirming design revision #1
+    section D-8 rows 1-3.
+  blocking_work_item:
+    item_type: "QA_VERDICT"
+    item_id: "A9108212-3417-4E14-B3BA-7BBED3EC2B54"
+    item_ref: "FEAT-PROGRAM-CREATE-001 golden baseline promotion (Gate)"
+  evidence:
+    documents:
+      - type: "QA_CONTRACT"
+        id: "c0b70155-b400-424e-b52b-00b09254c082"
+        url: "docs/qa/contracts/FEAT-PROGRAM-CREATE-001-qa-contract.md"
+      - type: "QA_VERDICT"
+        id: "47645A7A-93E9-44D3-8AD2-21422245CAAD"
+        url: "docs/qa/results/qa-verdict-q6.yaml"
+      - type: "GOLDEN_REGISTRY"
+        id: "goldens_registry.md"
+        url: "apps/app/test/goldens/goldens_registry.md"
+      - type: "DECISION"
+        id: "FEA82795-EC9E-4A87-BF57-8EEB69C4680D"
+        url: ".decisions/human-decision-FEA82795-EC9E-4A87-BF57-8EEB69C4680D.yaml"
+    quantitative_data:
+      - metric: "program_create.png CI diff"
+        value: "1.14%, 5490px (Linux CI)"
+        source: "github run 34757198586 (qa workflow on push c787d25)"
+      - metric: "programs_empty.png CI diff"
+        value: "0.91%, 4373px (Linux CI)"
+        source: "github run 34757198586 (qa workflow on push c787d25)"
+      - metric: "program_details_joined.png CI diff"
+        value: "1.58%, 7589px (Linux CI)"
+        source: "github run 34757198586 (qa workflow on push c787d25)"
+      - metric: "goldens-update workflow run"
+        value: "dispatched (run 34763110654, Linux CI)"
+        source: "gh workflow run goldens-update.yml (main, design_revision 77ccf5c1, reviewer tariq)"
+  recommendation:
+    recommended_option: "OPTION_A"
+    rationale: >-
+      Human approved the promotion with reviewer tariq. Dispatch regenerates the
+      3 baselines on the Linux CI host and records DESIGN_PENDING -> APPROVED,
+      closing the only red CI lane and making main merge-clean.
+    confidence: "HIGH"
+
+options:
+  - option_id: "OPTION_A"
+    label: "Dispatch goldens-update.yml (approve promotion)"
+    description: "Dispatch .github/workflows/goldens-update.yml on main with design_revision 77ccf5c1-9f2b-4798-87ec-c9b8bd7fb2e3 and reviewer tariq; QA Architect records the transition in the promotion commit."
+    implications: "3 baselines regenerated on Linux CI, re-approved marker appended, registry updated in same commit; qa.yml then goes green on main."
+    estimated_effort: "workflow dispatch + CI"
+    risk_level: "LOW"
+  - option_id: "OPTION_B"
+    label: "Keep deferral"
+    description: "Do not dispatch; leave the 3 baselines DESIGN_PENDING as recorded in FEA82795."
+    implications: "Main CI stays red on the 3 pixel tests; promotion remains blocked."
+    estimated_effort: "0"
+    risk_level: "LOW"
+
+resolution:
+  selected_option: "OPTION_A"
+  decided_by: "Human (product/design lead) via structured question UI"
+  decided_at: "2026-09-13T00:20:00Z"
+  rationale: "Selected OPTION_A - Approve golden baseline promotion (reviewer tariq)."
+  follow_up_actions:
+    - action: "QA Architect records DESIGN_PENDING -> APPROVED for the 3 baselines in the goldens-update.yml promotion commit"
+      owner: "qa-architect"
+      due_date: ""
+    - action: "Re-run qa.yml on main after promotion to confirm green"
+      owner: "engineering-manager"
+      due_date: ""
+
+created_by: "engineering-manager"
+created_at: "2026-09-13T00:20:00Z"
+updated_at: "2026-09-13T00:20:00Z"
