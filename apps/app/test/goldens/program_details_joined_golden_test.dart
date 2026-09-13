@@ -46,9 +46,9 @@ void main() {
         ),
       ),
     );
-    when(() => repository.isJoined('1')).thenAnswer(
-      (_) async => Result.success(true),
-    );
+    when(
+      () => repository.isJoined('1'),
+    ).thenAnswer((_) async => Result.success(true));
 
     await tester.pumpWidget(
       MaterialApp(

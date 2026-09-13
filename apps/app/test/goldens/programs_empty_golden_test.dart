@@ -31,9 +31,9 @@ class _MockProgramsRepository extends Mock implements ProgramsRepository {}
 void main() {
   testWidgets('golden: programs screen (empty state)', (tester) async {
     final repository = _MockProgramsRepository();
-    when(() => repository.getPrograms()).thenAnswer(
-      (_) async => Result.success(<Program>[]),
-    );
+    when(
+      () => repository.getPrograms(),
+    ).thenAnswer((_) async => Result.success(<Program>[]));
 
     final bloc = ProgramsBloc(repository: repository);
     addTearDown(bloc.close);

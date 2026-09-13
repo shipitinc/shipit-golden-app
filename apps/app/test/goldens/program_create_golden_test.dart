@@ -22,10 +22,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: shipitLightTheme(),
-        home: const ProgramCreateScreen(),
-      ),
+      MaterialApp(theme: shipitLightTheme(), home: const ProgramCreateScreen()),
     );
     await tester.pumpAndSettle();
 
