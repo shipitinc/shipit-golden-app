@@ -11,12 +11,12 @@ rev 1.0.1: addressed Gate D1 findings (traceability) - in-repo requirements sour
 |-------|-------|
 | `brief_id` | AE02F243-F283-4A9A-8D50-5597B8CAE9BE |
 | `version` | 1.0.1 |
-| `status` | UNDER_REVIEW |
+| `status` | APPROVED |
 | `created_by` | agent_id: design-agent-fcp-scaffold |
 | `created_at` | 2026-09-12T23:59:23Z |
-| `updated_at` | 2026-09-13T00:15:00Z |
-| `approved_by` | (pending - human) |
-| `approved_at` | (pending) |
+| `updated_at` | 2026-09-13T00:12:00Z |
+| `approved_by` | Human (product/design lead) — Human Decision 4BBBFDCB-E43A-45C5-B676-432A00750E18 (Gate D2) |
+| `approved_at` | 2026-09-13T00:12:00Z |
 
 ## Traceability
 

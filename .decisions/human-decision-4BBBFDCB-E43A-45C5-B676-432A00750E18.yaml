@@ -1,0 +1,74 @@
+# Human Decision — 4BBBFDCB-E43A-45C5-B676-432A00750E18
+
+decision_id: "4BBBFDCB-E43A-45C5-B676-432A00750E18"
+type: "DESIGN"
+status: "RESOLVED"
+question: "Approve Design Brief AE02F243-F283-4A9A-8D50-5597B8CAE9BE v1.0.1 for the Program Creation workflow, enabling Design Exploration (Gate D2)?"
+
+context:
+  summary: >-
+    FEAT-PROGRAM-CREATE-001 decision gateway D2. The Design Brief for the
+    Create Program workflow passed Independent Design Review (Gate D1,
+    APPROVED, reviewer_independent_design_level=2) at HEAD b025c12. Brief
+    scopes the new authenticated 'Create Program' surface as a Level 2
+    (Feature UX Change) design, traceable to in-repo requirements
+    (PC-001..PC-010) and resolved human decisions PD-1/PD-2/PD-3.
+  blocking_work_item:
+    item_type: "FEATURE"
+    item_id: "A9108212-3417-4E14-B3BA-7BBED3EC2B54"
+    item_ref: "Program Creation (FEAT-PROGRAM-CREATE-001) - Design Brief approval (Gate D2)"
+  evidence:
+    documents:
+      - type: "DESIGN_BRIEF"
+        id: "AE02F243-F283-4A9A-8D50-5597B8CAE9BE"
+        url: "docs/design/briefs/FEAT-PROGRAM-CREATE-001-design-brief.md"
+      - type: "OTHER"
+        id: "00000000-0000-0000-0000-000000000000"
+        url: "docs/features/FEAT-PROGRAM-CREATE-001-requirements.md"
+    quantitative_data:
+      - metric: "Gate D1 verdict"
+        value: "APPROVED"
+        source: "Independent Design Reviewer (structured result 2026-09-13)"
+      - metric: "Design risk level"
+        value: "2 (Feature UX Change)"
+        source: "Independent Design Reviewer, independent assessment"
+      - metric: "REQs traceable"
+        value: "PC-001..PC-010"
+        source: "docs/features/FEAT-PROGRAM-CREATE-001-requirements.md"
+    qualitative_tradeoffs:
+      - dimension: "Scope"
+        option_a: "Approve brief -> begin Design Exploration (revisions)"
+        option_b: "Request changes -> further brief revision"
+        assessment: "Brief is complete, scoped, and reviewer-approved; approving unblocks design revisions"
+  recommendation:
+    recommended_option: "OPTION_A"
+    rationale: "Brief passed Gate D1 with no traceability gaps; scope is minimal and aligns with the Phase 2 planning checkpoint."
+    confidence: "HIGH"
+
+options:
+  - option_id: "OPTION_A"
+    label: "Approve brief (D2)"
+    description: "Freeze Design Brief v1.0.1 as the contract for Design Exploration. Authorizes the Design Agent to produce Design Revisions for the Create Program surface."
+    implications: "authorizes Design Exploration + Design Revisions under docs/design/revisions/; each revision goes through Gate D3 independent review; no feature code."
+    estimated_effort: "n/a"
+    risk_level: "LOW"
+  - option_id: "OPTION_B"
+    label: "Request changes"
+    description: "Send the brief back to the Design Agent with change requirements before approving."
+    implications: "keeps the design lane parked; Gate D1 re-review required on revision 1.x."
+    estimated_effort: "0.5 day"
+    risk_level: "MEDIUM"
+
+resolution:
+  selected_option: "OPTION_A"
+  decided_by: "Human (product/design lead) via structured question UI"
+  decided_at: "2026-09-13T00:12:00Z"
+  rationale: "Selected OPTION_A - Approve brief (D2) (Recommended)."
+  follow_up_actions:
+    - action: "Freeze Design Brief v1.0.1; begin Design Exploration under docs/design/revisions/; each revision routed through Gate D3"
+      owner: "design-agent"
+      due_date: ""
+
+created_by: "engineering-manager"
+created_at: "2026-09-13T00:09:03Z"
+updated_at: "2026-09-13T00:12:00Z"
