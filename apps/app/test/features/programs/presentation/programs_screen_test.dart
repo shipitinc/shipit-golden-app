@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -159,10 +161,12 @@ void main() {
     tester,
   ) async {
     var getCalls = 0;
-    when(() => repository.getPrograms()).thenAnswer((_) async {
+    final firstLoad = Completer<Result<List<Program>>>();
+    final refreshLoad = Completer<Result<List<Program>>>();
+    when(() => repository.getPrograms()).thenAnswer((_) {
       getCalls++;
-      if (getCalls == 1) return Result.success(<Program>[]);
-      return Result.success([sampleProgram()]);
+      if (getCalls == 1) return firstLoad.future;
+      return refreshLoad.future;
     });
     final now = DateTime.now();
     final startDate = DateTime(now.year, now.month, 10);
@@ -177,7 +181,26 @@ void main() {
     ).thenAnswer((_) async => Result.success(sampleProgram()));
 
     await pumpPrograms(tester);
-    await loadPrograms(tester);
+
+    // The reload kicked off at pump time passes through the list's loading
+    // branch (AC-QA-008): `AppSkeleton.card` placeholders and no spinner. The
+    // first fetch is gated so the loading state can be pumped deterministically.
+    await tester.runAsync(() async {
+      programsBloc.add(const ProgramsEvent.started());
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+    });
+    await tester.pump();
+    expect(find.byType(AppSkeleton), findsWidgets);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(AppEmptyState), findsNothing);
+
+    await tester.runAsync(() async {
+      firstLoad.complete(Result.success(<Program>[]));
+      for (var i = 0; i < 10; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      }
+    });
+    await tester.pumpAndSettle();
     expect(find.byType(AppEmptyState), findsOneWidget);
 
     // Enter the flow through the empty-state CTA.
@@ -202,8 +225,14 @@ void main() {
     });
     await tester.pumpAndSettle();
 
+    // The refresh is now in flight (its fetch is still gated): the previously
+    // loaded surface stays rendered — never blanked to a spinner (AC-QA-008).
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(AppEmptyState), findsOneWidget);
+
     // Flush the refresh roundtrip (a second awaited getPrograms).
     await tester.runAsync(() async {
+      refreshLoad.complete(Result.success([sampleProgram()]));
       for (var i = 0; i < 10; i++) {
         await Future<void>.delayed(const Duration(milliseconds: 10));
       }

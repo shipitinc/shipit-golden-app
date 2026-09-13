@@ -1,6 +1,8 @@
-import 'package:serverpod/serverpod.dart' show InvalidParametersException;
+import 'package:serverpod/serverpod.dart'
+    show DatabaseException, InvalidParametersException;
 import 'package:shipit_golden_server/src/endpoints/programs_endpoint.dart';
 import 'package:shipit_golden_server/src/generated/protocol.dart';
+import 'package:shipit_golden_server/src/services/household_service.dart';
 import 'package:test/test.dart';
 
 import 'test_tools/serverpod_test_tools.dart';
@@ -329,4 +331,95 @@ void main() {
       );
     },
   );
+
+  group('Programs endpoint (DB-backed) — createProgram atomicity', () {
+    withServerpod(
+      'Given a failing membership step inside the create transaction',
+      (sessionBuilder, endpoints) {
+        late TestSessionBuilder authed;
+        late String ownerId;
+
+        setUp(() {
+          ownerId = 'rollback-owner-${DateTime.now().millisecondsSinceEpoch}';
+          authed = sessionBuilder.copyWith(
+            authentication: AuthenticationOverride.authenticationInfo(
+              ownerId,
+              const {},
+            ),
+          );
+        });
+
+        test('then the whole create rolls back — no orphan program and no '
+            'partial household', () async {
+          final session = authed.build();
+          try {
+            // Mirrors ProgramsEndpoint.createProgram: program insert +
+            // getOrCreateFor + membership insert inside one caller-owned
+            // transaction. A duplicate membership insert on the same
+            // (programId, householdId) hits the unique composite index,
+            // which must abort the transaction and roll back the program
+            // and household inserts with it (AC-QA-010).
+            await expectLater(
+              session.db.transaction<void>((transaction) async {
+                final program = await Program.db.insertRow(
+                  session,
+                  Program(
+                    name: 'Rollback Program',
+                    description: 'auto-join must fail',
+                    createdBy: ownerId,
+                    startDate: DateTime(2026, 6, 15),
+                    endDate: DateTime(2026, 8, 15),
+                    status: ProgramStatus.upcoming,
+                  ),
+                  transaction: transaction,
+                );
+
+                final household = await HouseholdService.getOrCreateFor(
+                  session,
+                  ownerId,
+                  transaction: transaction,
+                );
+
+                await ProgramMember.db.insertRow(
+                  session,
+                  ProgramMember(
+                    programId: program.id!,
+                    householdId: household.id!,
+                    joinedAt: DateTime.now(),
+                  ),
+                  transaction: transaction,
+                );
+                await ProgramMember.db.insertRow(
+                  session,
+                  ProgramMember(
+                    programId: program.id!,
+                    householdId: household.id!,
+                    joinedAt: DateTime.now(),
+                  ),
+                  transaction: transaction,
+                );
+              }),
+              throwsA(isA<DatabaseException>()),
+            );
+
+            final programs = await Program.db.find(
+              session,
+              where: (p) => p.createdBy.equals(ownerId),
+            );
+            expect(programs, isEmpty);
+
+            final households = await Household.db.find(
+              session,
+              where: (h) => h.ownerId.equals(ownerId),
+            );
+            expect(households, isEmpty);
+          } finally {
+            await session.close();
+          }
+        });
+      },
+      rollbackDatabase: RollbackDatabase.disabled,
+      configOverride: useEphemeralApiPort(),
+    );
+  });
 }
