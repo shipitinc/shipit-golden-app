@@ -26,6 +26,7 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
     ProgramsRefreshRequested event,
     Emitter<ProgramsState> emit,
   ) async {
+    emit(const ProgramsState.loading());
     await _loadPrograms(emit);
   }
 

@@ -223,12 +223,21 @@ void main() {
         await Future<void>.delayed(const Duration(milliseconds: 10));
       }
     });
-    await tester.pumpAndSettle();
+    // The pop's future continuation crosses the fake/real async boundary: give
+    // the real event loop a turn so the refresh's `loading` emission and its
+    // `AppSkeleton` render land. `pumpAndSettle` cannot be used while the
+    // skeleton is on screen — its shimmer repeats indefinitely.
+    await tester.runAsync(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+    });
+    await tester.pump();
 
-    // The refresh is now in flight (its fetch is still gated): the previously
-    // loaded surface stays rendered — never blanked to a spinner (AC-QA-008).
+    // The refresh is now in flight (its fetch is still gated): it is a full
+    // reload, so the list emits `ProgramsState.loading()` → `AppSkeleton.card`
+    // placeholders and no spinner (AC-QA-008). No content stays rendered.
+    expect(find.byType(AppSkeleton), findsWidgets);
     expect(find.byType(CircularProgressIndicator), findsNothing);
-    expect(find.byType(AppEmptyState), findsOneWidget);
+    expect(find.byType(AppEmptyState), findsNothing);
 
     // Flush the refresh roundtrip (a second awaited getPrograms).
     await tester.runAsync(() async {
